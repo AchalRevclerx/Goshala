@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate - श्री प्रेमानंद गोशाला</title>
+    <link rel="icon" type="image/png" href="icon/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Acme&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/new.css">
+    <style>
+        :root {
+            --background-color: #8B4513;
+            --text-color: #8B4513;
+            --light-bg: #FFF8F0;
+            --gold: #D4A017;
+            --green: #2E8B57;
+        }
+        * { padding:0; margin:0; box-sizing:border-box; }
+        body {
+            font-family:'Bree Serif',serif;
+            background:var(--light-bg);
+            overflow-x:hidden;
+        }
+
+        /* ===== Fixed Left Social Sidebar ===== */
+        .social-sidebar {
+            position:fixed;
+            top:50%;
+            left:0;
+            transform:translateY(-50%);
+            z-index:9999;
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+            padding:8px 4px;
+            background:#fff;
+            border-radius:0 12px 12px 0;
+            box-shadow:0 4px 20px rgba(0,0,0,0.15);
+        }
+        .social-sidebar a {
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            width:42px;
+            height:42px;
+            border-radius:50%;
+            color:#fff;
+            font-size:18px;
+            text-decoration:none;
+            transition:0.3s;
+        }
+        .social-sidebar a:hover { transform:scale(1.15); }
+        .social-sidebar a.whatsapp { background:#25D366; }
+        .social-sidebar a.facebook { background:#1877F2; }
+        .social-sidebar a.instagram {
+            background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 70%,#285AEB 100%);
+        }
+        .social-sidebar a.youtube { background:#FF0000; }
+
+        /* ===== Top Bar / Enquiry ===== */
+        .top-bar {
+            background:var(--background-color);
+            padding:6px 0;
+            font-size:13px;
+            color:#fff;
+        }
+        .top-bar a { color:#fff; text-decoration:none; }
+        .top-bar .social-icons i {
+            margin-left:12px;
+            font-size:15px;
+            transition:0.3s;
+        }
+        .top-bar .social-icons i:hover { color:var(--gold); }
+
+        /* ===== Header / Navbar Top ===== */
+        .header-top {
+            background:#fff;
+            position:fixed;
+            top:0;
+            width:100%;
+            z-index:9998;
+            box-shadow:0 2px 15px rgba(0,0,0,0.08);
+            height:70px;
+            display:flex;
+            align-items:center;
+        }
+        .header-top .container-fluid {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+        }
+        .header-top .logo-area {
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+        .header-top .logo-area img { height:50px; }
+        .header-top .site-title {
+            font-family:'Acme',sans-serif;
+            font-size:22px;
+            color:var(--background-color);
+            line-height:1.2;
+        }
+        .header-top .site-title small {
+            display:block;
+            font-size:12px;
+            color:#888;
+            font-family:'Bree Serif',serif;
+        }
+        .header-top .header-right {
+            display:flex;
+            align-items:center;
+            gap:15px;
+        }
+        .header-top .header-right .social-icons a {
+            color:var(--background-color);
+            margin:0 6px;
+            font-size:18px;
+        }
+        .header-top .header-right .social-icons a:hover { color:var(--gold); }
+        .enquiry-btn {
+            background:var(--background-color);
+            color:#fff;
+            padding:8px 22px;
+            border-radius:50px;
+            text-decoration:none;
+            font-size:14px;
+            font-weight:600;
+            transition:0.3s;
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+        }
+        .enquiry-btn:hover { background:var(--gold); color:#fff; text-decoration:none; }
+        .hamburger-menu {
+            display:none;
+            background:none;
+            border:none;
+            font-size:26px;
+            color:var(--background-color);
+            cursor:pointer;
+            padding:4px 8px;
+        }
+
+        /* ===== Navigation ===== */
+        .nav-bar {
+            background:var(--background-color);
+            margin-top:70px;
+            position:sticky;
+            top:0;
+            z-index:9997;
+        }
+        .nav-bar .navbar-nav .nav-item .nav-link {
+            color:#fff !important;
+            padding:12px 16px;
+            font-size:14px;
+            font-weight:600;
+            transition:0.3s;
+            text-transform:uppercase;
+        }
+        .nav-bar .navbar-nav .nav-item .nav-link:hover,
+        .nav-bar .navbar-nav .nav-item .nav-link.active {
+            background:var(--gold);
+            color:#fff !important;
+        }
+        .nav-bar .navbar-nav .nav-item .nav-link i { margin-right:4px; }
+        .nav-bar .dropdown-menu {
+            background:var(--background-color);
+            border:none;
+            border-radius:0 0 8px 8px;
+            padding:8px 0;
+            min-width:200px;
+        }
+        .nav-bar .dropdown-menu .dropdown-item {
+            color:#fff;
+            padding:8px 20px;
+            font-size:13px;
+            transition:0.3s;
+            border-bottom:1px solid rgba(255,255,255,0.1);
+        }
+        .nav-bar .dropdown-menu .dropdown-item:last-child { border-bottom:none; }
+        .nav-bar .dropdown-menu .dropdown-item:hover {
+            background:var(--gold);
+            color:#fff;
+        }
+        .nav-bar .dropdown-toggle::after {
+            margin-left:6px;
+            vertical-align:middle;
+        }
+
+        /* ===== Mobile Nav Overlay ===== */
+        .mobile-nav-overlay {
+            display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,0.5);
+            backdrop-filter:blur(4px);
+            z-index:99999;
+        }
+        .mobile-nav-overlay.active { display:block; }
+        .mobile-nav {
+            position:fixed;
+            top:0;
+            left:-280px;
+            width:280px;
+            height:100%;
+            background:#fff;
+            z-index:100000;
+            overflow-y:auto;
+            transition:0.3s;
+            box-shadow:2px 0 20px rgba(0,0,0,0.2);
+        }
+        .mobile-nav.active { left:0; }
+        .mobile-nav .mobile-nav-header {
+            background:var(--background-color);
+            color:#fff;
+            padding:15px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+        }
+        .mobile-nav .mobile-nav-header h5 { margin:0; font-family:'Acme',sans-serif; }
+        .mobile-nav .mobile-nav-header button {
+            background:none;
+            border:none;
+            color:#fff;
+            font-size:22px;
+            cursor:pointer;
+        }
+        .mobile-nav .mobile-nav-links { padding:10px 0; }
+        .mobile-nav .mobile-nav-links a {
+            display:block;
+            padding:12px 20px;
+            color:#333;
+            text-decoration:none;
+            font-size:15px;
+            border-bottom:1px solid #f0f0f0;
+            transition:0.3s;
+        }
+        .mobile-nav .mobile-nav-links a:hover,
+        .mobile-nav .mobile-nav-links a.active {
+            background:var(--light-bg);
+            color:var(--background-color);
+            padding-left:28px;
+        }
+        .mobile-nav .mobile-nav-links .dropdown-toggle-nav {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            cursor:pointer;
+        }
+        .mobile-nav .mobile-nav-links .sub-menu {
+            display:none;
+            padding-left:20px;
+            background:#fafafa;
+        }
+        .mobile-nav .mobile-nav-links .sub-menu.show { display:block; }
+        .mobile-nav .mobile-nav-links .sub-menu a { font-size:14px; }
+
+        /* ===== Page Hero ===== */
+        .page-hero {
+            background:linear-gradient(rgba(139,69,19,0.85),rgba(139,69,19,0.85)),url('https://via.placeholder.com/1600x400/8B4513/ffffff?text=गौ+सेवा+ही+मानव+सेवा');
+            background-size:cover;
+            background-position:center;
+            padding:80px 0 60px;
+            text-align:center;
+            color:#fff;
+            margin-top:0;
+        }
+        .page-hero h1 {
+            font-family:'Acme',sans-serif;
+            font-size:48px;
+            margin-bottom:10px;
+        }
+        .page-hero p { font-size:18px; opacity:0.9; }
+        .page-hero .breadcrumb {
+            background:transparent;
+            justify-content:center;
+            margin:0;
+            padding:10px 0 0;
+        }
+        .page-hero .breadcrumb-item,
+        .page-hero .breadcrumb-item a {
+            color:rgba(255,255,255,0.8);
+            text-decoration:none;
+        }
+        .page-hero .breadcrumb-item a:hover { color:var(--gold); }
+        .page-hero .breadcrumb-item.active { color:#fff; }
+        .page-hero .breadcrumb-item+.breadcrumb-item::before { color:rgba(255,255,255,0.5); }
+
+        /* ===== Donation Section ===== */
+        .donation-section {
+            padding:60px 0;
+        }
+        .donation-section .head_item3 {
+            width:100%;
+            text-align:center;
+            margin:0 0 40px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .donation-section .head_item3 span {
+            background:var(--green);
+            color:#fff;
+            padding:12px 40px;
+            border-radius:8px;
+            font-size:24px;
+            font-weight:bold;
+            display:inline-block;
+            text-transform:uppercase;
+            box-shadow:0 4px 15px rgba(46,139,87,0.3);
+        }
+
+        .donation-card {
+            background:#fff;
+            border-radius:12px;
+            padding:30px;
+            box-shadow:0 4px 20px rgba(0,0,0,0.08);
+            height:100%;
+        }
+        .donation-card h4 {
+            color:var(--background-color);
+            font-family:'Acme',sans-serif;
+            margin-bottom:20px;
+            border-bottom:2px solid var(--gold);
+            padding-bottom:10px;
+        }
+        .donation-card .form-control {
+            border-radius:8px;
+            border:1px solid #ddd;
+            padding:10px 15px;
+            font-size:14px;
+            font-family:'Bree Serif',serif;
+        }
+        .donation-card .form-control:focus {
+            border-color:var(--gold);
+            box-shadow:0 0 0 0.2rem rgba(212,160,23,0.25);
+        }
+        .donation-card .form-group label {
+            font-size:14px;
+            color:#555;
+            font-weight:600;
+        }
+        .donation-card .form-group label .required {
+            color:red;
+        }
+        .donate-submit-btn {
+            background:var(--green);
+            color:#fff;
+            padding:12px 35px;
+            border:none;
+            border-radius:50px;
+            font-size:16px;
+            font-weight:600;
+            cursor:pointer;
+            transition:0.3s;
+            font-family:'Bree Serif',serif;
+        }
+        .donate-submit-btn:hover {
+            background:var(--background-color);
+        }
+
+        /* ===== Bank Details ===== */
+        .bank-details {
+            background:var(--light-bg);
+            border-radius:8px;
+            padding:20px;
+            border-left:4px solid var(--green);
+        }
+        .bank-details table {
+            width:100%;
+            font-size:14px;
+        }
+        .bank-details table td {
+            padding:6px 10px;
+            color:#555;
+        }
+        .bank-details table td:first-child {
+            font-weight:600;
+            color:var(--background-color);
+            white-space:nowrap;
+            width:120px;
+        }
+        .bank-details h5 {
+            color:var(--green);
+            font-family:'Acme',sans-serif;
+            margin-bottom:12px;
+        }
+
+        /* ===== UPI QR ===== */
+        .upi-section {
+            text-align:center;
+            margin-top:20px;
+        }
+        .upi-section img {
+            max-width:200px;
+            border-radius:8px;
+            box-shadow:0 4px 15px rgba(0,0,0,0.1);
+        }
+        .upi-section p {
+            margin-top:10px;
+            font-size:14px;
+            color:#666;
+        }
+        .upi-section .upi-id {
+            background:var(--light-bg);
+            display:inline-block;
+            padding:8px 20px;
+            border-radius:50px;
+            font-weight:600;
+            color:var(--background-color);
+            font-size:15px;
+            margin-top:5px;
+        }
+
+        /* ===== Upload Preview ===== */
+        .upload-box {
+            border:2px dashed #ddd;
+            border-radius:8px;
+            padding:30px 20px;
+            text-align:center;
+            cursor:pointer;
+            transition:0.3s;
+            position:relative;
+        }
+        .upload-box:hover {
+            border-color:var(--gold);
+            background:rgba(212,160,23,0.05);
+        }
+        .upload-box input[type="file"] {
+            position:absolute;
+            top:0; left:0; width:100%; height:100%;
+            opacity:0;
+            cursor:pointer;
+        }
+        .upload-box i {
+            font-size:40px;
+            color:var(--gold);
+            margin-bottom:10px;
+        }
+        .upload-box p {
+            margin:0;
+            font-size:14px;
+            color:#888;
+        }
+        .preview-container {
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-top:15px;
+        }
+        .preview-container .preview-item {
+            position:relative;
+            width:120px;
+            height:120px;
+            border-radius:8px;
+            overflow:hidden;
+            box-shadow:0 2px 10px rgba(0,0,0,0.1);
+        }
+        .preview-container .preview-item img {
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+        .preview-container .preview-item .remove-btn {
+            position:absolute;
+            top:4px;
+            right:4px;
+            width:24px;
+            height:24px;
+            background:rgba(255,0,0,0.8);
+            color:#fff;
+            border:none;
+            border-radius:50%;
+            font-size:12px;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            transition:0.3s;
+        }
+        .preview-container .preview-item .remove-btn:hover {
+            background:red;
+            transform:scale(1.1);
+        }
+
+        /* Amount quick select */
+        .amount-options {
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+            margin-top:5px;
+        }
+        .amount-options .amt-btn {
+            padding:8px 20px;
+            border:2px solid #ddd;
+            border-radius:50px;
+            background:#fff;
+            color:#555;
+            font-size:14px;
+            font-weight:600;
+            cursor:pointer;
+            transition:0.3s;
+            font-family:'Bree Serif',serif;
+        }
+        .amount-options .amt-btn:hover,
+        .amount-options .amt-btn.active {
+            border-color:var(--green);
+            background:var(--green);
+            color:#fff;
+        }
+
+        /* ===== Footer ===== */
+        .contact-footer {
+            background:var(--background-color);
+            color:#fff;
+            padding:50px 0 0;
+        }
+        .contact-footer h5 {
+            font-family:'Acme',sans-serif;
+            color:var(--gold);
+            margin-bottom:20px;
+            position:relative;
+            padding-bottom:10px;
+        }
+        .contact-footer h5::after {
+            content:'';
+            position:absolute;
+            bottom:0;
+            left:0;
+            width:40px;
+            height:2px;
+            background:#fff;
+        }
+        .contact-footer .footer-logo img { height:80px; margin-bottom:15px; }
+        .contact-footer .footer-logo p {
+            font-size:14px;
+            line-height:1.7;
+            color:rgba(255,255,255,0.8);
+        }
+        .contact-footer .footer-contact p {
+            margin-bottom:12px;
+            font-size:14px;
+            display:flex;
+            align-items:flex-start;
+            gap:10px;
+            color:rgba(255,255,255,0.8);
+        }
+        .contact-footer .footer-contact p i {
+            color:var(--gold);
+            font-size:18px;
+            min-width:20px;
+            margin-top:3px;
+        }
+        .contact-footer .footer-links a {
+            display:block;
+            color:rgba(255,255,255,0.8);
+            padding:5px 0;
+            text-decoration:none;
+            font-size:14px;
+            transition:0.3s;
+        }
+        .contact-footer .footer-links a:hover {
+            color:var(--gold);
+            padding-left:5px;
+        }
+        .contact-footer .footer-social a {
+            display:inline-flex;
+            width:38px;
+            height:38px;
+            background:rgba(255,255,255,0.1);
+            border-radius:50%;
+            align-items:center;
+            justify-content:center;
+            color:#fff;
+            margin:0 5px 5px 0;
+            font-size:16px;
+            transition:0.3s;
+            text-decoration:none;
+        }
+        .contact-footer .footer-social a:hover {
+            background:var(--gold);
+            color:#fff;
+        }
+        .footer-bottom {
+            background:rgba(0,0,0,0.2);
+            padding:15px 0;
+            margin-top:40px;
+            font-size:14px;
+        }
+        .footer-bottom a { color:var(--gold); text-decoration:none; }
+        .footer-bottom a:hover { text-decoration:underline; }
+
+        /* ===== Floating Buttons ===== */
+        .floating-buttons {
+            position:fixed;
+            bottom:20px;
+            right:20px;
+            z-index:9999;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+        }
+        .floating-buttons a {
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            width:52px;
+            height:52px;
+            border-radius:50%;
+            color:#fff;
+            font-size:24px;
+            text-decoration:none;
+            box-shadow:0 4px 15px rgba(0,0,0,0.25);
+            transition:0.3s;
+        }
+        .floating-buttons a:hover { transform:scale(1.1); }
+        .floating-buttons .fb-whatsapp { background:#25D366; }
+        .floating-buttons .fb-donate { background:var(--green); }
+        .floating-buttons .fb-problem {
+            background:var(--gold);
+            font-size:13px;
+            width:auto;
+            padding:0 18px;
+            border-radius:25px;
+            font-weight:600;
+        }
+
+        /* ===== Responsive ===== */
+        @media only screen and (max-width:992px) {
+            .hamburger-menu { display:block; }
+            .header-top .header-right .social-icons { display:none; }
+            .nav-bar .navbar-nav { display:none; }
+            .page-hero h1 { font-size:36px; }
+        }
+        @media only screen and (max-width:768px) {
+            .header-top .site-title { font-size:16px; }
+            .header-top .site-title small { font-size:10px; }
+            .page-hero { padding:60px 0 40px; }
+            .page-hero h1 { font-size:28px; }
+            .donation-section .head_item3 span { font-size:18px; padding:10px 25px; }
+        }
+        @media only screen and (max-width:576px) {
+            .header-top .logo-area img { height:36px; }
+            .header-top .site-title { font-size:14px; }
+            .page-hero h1 { font-size:24px; }
+            .bank-details table td { display:block; width:100%; }
+            .bank-details table td:first-child { width:100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== Fixed Left Social Sidebar ===== -->
+    <div class="social-sidebar">
+        <a href="https://wa.me/917000000000" target="_blank" class="whatsapp" title="WhatsApp"><i class="fa fa-whatsapp"></i></a>
+        <a href="https://facebook.com" target="_blank" class="facebook" title="Facebook"><i class="fa fa-facebook"></i></a>
+        <a href="https://instagram.com" target="_blank" class="instagram" title="Instagram"><i class="fa fa-instagram"></i></a>
+        <a href="https://youtube.com" target="_blank" class="youtube" title="YouTube"><i class="fa fa-youtube-play"></i></a>
+    </div>
+
+    <!-- ===== Top Bar ===== -->
+    <div class="top-bar d-none d-md-block">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-left">
+                    <i class="fa fa-phone" style="margin-right:5px;"></i> +91-7000000000 &nbsp;|&nbsp;
+                    <i class="fa fa-envelope" style="margin-right:5px;"></i> info@premanandgoshala.org
+                </div>
+                <div class="col-md-6 text-center text-md-right social-icons">
+                    <a href="#"><i class="fa fa-facebook"></i></a>
+                    <a href="#"><i class="fa fa-twitter"></i></a>
+                    <a href="#"><i class="fa fa-instagram"></i></a>
+                    <a href="#"><i class="fa fa-youtube-play"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Header / Navbar Top ===== -->
+    <header class="header-top">
+        <div class="container-fluid px-4">
+            <div class="logo-area">
+                <button class="hamburger-menu" onclick="toggleMobileNav()">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a href="index.html">
+                    <img src="https://via.placeholder.com/50x50/8B4513/ffffff?text=गौ" alt="Logo">
+                </a>
+                <div class="site-title">
+                    श्री प्रेमानंद गोशाला
+                    <small>गौ सेवा ही मानव सेवा</small>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="social-icons">
+                    <a href="#"><i class="fa fa-facebook-square"></i></a>
+                    <a href="#"><i class="fa fa-twitter-square"></i></a>
+                    <a href="#"><i class="fa fa-instagram"></i></a>
+                    <a href="#"><i class="fa fa-youtube-play"></i></a>
+                </div>
+                <a href="contact.html" class="enquiry-btn">
+                    <i class="fa fa-phone"></i> Enquiry Now
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== Navigation ===== -->
+    <nav class="nav-bar">
+        <div class="container">
+            <ul class="nav navbar-nav flex-row justify-content-center">
+                <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-user-plus"></i> Member Apply</a></li>
+                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-id-card"></i> ID Card Download</a></li>
+                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-calendar"></i> Upcoming Event</a></li>
+                <li class="nav-item"><a class="nav-link active" href="donation_form.html"><i class="fa fa-heart"></i> Donate</a></li>
+                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-list"></i> List of Donors</a></li>
+                <li class="nav-item"><a class="nav-link" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
+                <li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="aboutus.html" id="aboutDropdown" data-toggle="dropdown">About Us</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="aboutus.html">About Us</a>
+                        <a class="dropdown-item" href="#">Management Team</a>
+                        <a class="dropdown-item" href="#">Working Staff</a>
+                        <a class="dropdown-item" href="#">Our Team</a>
+                        <a class="dropdown-item" href="#">Achievements</a>
+                        <a class="dropdown-item" href="#">Certifications</a>
+                        <a class="dropdown-item" href="#">Annual Report 3 Year</a>
+                        <a class="dropdown-item" href="#">Audit Report 3 Year</a>
+                        <a class="dropdown-item" href="#">ITR 3 Year</a>
+                        <a class="dropdown-item" href="#">Memorandum</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="linksDropdown" data-toggle="dropdown">Important Links</a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Crowdfunding</a>
+                        <a class="dropdown-item" href="#">Our Solutions</a>
+                        <a class="dropdown-item" href="#">Your Problems</a>
+                        <a class="dropdown-item" href="#">Our Project</a>
+                        <a class="dropdown-item" href="#">Geographical Location of Work</a>
+                        <a class="dropdown-item" href="#">Projects Funding</a>
+                        <a class="dropdown-item" href="#">Programs & Activities</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" data-toggle="dropdown"><i class="fa fa-sign-in"></i> Login</a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Coordinator Login</a>
+                        <a class="dropdown-item" href="#">Manager Login</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== Mobile Navigation Overlay ===== -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileNav()"></div>
+    <div class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-header">
+            <h5><i class="fa fa-cow"></i> श्री प्रेमानंद गोशाला</h5>
+            <button onclick="toggleMobileNav()"><i class="fa fa-times"></i></button>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html"><i class="fa fa-home"></i> Home</a>
+            <a href="#"><i class="fa fa-user-plus"></i> Member Apply</a>
+            <a href="#"><i class="fa fa-id-card"></i> ID Card Download</a>
+            <a href="#"><i class="fa fa-calendar"></i> Upcoming Event</a>
+            <a href="donation_form.html" class="active"><i class="fa fa-heart"></i> Donate</a>
+            <a href="#"><i class="fa fa-list"></i> List of Donors</a>
+            <a href="gallery.html"><i class="fa fa-image"></i> Gallery</a>
+            <a href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a>
+            <div>
+                <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)">
+                    <span><i class="fa fa-info-circle"></i> About Us</span>
+                    <i class="fa fa-chevron-down"></i>
+                </a>
+                <div class="sub-menu">
+                    <a href="aboutus.html">About Us</a>
+                    <a href="#">Management Team</a>
+                    <a href="#">Working Staff</a>
+                    <a href="#">Our Team</a>
+                    <a href="#">Achievements</a>
+                    <a href="#">Certifications</a>
+                    <a href="#">Annual Report 3 Year</a>
+                    <a href="#">Audit Report 3 Year</a>
+                    <a href="#">ITR 3 Year</a>
+                    <a href="#">Memorandum</a>
+                </div>
+            </div>
+            <div>
+                <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)">
+                    <span><i class="fa fa-link"></i> Important Links</span>
+                    <i class="fa fa-chevron-down"></i>
+                </a>
+                <div class="sub-menu">
+                    <a href="#">Crowdfunding</a>
+                    <a href="#">Our Solutions</a>
+                    <a href="#">Your Problems</a>
+                    <a href="#">Our Project</a>
+                    <a href="#">Geographical Location of Work</a>
+                    <a href="#">Projects Funding</a>
+                    <a href="#">Programs & Activities</a>
+                </div>
+            </div>
+            <div>
+                <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)">
+                    <span><i class="fa fa-sign-in"></i> Login</span>
+                    <i class="fa fa-chevron-down"></i>
+                </a>
+                <div class="sub-menu">
+                    <a href="#">Coordinator Login</a>
+                    <a href="#">Manager Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Hero Banner ===== -->
+    <section class="page-hero">
+        <div class="container">
+            <h1><i class="fa fa-heart"></i> Donate Now</h1>
+            <p>Support गौ सेवा - Your donation helps protect and care for our cows</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Donate</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+    <!-- ===== Donation Section ===== -->
+    <section class="donation-section">
+        <div class="container">
+            <div class="head_item3" data-aos="fade-down">
+                <span><i class="fa fa-heart"></i> Donate Now</span>
+            </div>
+
+            <div class="row">
+                <!-- Donation Form -->
+                <div class="col-lg-7 mb-4" data-aos="fade-right">
+                    <div class="donation-card">
+                        <h4><i class="fa fa-pencil"></i> Donation Form</h4>
+                        <form>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label>Full Name <span class="required">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Enter your full name" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Mobile No. <span class="required">*</span></label>
+                                    <input type="tel" class="form-control" placeholder="Enter your mobile number" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label>Email <span style="color:#999;font-weight:normal;">(optional)</span></label>
+                                    <input type="email" class="form-control" placeholder="Enter your email">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Pan Card <span style="color:#999;font-weight:normal;">(optional)</span></label>
+                                    <input type="text" class="form-control" placeholder="Enter your Pan Card number">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Address <span class="required">*</span></label>
+                                <textarea class="form-control" rows="3" placeholder="Enter your address" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Donation Amount <span class="required">*</span></label>
+                                <div class="amount-options">
+                                    <button type="button" class="amt-btn" data-amount="501">₹501</button>
+                                    <button type="button" class="amt-btn" data-amount="1001">₹1,001</button>
+                                    <button type="button" class="amt-btn" data-amount="5001">₹5,001</button>
+                                    <button type="button" class="amt-btn" data-amount="11000">₹11,000</button>
+                                    <button type="button" class="amt-btn" data-amount="51000">₹51,000</button>
+                                    <button type="button" class="amt-btn" data-amount="custom">Custom</button>
+                                </div>
+                                <input type="number" class="form-control mt-2" id="customAmount" placeholder="Enter custom amount" style="display:none;">
+                            </div>
+
+                            <h5 style="color:var(--green);font-family:'Acme',sans-serif;margin:25px 0 15px;"><i class="fa fa-upload"></i> Photo Upload</h5>
+                            <div class="upload-box" id="photoUploadBox">
+                                <input type="file" id="photoInput" accept="image/*" multiple>
+                                <i class="fa fa-camera"></i>
+                                <p>Click to upload your photo (optional)</p>
+                            </div>
+                            <div class="preview-container" id="photoPreview"></div>
+
+                            <h5 style="color:var(--green);font-family:'Acme',sans-serif;margin:25px 0 15px;"><i class="fa fa-file-image-o"></i> Payment Receipt Upload</h5>
+                            <div class="upload-box" id="receiptUploadBox">
+                                <input type="file" id="receiptInput" accept="image/*" multiple>
+                                <i class="fa fa-file-image-o"></i>
+                                <p>Click to upload payment receipt / screenshot</p>
+                            </div>
+                            <div class="preview-container" id="receiptPreview"></div>
+
+                            <button type="submit" class="donate-submit-btn mt-3"><i class="fa fa-heart"></i> Donate Now</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Bank Details & UPI -->
+                <div class="col-lg-5 mb-4" data-aos="fade-left">
+                    <!-- Bank Details -->
+                    <div class="donation-card mb-4">
+                        <h4><i class="fa fa-university"></i> Bank Details</h4>
+                        <div class="bank-details">
+                            <h5><i class="fa fa-bank"></i> Bank of Baroda, Mathura</h5>
+                            <table>
+                                <tr>
+                                    <td>A/c Holder</td>
+                                    <td>श्री प्रेमानंद गोशाला</td>
+                                </tr>
+                                <tr>
+                                    <td>A/c No.</td>
+                                    <td>12345678901234</td>
+                                </tr>
+                                <tr>
+                                    <td>IFSC Code</td>
+                                    <td>BARB0VRINDA</td>
+                                </tr>
+                                <tr>
+                                    <td>MICR Code</td>
+                                    <td>281012025</td>
+                                </tr>
+                                <tr>
+                                    <td>Branch</td>
+                                    <td>Vrindavan, Mathura</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- UPI QR -->
+                    <div class="donation-card">
+                        <h4><i class="fa fa-mobile"></i> UPI Payment</h4>
+                        <div class="upi-section">
+                            <img src="https://via.placeholder.com/200x200/D4A017/ffffff?text=UPI+QR" alt="UPI QR Code">
+                            <p>Scan this QR code with any UPI app</p>
+                            <div class="upi-id">
+                                <i class="fa fa-google-wallet"></i> premanandgoshala@upi
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Donation Info -->
+                    <div class="donation-card mt-4" style="background:var(--light-bg);border-left:4px solid var(--gold);">
+                        <h4 style="color:var(--gold);border-bottom-color:var(--green);"><i class="fa fa-info-circle"></i> Why Donate?</h4>
+                        <p style="font-size:14px;color:#555;line-height:1.8;">Your donation helps us provide:</p>
+                        <ul style="list-style:none;padding:0;font-size:14px;color:#555;">
+                            <li style="padding:6px 0;"><i class="fa fa-check-circle" style="color:var(--green);margin-right:8px;"></i> Nutritious food and clean water for cows</li>
+                            <li style="padding:6px 0;"><i class="fa fa-check-circle" style="color:var(--green);margin-right:8px;"></i> Regular veterinary check-ups and medicine</li>
+                            <li style="padding:6px 0;"><i class="fa fa-check-circle" style="color:var(--green);margin-right:8px;"></i> Proper shelter and bedding for all cows</li>
+                            <li style="padding:6px 0;"><i class="fa fa-check-circle" style="color:var(--green);margin-right:8px;"></i> Rescue and rehabilitation of homeless cows</li>
+                            <li style="padding:6px 0;"><i class="fa fa-check-circle" style="color:var(--green);margin-right:8px;"></i> Gaushala maintenance and infrastructure</li>
+                        </ul>
+                        <p style="font-size:14px;color:var(--background-color);font-weight:600;margin-top:10px;">"गौ सेवा ही मानव सेवा"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
+    <footer class="contact-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-logo">
+                        <a href="index.html"><img src="https://via.placeholder.com/80x80/ffffff/8B4513?text=प्रे" alt="Logo"></a>
+                        <h5>श्री प्रेमानंद गोशाला</h5>
+                        <p>गौ सेवा ही मानव सेवा के उद्देश्य के साथ समर्पित। हम बूढ़ी, बीमार और बेसहारा गायों की सेवा और संरक्षण के लिए प्रतिबद्ध हैं।</p>
+                    </div>
+                    <div class="footer-contact mt-3">
+                        <p><i class="fa fa-map-marker"></i> गौशाला रोड, वृंदावन, जिला मथुरा, उत्तर प्रदेश - 281121</p>
+                        <p><i class="fa fa-phone"></i> +91-7000000000, +91-7000000001</p>
+                        <p><i class="fa fa-envelope"></i> info@premanandgoshala.org</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Useful Links</h5>
+                    <div class="footer-links">
+                        <a href="index.html"><i class="fa fa-angle-right"></i> Home</a>
+                        <a href="#"><i class="fa fa-angle-right"></i> Member Apply</a>
+                        <a href="#"><i class="fa fa-angle-right"></i> ID Card Download</a>
+                        <a href="#"><i class="fa fa-angle-right"></i> Upcoming Event</a>
+                        <a href="donation_form.html"><i class="fa fa-angle-right"></i> Donate</a>
+                        <a href="#"><i class="fa fa-angle-right"></i> List of Donors</a>
+                        <a href="gallery.html"><i class="fa fa-angle-right"></i> Gallery</a>
+                        <a href="contact-us.html"><i class="fa fa-angle-right"></i> Contact Us</a>
+                        <a href="aboutus.html"><i class="fa fa-angle-right"></i> About Us</a>
+                        <a href="#"><i class="fa fa-angle-right"></i> Important Links</a>
+                        <a href="#"><i class="fa fa-angle-right"></i> Login</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Follow Us</h5>
+                    <div class="footer-social">
+                        <a href="#"><i class="fa fa-facebook"></i></a>
+                        <a href="#"><i class="fa fa-twitter"></i></a>
+                        <a href="#"><i class="fa fa-instagram"></i></a>
+                        <a href="#"><i class="fa fa-youtube-play"></i></a>
+                        <a href="#"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <div class="mt-4">
+                        <h5>Donate Now</h5>
+                        <p style="color:rgba(255,255,255,0.8);font-size:14px;">Your contribution helps us feed and care for our cows. Every donation matters!</p>
+                        <a href="donation_form.html" class="enquiry-btn" style="background:var(--gold);"><i class="fa fa-heart"></i> Donate Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-left mb-2 mb-md-0">
+                        Copyright &copy; 2026, All Right Reserved <strong>श्री प्रेमानंद गोशाला</strong>
+                    </div>
+                    <div class="col-md-6 text-center text-md-right">
+                        <a href="#">Terms &amp; Condition</a> &nbsp;|&nbsp;
+                        <a href="#">Privacy Policy</a> &nbsp;|&nbsp;
+                        <a href="#">Disclaimer</a> &nbsp;|&nbsp;
+                        <a href="#">Refund Policy</a>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12 text-center" style="font-size:13px;color:rgba(255,255,255,0.6);">
+                        Website Designed By - <a href="#" style="color:var(--gold);">Fragron Infotech</a>, Mob. - 7000131032
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== Floating Action Buttons ===== -->
+    <div class="floating-buttons">
+        <a href="https://wa.me/917000000000" target="_blank" class="fb-whatsapp" title="WhatsApp">
+            <i class="fa fa-whatsapp"></i>
+        </a>
+        <a href="donation_form.html" class="fb-donate" title="Donate">
+            <i class="fa fa-heart"></i>
+        </a>
+        <a href="#" class="fb-problem">
+            <i class="fa fa-exclamation-triangle"></i> Register Problem
+        </a>
+    </div>
+
+    <!-- ===== Scripts ===== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Mobile Navigation Toggle
+        function toggleMobileNav() {
+            $('#mobileNav').toggleClass('active');
+            $('#mobileNavOverlay').toggleClass('active');
+            $('body').toggleClass('overflow-hidden');
+        }
+
+        // Mobile Submenu Toggle
+        function toggleMobileSubMenu(el) {
+            $(el).next('.sub-menu').toggleClass('show');
+            $(el).find('.fa-chevron-down').toggleClass('fa-chevron-up');
+        }
+
+        // Active page highlighting
+        $(function() {
+            var path = window.location.pathname;
+            var page = path.split('/').pop();
+
+            $('.nav-bar .navbar-nav .nav-link, .mobile-nav-links a').each(function() {
+                var href = $(this).attr('href');
+                if (href === page || (page === '' && href === 'index.html')) {
+                    $(this).addClass('active');
+                }
+            });
+        });
+
+        // Amount quick select
+        $('.amt-btn').click(function() {
+            $('.amt-btn').removeClass('active');
+            $(this).addClass('active');
+            var amount = $(this).data('amount');
+            if (amount === 'custom') {
+                $('#customAmount').show().focus();
+            } else {
+                $('#customAmount').hide().val('');
+            }
+        });
+
+        // Image upload preview - Photo
+        $('#photoInput').on('change', function(e) {
+            handleFilePreview(e, '#photoPreview');
+        });
+
+        // Image upload preview - Receipt
+        $('#receiptInput').on('change', function(e) {
+            handleFilePreview(e, '#receiptPreview');
+        });
+
+        function handleFilePreview(e, containerSelector) {
+            var files = e.target.files;
+            var container = $(containerSelector);
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                if (!file.type.match('image.*')) continue;
+
+                var reader = new FileReader();
+                reader.onload = (function(file) {
+                    return function(e) {
+                        var previewItem = $('<div class="preview-item"></div>');
+                        var img = $('<img>').attr('src', e.target.result);
+                        var removeBtn = $('<button class="remove-btn"><i class="fa fa-times"></i></button>');
+
+                        removeBtn.click(function() {
+                            $(this).parent('.preview-item').remove();
+                        });
+
+                        previewItem.append(img);
+                        previewItem.append(removeBtn);
+                        container.append(previewItem);
+                    };
+                })(file);
+                reader.readAsDataURL(file);
+            }
+            $(e.target).val('');
+        }
+
+        // Initialize Owl Carousels if present on page (for nav styling)
+        $('.owl-carousel').on('initialized.owl.carousel', function() {
+            $(this).find('.owl-nav button').css({
+                'background': 'rgba(139,69,19,0.8)',
+                'color': '#fff',
+                'width': '30px',
+                'height': '30px',
+                'border-radius': '50%',
+                'font-size': '14px',
+                'position': 'absolute',
+                'top': '40%',
+                'transform': 'translateY(-50%)',
+                'outline': 'none'
+            });
+            $(this).find('.owl-prev').css('left', '-10px');
+            $(this).find('.owl-next').css('right', '-10px');
+        });
+    </script>
+</body>
+</html>

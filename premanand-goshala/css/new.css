@@ -1,0 +1,39 @@
+:root {
+    --background-color: #8B4513;
+    --text-color: #8B4513;
+}
+.contact-footer {
+    background: var(--background-color);
+}
+.line-all {
+    border-bottom: 1px solid #ddd;
+    margin: 15px 0;
+}
+.main-div {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+}
+.btn-grad {
+    background: var(--background-color);
+    color: #fff;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-grad:hover {
+    background: var(--gold, #D4A017);
+    color: #fff;
+}
+#red {
+    color: red;
+}
+.form-control {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 15px;
+    width: 100%;
+}
