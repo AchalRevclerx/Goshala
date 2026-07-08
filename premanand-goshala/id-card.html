@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Card Download - श्री प्रेमानंद गोशाला</title>
+    <link rel="icon" type="image/png" href="icon/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Acme&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/new.css">
+    <style>
+        :root { --background-color: #8B4513; --text-color: #8B4513; --light-bg: #FFF8F0; --gold: #D4A017; --green: #2E8B57; }
+        * { padding:0; margin:0; box-sizing:border-box; }
+        body { font-family:'Bree Serif',serif; background:var(--light-bg); overflow-x:hidden; }
+        .social-sidebar { position:fixed; top:50%; left:0; transform:translateY(-50%); z-index:9999; display:flex; flex-direction:column; gap:6px; padding:8px 4px; background:#fff; border-radius:0 12px 12px 0; box-shadow:0 4px 20px rgba(0,0,0,0.15); }
+        .social-sidebar a { display:flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:50%; color:#fff; font-size:18px; text-decoration:none; transition:0.3s; }
+        .social-sidebar a:hover { transform:scale(1.15); }
+        .social-sidebar a.whatsapp { background:#25D366; }
+        .social-sidebar a.facebook { background:#1877F2; }
+        .social-sidebar a.instagram { background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 70%,#285AEB 100%); }
+        .social-sidebar a.youtube { background:#FF0000; }
+        .top-bar { background:var(--background-color); padding:6px 0; font-size:13px; color:#fff; }
+        .top-bar a { color:#fff; text-decoration:none; }
+        .top-bar .social-icons i { margin-left:12px; font-size:15px; transition:0.3s; }
+        .top-bar .social-icons i:hover { color:var(--gold); }
+        .header-top { background:#fff; position:fixed; top:0; width:100%; z-index:9998; box-shadow:0 2px 15px rgba(0,0,0,0.08); height:70px; display:flex; align-items:center; }
+        .header-top .container-fluid { display:flex; align-items:center; justify-content:space-between; }
+        .header-top .logo-area { display:flex; align-items:center; gap:12px; }
+        .header-top .logo-area img { height:50px; }
+        .header-top .site-title { font-family:'Acme',sans-serif; font-size:22px; color:var(--background-color); line-height:1.2; }
+        .header-top .site-title small { display:block; font-size:12px; color:#888; font-family:'Bree Serif',serif; }
+        .header-top .header-right { display:flex; align-items:center; gap:15px; }
+        .header-top .header-right .social-icons a { color:var(--background-color); margin:0 6px; font-size:18px; }
+        .header-top .header-right .social-icons a:hover { color:var(--gold); }
+        .enquiry-btn { background:var(--background-color); color:#fff; padding:8px 22px; border-radius:50px; text-decoration:none; font-size:14px; font-weight:600; transition:0.3s; display:inline-flex; align-items:center; gap:8px; }
+        .enquiry-btn:hover { background:var(--gold); color:#fff; text-decoration:none; }
+        .hamburger-menu { display:none; background:none; border:none; font-size:26px; color:var(--background-color); cursor:pointer; padding:4px 8px; }
+        .nav-bar { background:var(--background-color); margin-top:70px; position:sticky; top:0; z-index:9997; }
+        .nav-bar .navbar-nav .nav-item .nav-link { color:#fff !important; padding:12px 16px; font-size:14px; font-weight:600; transition:0.3s; text-transform:uppercase; }
+        .nav-bar .navbar-nav .nav-item .nav-link:hover, .nav-bar .navbar-nav .nav-item .nav-link.active { background:var(--gold); color:#fff !important; }
+        .nav-bar .navbar-nav .nav-item .nav-link i { margin-right:4px; }
+        .nav-bar .dropdown-menu { background:var(--background-color); border:none; border-radius:0 0 8px 8px; padding:8px 0; min-width:200px; }
+        .nav-bar .dropdown-menu .dropdown-item { color:#fff; padding:8px 20px; font-size:13px; transition:0.3s; border-bottom:1px solid rgba(255,255,255,0.1); }
+        .nav-bar .dropdown-menu .dropdown-item:last-child { border-bottom:none; }
+        .nav-bar .dropdown-menu .dropdown-item:hover { background:var(--gold); color:#fff; }
+        .nav-bar .dropdown-toggle::after { margin-left:6px; vertical-align:middle; }
+        .mobile-nav-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); z-index:99999; }
+        .mobile-nav-overlay.active { display:block; }
+        .mobile-nav { position:fixed; top:0; left:-280px; width:280px; height:100%; background:#fff; z-index:100000; overflow-y:auto; transition:0.3s; box-shadow:2px 0 20px rgba(0,0,0,0.2); }
+        .mobile-nav.active { left:0; }
+        .mobile-nav .mobile-nav-header { background:var(--background-color); color:#fff; padding:15px; display:flex; align-items:center; justify-content:space-between; }
+        .mobile-nav .mobile-nav-header h5 { margin:0; font-family:'Acme',sans-serif; }
+        .mobile-nav .mobile-nav-header button { background:none; border:none; color:#fff; font-size:22px; cursor:pointer; }
+        .mobile-nav .mobile-nav-links { padding:10px 0; }
+        .mobile-nav .mobile-nav-links a { display:block; padding:12px 20px; color:#333; text-decoration:none; font-size:15px; border-bottom:1px solid #f0f0f0; transition:0.3s; }
+        .mobile-nav .mobile-nav-links a:hover, .mobile-nav .mobile-nav-links a.active { background:var(--light-bg); color:var(--background-color); padding-left:28px; }
+        .mobile-nav .mobile-nav-links .dropdown-toggle-nav { display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+        .mobile-nav .mobile-nav-links .sub-menu { display:none; padding-left:20px; background:#fafafa; }
+        .mobile-nav .mobile-nav-links .sub-menu.show { display:block; }
+        .mobile-nav .mobile-nav-links .sub-menu a { font-size:14px; }
+        .page-hero { background:linear-gradient(rgba(139,69,19,0.85),rgba(139,69,19,0.85)); background-size:cover; background-position:center; padding:80px 0 60px; text-align:center; color:#fff; margin-top:0; }
+        .page-hero h1 { font-family:'Acme',sans-serif; font-size:48px; margin-bottom:10px; }
+        .page-hero p { font-size:18px; opacity:0.9; }
+        .page-hero .breadcrumb { background:transparent; justify-content:center; margin:0; padding:10px 0 0; }
+        .page-hero .breadcrumb-item, .page-hero .breadcrumb-item a { color:rgba(255,255,255,0.8); text-decoration:none; }
+        .page-hero .breadcrumb-item a:hover { color:var(--gold); }
+        .page-hero .breadcrumb-item.active { color:#fff; }
+        .page-hero .breadcrumb-item+.breadcrumb-item::before { color:rgba(255,255,255,0.5); }
+        .idcard-section { padding:60px 0; }
+        .idcard-section .head_item3 { width:100%; text-align:center; margin:0 0 40px; display:flex; align-items:center; justify-content:center; }
+        .idcard-section .head_item3 span { background:var(--green); color:#fff; padding:12px 40px; border-radius:8px; font-size:24px; font-weight:bold; display:inline-block; text-transform:uppercase; box-shadow:0 4px 15px rgba(46,139,87,0.3); }
+        .idcard-search-box { background:#fff; border-radius:12px; padding:30px; box-shadow:0 4px 20px rgba(0,0,0,0.08); margin-bottom:40px; }
+        .idcard-search-box .form-group { margin-bottom:0; }
+        .idcard-search-box input[type="text"] { border:2px solid #e0d6cc; border-radius:50px; padding:12px 20px; font-size:16px; transition:0.3s; }
+        .idcard-search-box input[type="text"]:focus { border-color:var(--background-color); outline:none; box-shadow:0 0 0 3px rgba(139,69,19,0.1); }
+        .idcard-search-box .btn-search { background:var(--background-color); color:#fff; border-radius:50px; padding:12px 40px; font-weight:600; border:none; cursor:pointer; transition:0.3s; }
+        .idcard-search-box .btn-search:hover { background:var(--gold); }
+        .idcard-preview { background:#fff; border-radius:12px; padding:30px; box-shadow:0 4px 20px rgba(0,0,0,0.08); text-align:center; display:none; }
+        .idcard-preview .idcard { max-width:340px; margin:0 auto; background:linear-gradient(135deg, #f5eee6 0%, #fff 100%); border:2px solid var(--gold); border-radius:12px; overflow:hidden; box-shadow:0 8px 30px rgba(0,0,0,0.12); }
+        .idcard-preview .idcard-header { background:var(--background-color); color:#fff; padding:15px; text-align:center; }
+        .idcard-preview .idcard-header img { height:45px; margin-bottom:5px; }
+        .idcard-preview .idcard-header h6 { font-family:'Acme',sans-serif; margin:0; font-size:15px; }
+        .idcard-preview .idcard-header small { font-size:11px; opacity:0.9; }
+        .idcard-preview .idcard-body { padding:20px 20px 15px; text-align:center; }
+        .idcard-preview .idcard-body .photo-placeholder { width:90px; height:90px; border-radius:50%; margin:0 auto 12px; background:#e0d6cc; display:flex; align-items:center; justify-content:center; font-size:36px; color:var(--background-color); overflow:hidden; border:3px solid var(--gold); }
+        .idcard-preview .idcard-body .photo-placeholder img { width:100%; height:100%; object-fit:cover; }
+        .idcard-preview .idcard-body h5 { font-family:'Acme',sans-serif; color:var(--background-color); margin-bottom:2px; }
+        .idcard-preview .idcard-body .id-details { text-align:left; margin-top:12px; }
+        .idcard-preview .idcard-body .id-details table { width:100%; font-size:13px; }
+        .idcard-preview .idcard-body .id-details table td { padding:4px 0; }
+        .idcard-preview .idcard-body .id-details table td:first-child { font-weight:600; color:var(--background-color); width:90px; }
+        .idcard-preview .idcard-footer { background:var(--gold); color:#fff; padding:8px; text-align:center; font-size:10px; letter-spacing:1px; }
+        .idcard-preview .btn-download { background:var(--green); color:#fff; border-radius:50px; padding:12px 40px; font-weight:600; border:none; cursor:pointer; transition:0.3s; margin-top:20px; display:inline-flex; align-items:center; gap:8px; }
+        .idcard-preview .btn-download:hover { background:#236b43; }
+        .idcard-preview .btn-download i { font-size:18px; }
+        .no-member { text-align:center; padding:60px 20px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); display:none; }
+        .no-member i { font-size:60px; color:#ddd; margin-bottom:15px; }
+        .no-member h4 { color:#999; }
+        .contact-footer { background:var(--background-color); color:#fff; padding:50px 0 0; }
+        .contact-footer h5 { font-family:'Acme',sans-serif; color:var(--gold); margin-bottom:20px; position:relative; padding-bottom:10px; }
+        .contact-footer h5::after { content:''; position:absolute; bottom:0; left:0; width:40px; height:2px; background:#fff; }
+        .contact-footer .footer-logo img { height:80px; margin-bottom:15px; }
+        .contact-footer .footer-logo p { font-size:14px; line-height:1.7; color:rgba(255,255,255,0.8); }
+        .contact-footer .footer-contact p { margin-bottom:12px; font-size:14px; display:flex; align-items:flex-start; gap:10px; color:rgba(255,255,255,0.8); }
+        .contact-footer .footer-contact p i { color:var(--gold); font-size:18px; min-width:20px; margin-top:3px; }
+        .contact-footer .footer-links a { display:block; color:rgba(255,255,255,0.8); padding:5px 0; text-decoration:none; font-size:14px; transition:0.3s; }
+        .contact-footer .footer-links a:hover { color:var(--gold); padding-left:5px; }
+        .contact-footer .footer-social a { display:inline-flex; width:38px; height:38px; background:rgba(255,255,255,0.1); border-radius:50%; align-items:center; justify-content:center; color:#fff; margin:0 5px 5px 0; font-size:16px; transition:0.3s; text-decoration:none; }
+        .contact-footer .footer-social a:hover { background:var(--gold); color:#fff; }
+        .footer-bottom { background:rgba(0,0,0,0.2); padding:15px 0; margin-top:40px; font-size:14px; }
+        .footer-bottom a { color:var(--gold); text-decoration:none; }
+        .footer-bottom a:hover { text-decoration:underline; }
+        .floating-buttons { position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px; }
+        .floating-buttons a { display:flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:50%; color:#fff; font-size:24px; text-decoration:none; box-shadow:0 4px 15px rgba(0,0,0,0.25); transition:0.3s; }
+        .floating-buttons a:hover { transform:scale(1.1); }
+        .floating-buttons .fb-whatsapp { background:#25D366; }
+        .floating-buttons .fb-donate { background:var(--green); }
+        .floating-buttons .fb-problem { background:var(--gold); font-size:13px; width:auto; padding:0 18px; border-radius:25px; font-weight:600; }
+        @media only screen and (max-width:992px) { .hamburger-menu { display:block; } .header-top .header-right .social-icons { display:none; } .nav-bar .navbar-nav { display:none; } .page-hero h1 { font-size:36px; } }
+        @media only screen and (max-width:768px) { .header-top .site-title { font-size:16px; } .header-top .site-title small { font-size:10px; } .page-hero { padding:60px 0 40px; } .page-hero h1 { font-size:28px; } .idcard-section .head_item3 span { font-size:18px; padding:10px 25px; } .idcard-search-box { padding:20px; } }
+        @media only screen and (max-width:576px) { .header-top .logo-area img { height:36px; } .header-top .site-title { font-size:14px; } .page-hero h1 { font-size:24px; } }
+    </style>
+</head>
+<body>
+    <div class="social-sidebar">
+        <a href="https://wa.me/917000000000" target="_blank" class="whatsapp" title="WhatsApp"><i class="fa fa-whatsapp"></i></a>
+        <a href="https://facebook.com" target="_blank" class="facebook" title="Facebook"><i class="fa fa-facebook"></i></a>
+        <a href="https://instagram.com" target="_blank" class="instagram" title="Instagram"><i class="fa fa-instagram"></i></a>
+        <a href="https://youtube.com" target="_blank" class="youtube" title="YouTube"><i class="fa fa-youtube-play"></i></a>
+    </div>
+    <div class="top-bar d-none d-md-block">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-left"><i class="fa fa-phone" style="margin-right:5px;"></i> +91-7000000000 &nbsp;|&nbsp; <i class="fa fa-envelope" style="margin-right:5px;"></i> info@premanandgoshala.org</div>
+                <div class="col-md-6 text-center text-md-right social-icons">
+                    <a href="#"><i class="fa fa-facebook"></i></a>
+                    <a href="#"><i class="fa fa-twitter"></i></a>
+                    <a href="#"><i class="fa fa-instagram"></i></a>
+                    <a href="#"><i class="fa fa-youtube-play"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <header class="header-top">
+        <div class="container-fluid px-4">
+            <div class="logo-area">
+                <button class="hamburger-menu" onclick="toggleMobileNav()"><i class="fa fa-bars"></i></button>
+                <a href="index.html"><img src="images/logo.jpg" alt="Logo"></a>
+                <div class="site-title">श्री प्रेमानंद गोशाला <small>गौ सेवा ही मानव सेवा</small></div>
+            </div>
+            <div class="header-right">
+                <div class="social-icons">
+                    <a href="#"><i class="fa fa-facebook-square"></i></a>
+                    <a href="#"><i class="fa fa-twitter-square"></i></a>
+                    <a href="#"><i class="fa fa-instagram"></i></a>
+                    <a href="#"><i class="fa fa-youtube-play"></i></a>
+                </div>
+                <a href="contact-us.html" class="enquiry-btn"><i class="fa fa-phone"></i> Enquiry Now</a>
+            </div>
+        </div>
+    </header>
+    <nav class="nav-bar">
+        <div class="container">
+            <ul class="nav navbar-nav flex-row justify-content-center">
+                <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-home"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="member-apply.html"><i class="fa fa-user-plus"></i> Member Apply</a></li>
+                <li class="nav-item"><a class="nav-link active" href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a></li>
+                <li class="nav-item"><a class="nav-link" href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a></li>
+                <li class="nav-item"><a class="nav-link" href="donation_form.html"><i class="fa fa-heart"></i> Donate</a></li>
+                <li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
+                <li class="nav-item"><a class="nav-link" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
+                <li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="aboutus.html" id="aboutDropdown" data-toggle="dropdown">About Us</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="aboutus.html">About Us</a>
+                        <a class="dropdown-item" href="#">Management Team</a>
+                        <a class="dropdown-item" href="#">Working Staff</a>
+                        <a class="dropdown-item" href="#">Our Team</a>
+                        <a class="dropdown-item" href="#">Achievements</a>
+                        <a class="dropdown-item" href="#">Certifications</a>
+                        <a class="dropdown-item" href="#">Annual Report 3 Year</a>
+                        <a class="dropdown-item" href="#">Audit Report 3 Year</a>
+                        <a class="dropdown-item" href="#">ITR 3 Year</a>
+                        <a class="dropdown-item" href="#">Memorandum</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="linksDropdown" data-toggle="dropdown">Important Links</a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Crowdfunding</a>
+                        <a class="dropdown-item" href="#">Our Solutions</a>
+                        <a class="dropdown-item" href="#">Your Problems</a>
+                        <a class="dropdown-item" href="#">Our Project</a>
+                        <a class="dropdown-item" href="#">Geographical Location of Work</a>
+                        <a class="dropdown-item" href="#">Projects Funding</a>
+                        <a class="dropdown-item" href="#">Programs & Activities</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" data-toggle="dropdown"><i class="fa fa-sign-in"></i> Login</a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Coordinator Login</a>
+                        <a class="dropdown-item" href="#">Manager Login</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileNav()"></div>
+    <div class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-header">
+            <h5><i class="fa fa-cow"></i> श्री प्रेमानंद गोशाला</h5>
+            <button onclick="toggleMobileNav()"><i class="fa fa-times"></i></button>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html"><i class="fa fa-home"></i> Home</a>
+            <a href="member-apply.html"><i class="fa fa-user-plus"></i> Member Apply</a>
+            <a href="id-card.html" class="active"><i class="fa fa-id-card"></i> ID Card Download</a>
+            <a href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a>
+            <a href="donation_form.html"><i class="fa fa-heart"></i> Donate</a>
+            <a href="donors.html"><i class="fa fa-list"></i> List of Donors</a>
+            <a href="gallery.html"><i class="fa fa-image"></i> Gallery</a>
+            <a href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a>
+            <div>
+                <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-info-circle"></i> About Us</span><i class="fa fa-chevron-down"></i></a>
+                <div class="sub-menu">
+                    <a href="aboutus.html">About Us</a>
+                    <a href="#">Management Team</a>
+                    <a href="#">Working Staff</a>
+                    <a href="#">Our Team</a>
+                    <a href="#">Achievements</a>
+                    <a href="#">Certifications</a>
+                    <a href="#">Annual Report 3 Year</a>
+                    <a href="#">Audit Report 3 Year</a>
+                    <a href="#">ITR 3 Year</a>
+                    <a href="#">Memorandum</a>
+                </div>
+            </div>
+            <div>
+                <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-link"></i> Important Links</span><i class="fa fa-chevron-down"></i></a>
+                <div class="sub-menu">
+                    <a href="#">Crowdfunding</a>
+                    <a href="#">Our Solutions</a>
+                    <a href="#">Your Problems</a>
+                    <a href="#">Our Project</a>
+                    <a href="#">Geographical Location of Work</a>
+                    <a href="#">Projects Funding</a>
+                    <a href="#">Programs & Activities</a>
+                </div>
+            </div>
+            <div>
+                <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-sign-in"></i> Login</span><i class="fa fa-chevron-down"></i></a>
+                <div class="sub-menu">
+                    <a href="#">Coordinator Login</a>
+                    <a href="#">Manager Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="page-hero">
+        <div class="container">
+            <h1><i class="fa fa-id-card"></i> ID Card Download</h1>
+            <p>Download your श्री प्रेमानंद गोशाला membership ID card</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">ID Card Download</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+    <section class="idcard-section">
+        <div class="container">
+            <div class="head_item3" data-aos="fade-down"><span><i class="fa fa-id-card"></i> Download ID Card</span></div>
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="idcard-search-box" data-aos="fade-up">
+                        <form id="idcardSearchForm" autocomplete="off">
+                            <div class="form-group">
+                                <label style="font-size:18px;color:var(--background-color);"><i class="fa fa-search"></i> Search by Member ID or Phone Number</label>
+                                <div class="input-group mt-2">
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Enter Member ID (e.g. MEM001) or Phone Number" required>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-search"><i class="fa fa-search"></i> Search</button>
+                                    </div>
+                                </div>
+                                <small class="form-text text-muted mt-1">Enter your membership ID or registered phone number to download your ID card.</small>
+                            </div>
+                        </form>
+                        <div id="searchError" class="alert alert-danger mt-3 d-none"></div>
+                    </div>
+                    <div id="idcardPreview" class="idcard-preview" data-aos="fade-up">
+                        <div class="idcard" id="idcardElement">
+                            <div class="idcard-header">
+                                <img src="images/logo.jpg" alt="Logo">
+                                <h6>श्री प्रेमानंद गोशाला</h6>
+                                <small>गौ सेवा ही मानव सेवा</small>
+                            </div>
+                            <div class="idcard-body">
+                                <div class="photo-placeholder" id="memberPhoto">
+                                    <i class="fa fa-user"></i>
+                                </div>
+                                <h5 id="cardName">---</h5>
+                                <div class="id-details">
+                                    <table>
+                                        <tr><td>Member ID</td><td>: <span id="cardMemberId">---</span></td></tr>
+                                        <tr><td>Phone</td><td>: <span id="cardPhone">---</span></td></tr>
+                                        <tr><td>Email</td><td>: <span id="cardEmail">---</span></td></tr>
+                                        <tr><td>Address</td><td>: <span id="cardAddress">---</span></td></tr>
+                                        <tr><td>Valid Till</td><td>: <span id="cardValidTill">---</span></td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="idcard-footer">MEMBER IDENTITY CARD</div>
+                        </div>
+                        <button class="btn-download" onclick="downloadIDCard()"><i class="fa fa-download"></i> Download ID Card</button>
+                    </div>
+                    <div id="noMember" class="no-member" data-aos="fade-up">
+                        <i class="fa fa-frown-o"></i>
+                        <h4>Member Not Found</h4>
+                        <p style="color:#999;">No member found with the given ID or phone number. Please check and try again.</p>
+                        <a href="member-apply.html" class="btn mt-3" style="background:var(--gold);color:#fff;border-radius:50px;padding:10px 30px;"><i class="fa fa-user-plus"></i> Apply for Membership</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="contact-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-logo">
+                        <a href="index.html"><img src="images/logo.jpg" alt="Logo"></a>
+                        <h5>श्री प्रेमानंद गोशाला</h5>
+                        <p>गौ सेवा ही मानव सेवा के उद्देश्य के साथ समर्पित। हम बूढ़ी, बीमार और बेसहारा गायों की सेवा और संरक्षण के लिए प्रतिबद्ध हैं।</p>
+                    </div>
+                    <div class="footer-contact mt-3">
+                        <p><i class="fa fa-map-marker"></i> गौशाला रोड, वृंदावन, जिला मथुरा, उत्तर प्रदेश - 281121</p>
+                        <p><i class="fa fa-phone"></i> +91-7000000000, +91-7000000001</p>
+                        <p><i class="fa fa-envelope"></i> info@premanandgoshala.org</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Useful Links</h5>
+                    <div class="footer-links">
+                        <a href="index.html"><i class="fa fa-angle-right"></i> Home</a>
+                        <a href="member-apply.html"><i class="fa fa-angle-right"></i> Member Apply</a>
+                        <a href="id-card.html"><i class="fa fa-angle-right"></i> ID Card Download</a>
+                        <a href="events.html"><i class="fa fa-angle-right"></i> Upcoming Event</a>
+                        <a href="donation_form.html"><i class="fa fa-angle-right"></i> Donate</a>
+                        <a href="donors.html"><i class="fa fa-angle-right"></i> List of Donors</a>
+                        <a href="gallery.html"><i class="fa fa-angle-right"></i> Gallery</a>
+                        <a href="contact-us.html"><i class="fa fa-angle-right"></i> Contact Us</a>
+                        <a href="aboutus.html"><i class="fa fa-angle-right"></i> About Us</a>
+                        <a href="#"><i class="fa fa-angle-right"></i> Important Links</a>
+                        <a href="#"><i class="fa fa-angle-right"></i> Login</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Follow Us</h5>
+                    <div class="footer-social">
+                        <a href="#"><i class="fa fa-facebook"></i></a>
+                        <a href="#"><i class="fa fa-twitter"></i></a>
+                        <a href="#"><i class="fa fa-instagram"></i></a>
+                        <a href="#"><i class="fa fa-youtube-play"></i></a>
+                        <a href="#"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <div class="mt-4">
+                        <h5>Donate Now</h5>
+                        <p style="color:rgba(255,255,255,0.8);font-size:14px;">Your contribution helps us feed and care for our cows. Every donation matters!</p>
+                        <a href="donation_form.html" class="enquiry-btn" style="background:var(--gold);"><i class="fa fa-heart"></i> Donate Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-left mb-2 mb-md-0">Copyright &copy; 2026, All Right Reserved <strong>श्री प्रेमानंद गोशाला</strong></div>
+                    <div class="col-md-6 text-center text-md-right">
+                        <a href="#">Terms &amp; Condition</a> &nbsp;|&nbsp; <a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Disclaimer</a> &nbsp;|&nbsp; <a href="#">Refund Policy</a>
+                    </div>
+                </div>
+                <div class="row mt-2"><div class="col-12 text-center" style="font-size:13px;color:rgba(255,255,255,0.6);">Website Designed By - <a href="#" style="color:var(--gold);">Fragron Infotech</a>, Mob. - 7000131032</div></div>
+            </div>
+        </div>
+    </footer>
+    <div class="floating-buttons">
+        <a href="https://wa.me/917000000000" target="_blank" class="fb-whatsapp" title="WhatsApp"><i class="fa fa-whatsapp"></i></a>
+        <a href="donation_form.html" class="fb-donate" title="Donate"><i class="fa fa-heart"></i></a>
+        <a href="#" class="fb-problem"><i class="fa fa-exclamation-triangle"></i> Register Problem</a>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
+        function toggleMobileNav() { $('#mobileNav').toggleClass('active'); $('#mobileNavOverlay').toggleClass('active'); $('body').toggleClass('overflow-hidden'); }
+        function toggleMobileSubMenu(el) { $(el).next('.sub-menu').toggleClass('show'); $(el).find('.fa-chevron-down').toggleClass('fa-chevron-up'); }
+        $(function() {
+            var path = window.location.pathname;
+            var page = path.split('/').pop();
+            $('.nav-bar .navbar-nav .nav-link, .mobile-nav-links a').each(function() {
+                var href = $(this).attr('href');
+                if (href === page || (page === '' && href === 'index.html')) { $(this).addClass('active'); }
+            });
+            $('#idcardSearchForm').on('submit', function(e) {
+                e.preventDefault();
+                searchMember();
+            });
+        });
+        function searchMember() {
+            var query = $('#searchInput').val().trim();
+            if (!query) { return; }
+            var searchBy = /^(GOS|MEM)\d+$/i.test(query) ? 'member_id' : 'phone';
+            $('#searchError').addClass('d-none');
+            $('#idcardPreview').hide();
+            $('#noMember').hide();
+            $.get('/api/member/search?' + searchBy + '=' + encodeURIComponent(query))
+                .done(function(member) {
+                    if (!member || member.error) {
+                        $('#noMember').show();
+                        return;
+                    }
+                    $('#cardName').text(member.name || '---');
+                    $('#cardMemberId').text(member.member_id || '---');
+                    $('#cardPhone').text(member.phone || '---');
+                    $('#cardEmail').text(member.email || '---');
+                    var addr = [member.address, member.city, member.state].filter(Boolean).join(', ');
+                    $('#cardAddress').text(addr || '---');
+                    var validTill = member.valid_till || member.created_at || '---';
+                    if (validTill !== '---') {
+                        validTill = new Date(validTill).toLocaleDateString('en-IN');
+                    }
+                    $('#cardValidTill').text(validTill);
+                    if (member.photo) {
+                        $('#memberPhoto').html('<img src="' + member.photo + '" alt="Photo">');
+                    } else {
+                        var initial = member.name ? member.name.charAt(0).toUpperCase() : '?';
+                        $('#memberPhoto').html('<i class="fa fa-user" style="font-size:36px;color:var(--background-color);"></i>');
+                    }
+                    $('#idcardPreview').show();
+                })
+                .fail(function(xhr) {
+                    if (xhr.status === 404) {
+                        $('#noMember').show();
+                    } else {
+                        $('#searchError').removeClass('d-none').text('Server error. Please try again.');
+                    }
+                });
+        }
+        function downloadIDCard() {
+            var element = document.getElementById('idcardElement');
+            if (!element) { return; }
+            var name = $('#cardName').text().trim() || 'member';
+            html2canvas(element, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                useCORS: true,
+                logging: false
+            }).then(function(canvas) {
+                var link = document.createElement('a');
+                link.download = name.replace(/\s+/g, '_') + '_ID_Card.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>

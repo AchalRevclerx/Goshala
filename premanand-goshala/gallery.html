@@ -619,11 +619,11 @@
         <div class="container">
             <ul class="nav navbar-nav flex-row justify-content-center">
                 <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-home"></i> Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-user-plus"></i> Member Apply</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-id-card"></i> ID Card Download</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-calendar"></i> Upcoming Event</a></li>
+                <li class="nav-item"><a class="nav-link" href="member-apply.html"><i class="fa fa-user-plus"></i> Member Apply</a></li>
+                <li class="nav-item"><a class="nav-link" href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a></li>
+                <li class="nav-item"><a class="nav-link" href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a></li>
                 <li class="nav-item"><a class="nav-link" href="donation_form.html"><i class="fa fa-heart"></i> Donate</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-list"></i> List of Donors</a></li>
+                <li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
                 <li class="nav-item"><a class="nav-link active" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>
                 <li class="nav-item dropdown">
@@ -673,11 +673,11 @@
         </div>
         <div class="mobile-nav-links">
             <a href="index.html"><i class="fa fa-home"></i> Home</a>
-            <a href="#"><i class="fa fa-user-plus"></i> Member Apply</a>
-            <a href="#"><i class="fa fa-id-card"></i> ID Card Download</a>
-            <a href="#"><i class="fa fa-calendar"></i> Upcoming Event</a>
+            <a href="member-apply.html"><i class="fa fa-user-plus"></i> Member Apply</a>
+            <a href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a>
+            <a href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a>
             <a href="donation_form.html"><i class="fa fa-heart"></i> Donate</a>
-            <a href="#"><i class="fa fa-list"></i> List of Donors</a>
+            <a href="donors.html"><i class="fa fa-list"></i> List of Donors</a>
             <a href="gallery.html" class="active"><i class="fa fa-image"></i> Gallery</a>
             <a href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a>
             <div>
@@ -860,11 +860,11 @@
                     <h5>Useful Links</h5>
                     <div class="footer-links">
                         <a href="index.html"><i class="fa fa-angle-right"></i> Home</a>
-                        <a href="#"><i class="fa fa-angle-right"></i> Member Apply</a>
-                        <a href="#"><i class="fa fa-angle-right"></i> ID Card Download</a>
-                        <a href="#"><i class="fa fa-angle-right"></i> Upcoming Event</a>
+                        <a href="member-apply.html"><i class="fa fa-angle-right"></i> Member Apply</a>
+                        <a href="id-card.html"><i class="fa fa-angle-right"></i> ID Card Download</a>
+                        <a href="events.html"><i class="fa fa-angle-right"></i> Upcoming Event</a>
                         <a href="donation_form.html"><i class="fa fa-angle-right"></i> Donate</a>
-                        <a href="#"><i class="fa fa-angle-right"></i> List of Donors</a>
+                        <a href="donors.html"><i class="fa fa-angle-right"></i> List of Donors</a>
                         <a href="gallery.html"><i class="fa fa-angle-right"></i> Gallery</a>
                         <a href="contact-us.html"><i class="fa fa-angle-right"></i> Contact Us</a>
                         <a href="aboutus.html"><i class="fa fa-angle-right"></i> About Us</a>
@@ -962,16 +962,50 @@
                     $(this).addClass('active');
                 }
             });
+
+            loadGallery();
         });
+
+        function loadGallery() {
+            $.get('/api/gallery', function(images) {
+                if (!images || images.length === 0) return;
+                var grid = $('#galleryGrid');
+                grid.empty();
+                images.forEach(function(img, i) {
+                    var delay = (i % 4) * 50;
+                    var item = $('<div class="gallery-item" data-aos="zoom-in" data-aos-delay="' + delay + '" onclick="openLightbox(' + i + ')">' +
+                        '<img src="/uploads/' + img.image + '" alt="' + (img.title || 'Gallery Image') + '">' +
+                        '<div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>' +
+                        '</div>');
+                    grid.append(item);
+                });
+                rebuildGalleryArray();
+                AOS.refresh();
+            });
+        }
+
+        function rebuildGalleryArray() {
+            galleryImages = [];
+            $('#galleryGrid .gallery-item img').each(function() {
+                galleryImages.push({
+                    src: $(this).attr('src'),
+                    alt: $(this).attr('alt')
+                });
+            });
+        }
 
         // ===== Lightbox Functionality =====
         var galleryImages = [];
-        $('#galleryGrid .gallery-item img').each(function() {
-            galleryImages.push({
-                src: $(this).attr('src'),
-                alt: $(this).attr('alt')
+
+        function initGalleryImages() {
+            $('#galleryGrid .gallery-item img').each(function() {
+                galleryImages.push({
+                    src: $(this).attr('src'),
+                    alt: $(this).attr('alt')
+                });
             });
-        });
+        }
+        initGalleryImages();
 
         var currentImageIndex = 0;
 

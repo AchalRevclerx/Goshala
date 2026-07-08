@@ -328,7 +328,7 @@ app.delete('/api/gallery/:id', authMiddleware, (req, res) => {
   res.json({ success: true });
 });
 
-app.get('/api/donations', authMiddleware, (req, res) => {
+app.get('/api/donations', (req, res) => {
   const donations = queryAll('SELECT * FROM donations ORDER BY created_at DESC');
   res.json(donations);
 });
@@ -364,6 +364,28 @@ app.get('/api/contacts', authMiddleware, (req, res) => {
 app.get('/api/activities', (req, res) => {
   const activities = queryAll('SELECT * FROM activities ORDER BY created_at DESC LIMIT 10');
   res.json(activities);
+});
+
+app.get('/api/member/search', (req, res) => {
+  const { member_id, phone } = req.query;
+  let member;
+  if (member_id) {
+    member = queryOne('SELECT * FROM members WHERE id_card_number = ?', [member_id]);
+  } else if (phone) {
+    member = queryOne('SELECT * FROM members WHERE phone = ?', [phone]);
+  } else {
+    return res.status(400).json({ error: 'Provide member_id or phone' });
+  }
+  if (!member) return res.status(404).json({ error: 'Member not found' });
+  res.json({
+    name: member.name,
+    member_id: member.id_card_number,
+    phone: member.phone,
+    email: member.email,
+    address: member.address,
+    photo: member.photo,
+    valid_till: member.created_at
+  });
 });
 
 app.get('/api/stats', authMiddleware, (req, res) => {

@@ -852,12 +852,12 @@
         <div class="container">
             <ul class="nav navbar-nav flex-row justify-content-center">
                 <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-home"></i> Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-user-plus"></i> Member Apply</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-id-card"></i> ID Card Download</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-calendar"></i> Upcoming Event</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-heart"></i> Donate</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-list"></i> List of Donors</a></li>
-                <li class="nav-item"><a class="nav-link" href="#gallery"><i class="fa fa-image"></i> Gallery</a></li>
+                <li class="nav-item"><a class="nav-link" href="member-apply.html"><i class="fa fa-user-plus"></i> Member Apply</a></li>
+                <li class="nav-item"><a class="nav-link" href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a></li>
+                <li class="nav-item"><a class="nav-link" href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a></li>
+                <li class="nav-item"><a class="nav-link" href="donation_form.html"><i class="fa fa-heart"></i> Donate</a></li>
+                <li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
+                <li class="nav-item"><a class="nav-link" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" data-toggle="dropdown">About Us</a>
@@ -906,12 +906,12 @@
         </div>
         <div class="mobile-nav-links">
             <a href="index.html" class="active"><i class="fa fa-home"></i> Home</a>
-            <a href="#"><i class="fa fa-user-plus"></i> Member Apply</a>
-            <a href="#"><i class="fa fa-id-card"></i> ID Card Download</a>
-            <a href="#"><i class="fa fa-calendar"></i> Upcoming Event</a>
-            <a href="#"><i class="fa fa-heart"></i> Donate</a>
-            <a href="#"><i class="fa fa-list"></i> List of Donors</a>
-            <a href="#gallery"><i class="fa fa-image"></i> Gallery</a>
+            <a href="member-apply.html"><i class="fa fa-user-plus"></i> Member Apply</a>
+            <a href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a>
+            <a href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a>
+            <a href="donation_form.html"><i class="fa fa-heart"></i> Donate</a>
+            <a href="donors.html"><i class="fa fa-list"></i> List of Donors</a>
+            <a href="gallery.html"><i class="fa fa-image"></i> Gallery</a>
             <a href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a>
             <div>
                 <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)">
@@ -1043,47 +1043,49 @@
 
             <!-- 6 Buttons Grid -->
             <div class="buttons" data-aos="fade-up">
-                <a href="#"><button style="background:var(--background-color);"><i class="fa fa-user-plus"></i> Member Apply</button></a>
-                <a href="#"><button style="background:var(--gold);"><i class="fa fa-id-card"></i> ID Card Download</button></a>
-                <a href="#"><button style="background:var(--green);"><i class="fa fa-calendar"></i> Upcoming Event</button></a>
-                <a href="#"><button style="background:var(--background-color);"><i class="fa fa-heart"></i> Donate</button></a>
-                <a href="#"><button style="background:var(--gold);"><i class="fa fa-list"></i> List of Donors</button></a>
+                <a href="member-apply.html"><button style="background:var(--background-color);"><i class="fa fa-user-plus"></i> Member Apply</button></a>
+                <a href="id-card.html"><button style="background:var(--gold);"><i class="fa fa-id-card"></i> ID Card Download</button></a>
+                <a href="events.html"><button style="background:var(--green);"><i class="fa fa-calendar"></i> Upcoming Event</button></a>
+                <a href="donation_form.html"><button style="background:var(--background-color);"><i class="fa fa-heart"></i> Donate</button></a>
+                <a href="donors.html"><button style="background:var(--gold);"><i class="fa fa-list"></i> List of Donors</button></a>
                 <a href="#gallery"><button style="background:var(--green);"><i class="fa fa-image"></i> Gallery</button></a>
             </div>
 
             <!-- Latest Activity -->
-            <div class="latest-activity" data-aos="fade-up">
+            <div class="latest-activity" id="latestActivity" data-aos="fade-up">
                 <h5><i class="fa fa-clock-o"></i> Latest Activity</h5>
-                <div class="activity-item">
-                    <img src="images/IMG-20260708-WA0005.jpg" alt="Activity">
-                    <div class="activity-text">
-                        <h6>गौ पूजा समारोह 2026</h6>
-                        <p>गौशाला में विशेष गौ पूजा का आयोजन किया गया जिसमें सैकड़ों श्रद्धालुओं ने भाग लिया।</p>
-                        <small><i class="fa fa-clock-o"></i> 2 hours ago</small>
+                <div id="activityList">
+                    <div class="activity-item">
+                        <img src="images/IMG-20260708-WA0005.jpg" alt="Activity">
+                        <div class="activity-text">
+                            <h6>गौ पूजा समारोह 2026</h6>
+                            <p>गौशाला में विशेष गौ पूजा का आयोजन किया गया जिसमें सैकड़ों श्रद्धालुओं ने भाग लिया।</p>
+                            <small><i class="fa fa-clock-o"></i> 2 hours ago</small>
+                        </div>
                     </div>
-                </div>
-                <div class="activity-item">
-                    <img src="images/IMG-20260708-WA0003.jpg" alt="Activity">
-                    <div class="activity-text">
-                        <h6>चारा वितरण कार्यक्रम</h6>
-                        <p>गर्मियों के मद्देनजर गायों के लिए 500 किलो हरा चारा वितरित किया गया।</p>
-                        <small><i class="fa fa-clock-o"></i> 1 day ago</small>
+                    <div class="activity-item">
+                        <img src="images/IMG-20260708-WA0003.jpg" alt="Activity">
+                        <div class="activity-text">
+                            <h6>चारा वितरण कार्यक्रम</h6>
+                            <p>गर्मियों के मद्देनजर गायों के लिए 500 किलो हरा चारा वितरित किया गया।</p>
+                            <small><i class="fa fa-clock-o"></i> 1 day ago</small>
+                        </div>
                     </div>
-                </div>
-                <div class="activity-item">
-                    <img src="images/IMG-20260708-WA0002.jpg" alt="Activity">
-                    <div class="activity-text">
-                        <h6>नवीन गौशाला का उद्घाटन</h6>
-                        <p>वृंदावन में नवीन गौशाला भवन का उद्घाटन संतों की उपस्थिति में संपन्न हुआ।</p>
-                        <small><i class="fa fa-clock-o"></i> 3 days ago</small>
+                    <div class="activity-item">
+                        <img src="images/IMG-20260708-WA0002.jpg" alt="Activity">
+                        <div class="activity-text">
+                            <h6>नवीन गौशाला का उद्घाटन</h6>
+                            <p>वृंदावन में नवीन गौशाला भवन का उद्घाटन संतों की उपस्थिति में संपन्न हुआ।</p>
+                            <small><i class="fa fa-clock-o"></i> 3 days ago</small>
+                        </div>
                     </div>
-                </div>
-                <div class="activity-item">
-                    <img src="images/IMG-20260708-WA0001.jpg" alt="Activity">
-                    <div class="activity-text">
-                        <h6>गौ चिकित्सा शिविर</h6>
-                        <p>पशु चिकित्सकों की टीम ने 100+ गायों का स्वास्थ्य परीक्षण किया और उनका उपचार किया।</p>
-                        <small><i class="fa fa-clock-o"></i> 5 days ago</small>
+                    <div class="activity-item">
+                        <img src="images/IMG-20260708-WA0001.jpg" alt="Activity">
+                        <div class="activity-text">
+                            <h6>गौ चिकित्सा शिविर</h6>
+                            <p>पशु चिकित्सकों की टीम ने 100+ गायों का स्वास्थ्य परीक्षण किया और उनका उपचार किया।</p>
+                            <small><i class="fa fa-clock-o"></i> 5 days ago</small>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1296,12 +1298,12 @@
                     <h5>Useful Links</h5>
                     <div class="footer-links">
                         <a href="index.html"><i class="fa fa-angle-right"></i> Home</a>
-                        <a href="#"><i class="fa fa-angle-right"></i> Member Apply</a>
-                        <a href="#"><i class="fa fa-angle-right"></i> ID Card Download</a>
-                        <a href="#"><i class="fa fa-angle-right"></i> Upcoming Event</a>
-                        <a href="#"><i class="fa fa-angle-right"></i> Donate</a>
-                        <a href="#"><i class="fa fa-angle-right"></i> List of Donors</a>
-                        <a href="#gallery"><i class="fa fa-angle-right"></i> Gallery</a>
+                        <a href="member-apply.html"><i class="fa fa-angle-right"></i> Member Apply</a>
+                        <a href="id-card.html"><i class="fa fa-angle-right"></i> ID Card Download</a>
+                        <a href="events.html"><i class="fa fa-angle-right"></i> Upcoming Event</a>
+                        <a href="donation_form.html"><i class="fa fa-angle-right"></i> Donate</a>
+                        <a href="donors.html"><i class="fa fa-angle-right"></i> List of Donors</a>
+                        <a href="gallery.html"><i class="fa fa-angle-right"></i> Gallery</a>
                         <a href="contact-us.html"><i class="fa fa-angle-right"></i> Contact Us</a>
                         <a href="aboutus.html"><i class="fa fa-angle-right"></i> About Us</a>
                         <a href="#"><i class="fa fa-angle-right"></i> Important Links</a>
@@ -1320,7 +1322,7 @@
                     <div class="mt-4">
                         <h5>Donate Now</h5>
                         <p style="color:rgba(255,255,255,0.8);font-size:14px;">Your contribution helps us feed and care for our cows. Every donation matters!</p>
-                        <a href="#" class="enquiry-btn" style="background:var(--gold);"><i class="fa fa-heart"></i> Donate Now</a>
+                        <a href="donation_form.html" class="enquiry-btn" style="background:var(--gold);"><i class="fa fa-heart"></i> Donate Now</a>
                     </div>
                 </div>
             </div>
@@ -1352,7 +1354,7 @@
         <a href="https://wa.me/917000000000" target="_blank" class="fb-whatsapp" title="WhatsApp">
             <i class="fa fa-whatsapp"></i>
         </a>
-        <a href="#" class="fb-donate" title="Donate">
+        <a href="donation_form.html" class="fb-donate" title="Donate">
             <i class="fa fa-heart"></i>
         </a>
         <a href="#" class="fb-problem">
@@ -1427,7 +1429,41 @@
                     $(this).addClass('active');
                 }
             });
+
+            loadActivities();
         });
+
+        function loadActivities() {
+            $.get('/api/activities', function(activities) {
+                if (!activities || activities.length === 0) return;
+                var list = $('#activityList');
+                list.empty();
+                activities.slice(0, 4).forEach(function(a) {
+                    var imgSrc = a.image ? 'images/' + a.image : 'images/IMG-20260708-WA0001.jpg';
+                    var time = a.created_at ? '<small><i class="fa fa-clock-o"></i> ' + timeSince(new Date(a.created_at)) + '</small>' : '';
+                    list.append('<div class="activity-item">' +
+                        '<img src="' + imgSrc + '" alt="Activity">' +
+                        '<div class="activity-text">' +
+                        '<h6>' + (a.title || 'Activity') + '</h6>' +
+                        '<p>' + (a.description || '') + '</p>' +
+                        time +
+                        '</div></div>');
+                });
+            });
+        }
+
+        function timeSince(date) {
+            var seconds = Math.floor((new Date() - date) / 1000);
+            var intervals = [
+                [31536000, 'year'], [2592000, 'month'], [604800, 'week'],
+                [86400, 'day'], [3600, 'hour'], [60, 'minute'], [1, 'second']
+            ];
+            for (var i = 0; i < intervals.length; i++) {
+                var count = Math.floor(seconds / intervals[i][0]);
+                if (count >= 1) return count + ' ' + intervals[i][1] + (count > 1 ? 's' : '') + ' ago';
+            }
+            return 'just now';
+        }
 
         // Owl Carousel nav styling
         $('.owl-carousel').on('initialized.owl.carousel', function() {
