@@ -46,6 +46,7 @@
         .btn-del{background:#dc3545;}
         .btn-green{background:var(--green);}
         .btn-orange{background:#e67e22;}
+        .btn-blue{background:#007bff;}
         .form-section{background:#fff;border-radius:12px;padding:24px;box-shadow:0 4px 15px rgba(0,0,0,0.06);margin-bottom:22px;}
         .form-section h6{font-family:'Acme',sans-serif;color:var(--bg);margin-bottom:15px;padding-bottom:6px;border-bottom:1px solid #eee;}
         .badge-pending{background:#ffc107;color:#333;padding:3px 10px;border-radius:50px;font-size:11px;}
@@ -55,6 +56,7 @@
         .badge-failed{background:#dc3545;color:#fff;padding:3px 10px;border-radius:50px;font-size:11px;}
         .badge-staff{background:#6c757d;color:#fff;padding:3px 10px;border-radius:50px;font-size:11px;}
         .badge-admin{background:var(--gold);color:var(--bg);padding:3px 10px;border-radius:50px;font-size:11px;}
+        .badge-role{background:var(--gold);color:#fff;padding:2px 8px;border-radius:50px;font-size:10px;margin:1px;display:inline-block;}
         .empty-state{text-align:center;padding:40px;color:#999;}
         .empty-state i{font-size:40px;display:block;margin-bottom:10px;}
         .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;}
@@ -66,6 +68,18 @@
         .member-photo{width:40px;height:40px;border-radius:50%;object-fit:cover;}
         select.form-control-sm-custom{padding:4px 8px;font-size:13px;border-radius:6px;border:1px solid #ccc;}
         .hamburger{display:none;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;margin-right:12px;}
+        .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;}
+        .modal-overlay.active{display:flex;}
+        .modal-box{background:#fff;border-radius:12px;width:700px;max-width:95vw;max-height:90vh;overflow-y:auto;padding:30px;position:relative;}
+        .modal-box .modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:22px;color:#999;cursor:pointer;}
+        .modal-box .modal-close:hover{color:red;}
+        .modal-box h5{font-family:'Acme',sans-serif;color:var(--bg);margin-bottom:15px;border-bottom:2px solid var(--gold);padding-bottom:8px;}
+        .modal-box .detail-row{display:flex;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px;}
+        .modal-box .detail-row .dl{color:#888;font-weight:600;width:160px;flex-shrink:0;}
+        .modal-box .detail-row .dv{color:#333;}
+        .checkbox-group label{display:inline-block;margin-right:12px;font-size:13px;cursor:pointer;}
+        .checkbox-group input{margin-right:4px;}
+        .msg-full{white-space:pre-wrap;word-break:break-word;font-size:13px;line-height:1.6;color:#333;}
         @media(max-width:768px){
             .sidebar{transform:translateX(-100%);}
             .sidebar.open{transform:translateX(0);}
@@ -79,18 +93,16 @@
 <body>
     <div class="sidebar" id="sidebar">
         <div class="logo">
-            <img src="icon/favicon.png" alt="Logo">
+            <img src="images/logo.jpg" alt="Logo">
             <h4>प्रेमानंद गोशाला</h4>
             <small>Admin Panel</small>
         </div>
         <nav>
-            <a href="#" class="active" data-page="dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
-            <a href="#" data-page="events"><i class="fa fa-calendar"></i> Events</a>
-            <a href="#" data-page="members"><i class="fa fa-users"></i> Members</a>
+            <a href="#" class="active" data-page="members"><i class="fa fa-users"></i> Members</a>
             <a href="#" data-page="donations"><i class="fa fa-inr"></i> Donations</a>
-            <a href="#" data-page="contacts"><i class="fa fa-envelope"></i> Contacts</a>
+            <a href="#" data-page="events"><i class="fa fa-calendar"></i> Events</a>
+            <a href="#" data-page="contacts"><i class="fa fa-envelope"></i> Messages</a>
             <a href="#" data-page="gallery"><i class="fa fa-image"></i> Gallery</a>
-            <a href="#" data-page="staff"><i class="fa fa-user-secret"></i> Staff</a>
             <a href="#" data-page="users"><i class="fa fa-user-circle"></i> Users & Roles</a>
             <a href="#" data-page="contact-info"><i class="fa fa-address-book"></i> Contact Info</a>
             <a href="#" data-page="settings"><i class="fa fa-cog"></i> Settings</a>
@@ -102,7 +114,7 @@
         <div class="topbar">
             <div style="display:flex;align-items:center;">
                 <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fa fa-bars"></i></button>
-                <h5 id="pageTitle"><i class="fa fa-dashboard"></i> Dashboard</h5>
+                <h5 id="pageTitle">Members</h5>
             </div>
             <div class="user-info">
                 <span class="role-badge" id="roleBadge">ADMIN</span>
@@ -112,28 +124,30 @@
         </div>
 
         <div class="content">
-            <!-- DASHBOARD -->
-            <div class="page active" id="page-dashboard">
-                <div class="stats-grid" id="statsGrid">
-                    <div class="stat-card"><i class="fa fa-users"></i><h3 id="statMembers">-</h3><p>Members</p></div>
-                    <div class="stat-card"><i class="fa fa-inr"></i><h3 id="statDonations">-</h3><p>Donations</p></div>
-                    <div class="stat-card"><i class="fa fa-rupee"></i><h3 id="statAmount">-</h3><p>Amount</p></div>
-                    <div class="stat-card"><i class="fa fa-calendar"></i><h3 id="statEvents">-</h3><p>Events</p></div>
-                    <div class="stat-card"><i class="fa fa-image"></i><h3 id="statGallery">-</h3><p>Gallery</p></div>
-                    <div class="stat-card"><i class="fa fa-envelope"></i><h3 id="statContacts">-</h3><p>Messages</p></div>
-                    <div class="stat-card"><i class="fa fa-user-secret"></i><h3 id="statStaff">-</h3><p>Staff</p></div>
-                    <div class="stat-card"><i class="fa fa-clock-o"></i><h3 id="statPending">-</h3><p>Pending</p></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6 class="page-title" style="font-size:16px;"><i class="fa fa-clock-o"></i> Pending Members</h6>
-                        <div class="table-wrap" id="dashPending"><div class="empty-state"><i class="fa fa-check"></i> All clear</div></div>
-                    </div>
-                    <div class="col-md-6">
-                        <h6 class="page-title" style="font-size:16px;"><i class="fa fa-envelope"></i> Recent Messages</h6>
-                        <div class="table-wrap" id="dashContacts"><div class="empty-state"><i class="fa fa-inbox"></i> No messages</div></div>
+            <!-- MEMBERS -->
+            <div class="page active" id="page-members">
+                <div class="form-section">
+                    <h6><i class="fa fa-search"></i> Search Members</h6>
+                    <div class="form-row">
+                        <div class="col-md-8">
+                            <input type="text" class="form-control form-control-sm" id="memberSearch" placeholder="Search by name, phone, email, or ID card number...">
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-control form-control-sm" id="memberStatusFilter">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
+                <div class="table-wrap" id="membersTable"><div class="empty-state"><i class="fa fa-users"></i> No members</div></div>
+            </div>
+
+            <!-- DONATIONS -->
+            <div class="page" id="page-donations">
+                <div class="table-wrap" id="donationsTable"><div class="empty-state"><i class="fa fa-inr"></i> No donations</div></div>
             </div>
 
             <!-- EVENTS -->
@@ -161,17 +175,7 @@
                 <div class="table-wrap" id="eventsTable"><div class="empty-state"><i class="fa fa-calendar"></i> No events</div></div>
             </div>
 
-            <!-- MEMBERS -->
-            <div class="page" id="page-members">
-                <div class="table-wrap" id="membersTable"><div class="empty-state"><i class="fa fa-users"></i> No members</div></div>
-            </div>
-
-            <!-- DONATIONS -->
-            <div class="page" id="page-donations">
-                <div class="table-wrap" id="donationsTable"><div class="empty-state"><i class="fa fa-inr"></i> No donations</div></div>
-            </div>
-
-            <!-- CONTACTS -->
+            <!-- CONTACTS / MESSAGES -->
             <div class="page" id="page-contacts">
                 <div class="table-wrap" id="contactsTable"><div class="empty-state"><i class="fa fa-envelope"></i> No messages</div></div>
             </div>
@@ -189,31 +193,6 @@
                     </form>
                 </div>
                 <div class="gallery-grid" id="galleryGrid"><div class="empty-state"><i class="fa fa-image"></i> No images</div></div>
-            </div>
-
-            <!-- STAFF -->
-            <div class="page" id="page-staff">
-                <div class="form-section">
-                    <h6 id="staffFormTitle"><i class="fa fa-plus"></i> Add Staff</h6>
-                    <form id="staffForm" enctype="multipart/form-data">
-                        <input type="hidden" id="staffId">
-                        <div class="row">
-                            <div class="col-md-3"><label>Name *</label><input type="text" class="form-control form-control-sm" id="staffName" required></div>
-                            <div class="col-md-3"><label>Phone *</label><input type="text" class="form-control form-control-sm" id="staffPhone" required></div>
-                            <div class="col-md-3"><label>Email</label><input type="email" class="form-control form-control-sm" id="staffEmail"></div>
-                            <div class="col-md-3"><label>Designation</label><input type="text" class="form-control form-control-sm" id="staffDesignation"></div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-4"><label>Address</label><textarea class="form-control form-control-sm" id="staffAddress" rows="2"></textarea></div>
-                            <div class="col-md-4"><label>Photo</label><input type="file" class="form-control form-control-sm" id="staffPhoto" accept="image/*"></div>
-                            <div class="col-md-4 d-flex align-items-end">
-                                <button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;margin-right:8px;">Save</button>
-                                <button type="button" class="btn btn-sm btn-secondary" onclick="resetStaffForm()">Cancel</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="table-wrap" id="staffTable"><div class="empty-state"><i class="fa fa-user-secret"></i> No staff</div></div>
             </div>
 
             <!-- USERS & ROLES -->
@@ -244,45 +223,24 @@
             <div class="page" id="page-contact-info">
                 <div class="form-section">
                     <h6><i class="fa fa-address-book"></i> Contact Information</h6>
-                    <p style="color:#888;font-size:13px;margin-bottom:18px;">Manage the contact details shown on the Contact Us page of your website.</p>
                     <form id="contactInfoForm">
                         <div class="row">
-                            <div class="col-md-12"><label><i class="fa fa-map-marker"></i> Address</label><textarea class="form-control form-control-sm" id="ciAddress" rows="2" placeholder="Full address of the gaushala"></textarea></div>
+                            <div class="col-md-12"><label><i class="fa fa-map-marker"></i> Address</label><textarea class="form-control form-control-sm" id="ciAddress" rows="2"></textarea></div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-md-6"><label><i class="fa fa-phone"></i> Phone (Primary)</label><input type="text" class="form-control form-control-sm" id="ciPhone" placeholder="+91-XXXXXXXXXX"></div>
-                            <div class="col-md-6"><label><i class="fa fa-phone"></i> Phone (Secondary)</label><input type="text" class="form-control form-control-sm" id="ciPhone2" placeholder="+91-XXXXXXXXXX"></div>
+                            <div class="col-md-6"><label><i class="fa fa-phone"></i> Phone (Primary)</label><input type="text" class="form-control form-control-sm" id="ciPhone"></div>
+                            <div class="col-md-6"><label><i class="fa fa-phone"></i> Phone (Secondary)</label><input type="text" class="form-control form-control-sm" id="ciPhone2"></div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-md-6"><label><i class="fa fa-envelope"></i> Email</label><input type="email" class="form-control form-control-sm" id="ciEmail" placeholder="info@example.com"></div>
-                            <div class="col-md-6"><label><i class="fa fa-clock-o"></i> Working Hours</label><input type="text" class="form-control form-control-sm" id="ciHours" placeholder="Mon - Sun: 6:00 AM - 8:00 PM"></div>
+                            <div class="col-md-6"><label><i class="fa fa-envelope"></i> Email</label><input type="email" class="form-control form-control-sm" id="ciEmail"></div>
+                            <div class="col-md-6"><label><i class="fa fa-clock-o"></i> Working Hours</label><input type="text" class="form-control form-control-sm" id="ciHours"></div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-md-12"><label><i class="fa fa-map"></i> Google Maps Embed URL</label><textarea class="form-control form-control-sm" id="ciMap" rows="2" placeholder="Paste Google Maps embed URL here"></textarea></div>
+                            <div class="col-md-12"><label><i class="fa fa-map"></i> Google Maps Embed URL</label><textarea class="form-control form-control-sm" id="ciMap" rows="2"></textarea></div>
                         </div>
-                        <div class="mt-3"><button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;"><i class="fa fa-save"></i> Save Contact Info</button></div>
+                        <div class="mt-3"><button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;"><i class="fa fa-save"></i> Save</button></div>
                         <div id="contactInfoMsg" class="mt-2"></div>
                     </form>
-                </div>
-
-                <div class="form-section">
-                    <h6><i class="fa fa-eye"></i> Preview — What visitors see on Contact Us page</h6>
-                    <div style="background:#f9f5f0;border-radius:10px;padding:20px;border:1px dashed #ccc;">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6 style="color:var(--bg);"><i class="fa fa-info-circle"></i> Contact Card</h6>
-                                <p><strong>Address:</strong> <span id="ciPreviewAddr">—</span></p>
-                                <p><strong>Phone:</strong> <span id="ciPreviewPhone">—</span></p>
-                                <p><strong>Email:</strong> <span id="ciPreviewEmail">—</span></p>
-                                <p><strong>Working Hours:</strong> <span id="ciPreviewHours">—</span></p>
-                            </div>
-                            <div class="col-md-6">
-                                <h6 style="color:var(--bg);"><i class="fa fa-map"></i> Map Preview</h6>
-                                <div id="ciPreviewMapWrap" style="display:none;"><iframe id="ciPreviewMap" src="" style="width:100%;height:200px;border:1px solid #ddd;border-radius:8px;" allowfullscreen="" loading="lazy"></iframe></div>
-                                <p id="ciPreviewMapMsg" style="color:#999;">No map URL set</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -292,7 +250,6 @@
                     <h6><i class="fa fa-cog"></i> Site Settings</h6>
                     <form id="settingsForm">
                         <div class="row" id="settingsFields">
-                            <div class="col-md-12"><div class="alert alert-info" style="padding:10px 14px;font-size:13px;border-radius:6px;"><i class="fa fa-info-circle"></i> Contact details (address, phone, email, working hours, map) are managed in the <strong>Contact Info</strong> section.</div></div>
                             <div class="col-md-6"><label>Site Name</label><input type="text" class="form-control form-control-sm" data-key="site_name"></div>
                             <div class="col-md-6"><label>Site Name (Hindi)</label><input type="text" class="form-control form-control-sm" data-key="site_name_hi"></div>
                             <div class="col-md-6"><label>Tagline</label><input type="text" class="form-control form-control-sm" data-key="tagline"></div>
@@ -320,9 +277,31 @@
         </div>
     </div>
 
+    <!-- MEMBER DETAIL MODAL -->
+    <div class="modal-overlay" id="memberModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeMemberModal()"><i class="fa fa-times"></i></button>
+            <h5 id="memberModalTitle">Member Details</h5>
+            <div id="memberModalBody"></div>
+            <div id="memberModalActions" style="margin-top:15px;"></div>
+        </div>
+    </div>
+
+    <!-- CONTACT DETAIL MODAL -->
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeContactModal()"><i class="fa fa-times"></i></button>
+            <h5>Message Details</h5>
+            <div id="contactModalBody"></div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
     var API = '/api';
+    var _allMembers = [];
+    var _allContacts = [];
+
     function getToken(){ return localStorage.getItem('admin_token'); }
     function authHeaders(){ return {'Authorization':'Bearer '+getToken()}; }
     var user = JSON.parse(localStorage.getItem('admin_user')||'{}');
@@ -332,7 +311,7 @@
         $('#adminName').html('<i class="fa fa-user-circle"></i> '+(user.name||'Admin'));
         $('#roleBadge').text(user.role||'ADMIN');
         initNav();
-        loadDashboard();
+        loadMembers();
     });
 
     function logout(){
@@ -349,13 +328,12 @@
             $(this).addClass('active');
             $('.page').removeClass('active');
             $('#page-'+pg).addClass('active');
-            $('#pageTitle').html($(this).find('i').attr('class')+' '+$(this).text().trim());
-            if(pg==='events') loadEvents();
+            $('#pageTitle').text($(this).text().trim());
             if(pg==='members') loadMembers();
             if(pg==='donations') loadDonations();
+            if(pg==='events') loadEvents();
             if(pg==='contacts') loadContacts();
             if(pg==='gallery') loadGallery();
-            if(pg==='staff') loadStaff();
             if(pg==='users') loadUsers();
             if(pg==='settings') loadSettings();
             if(pg==='contact-info') loadContactInfo();
@@ -368,40 +346,155 @@
         return $.ajax($.extend(defaults,opts));
     }
 
-    /* =================== DASHBOARD =================== */
-    function loadDashboard(){
-        ajax(API+'/stats').done(function(d){
-            $('#statMembers').text(d.memberCount||0);
-            $('#statDonations').text(d.donationCount||0);
-            $('#statAmount').text('\u20B9'+(d.donationTotal||0).toLocaleString('en-IN'));
-            $('#statEvents').text(d.eventCount||0);
-            $('#statGallery').text(d.galleryCount||0);
-            $('#statContacts').text(d.contactCount||0);
-            $('#statStaff').text(d.staffCount||0);
-            $('#statPending').text(d.pendingMembers||0);
-        });
+    /* =================== MEMBERS =================== */
+    function loadMembers(){
         ajax(API+'/members').done(function(data){
-            var pending=(data||[]).filter(function(m){return m.status==='pending';});
-            if(!pending.length){$('#dashPending').html('<div class="empty-state"><i class="fa fa-check"></i> All clear</div>');return;}
-            var h='<table class="table table-sm"><thead><tr><th>Name</th><th>Phone</th><th>Action</th></tr></thead><tbody>';
-            pending.slice(0,5).forEach(function(m){
-                h+='<tr><td>'+esc(m.name)+'</td><td>'+esc(m.phone)+'</td><td>';
-                h+='<button class="btn-sm-custom btn-green" onclick="approveMember('+m.id+')"><i class="fa fa-check"></i></button> ';
-                h+='<button class="btn-sm-custom btn-del" onclick="rejectMember('+m.id+')"><i class="fa fa-times"></i></button>';
-                h+='</td></tr>';
+            _allMembers = data || [];
+            renderMembers(_allMembers);
+        });
+    }
+
+    function renderMembers(list){
+        if(!list||!list.length){$('#membersTable').html('<div class="empty-state"><i class="fa fa-users"></i> No members</div>');return;}
+        var h='<table class="table table-hover"><thead><tr><th>Photo</th><th>Name</th><th>Phone</th><th>Email</th><th>ID Card</th><th>Roles</th><th>Working Valid Till</th><th>Status</th><th>Action</th></tr></thead><tbody>';
+        list.forEach(function(m){
+            var ph=m.photo?'<img src="/uploads/'+m.photo+'" class="member-photo">':'<i class="fa fa-user-circle" style="font-size:30px;color:#ccc;"></i>';
+            var badge='badge-'+(m.status||'pending');
+            var roles = m.roles ? m.roles.split(',').map(function(r){return '<span class="badge-role">'+r.trim()+'</span>';}).join('') : '<span style="color:#ccc;">-</span>';
+            var validTill = m.working_valid_till ? fmtDate(m.working_valid_till) : '<span style="color:#ccc;">-</span>';
+            h+='<tr><td>'+ph+'</td><td>'+esc(m.name)+'</td><td>'+esc(m.phone)+'</td><td>'+esc(m.email||'-')+'</td><td>'+esc(m.id_card_number||'-')+'</td>';
+            h+='<td>'+roles+'</td><td>'+validTill+'</td>';
+            h+='<td><span class="'+badge+'">'+(m.status||'pending')+'</span></td><td style="white-space:nowrap;">';
+            if(m.status==='pending'){
+                h+='<button class="btn-sm-custom btn-green" onclick="approveMember('+m.id+')" title="Approve"><i class="fa fa-check"></i></button> ';
+                h+='<button class="btn-sm-custom btn-del" onclick="rejectMember('+m.id+')" title="Reject"><i class="fa fa-times"></i></button> ';
+            }
+            h+='<button class="btn-sm-custom btn-blue" onclick="viewMember('+m.id+')" title="View Details"><i class="fa fa-eye"></i></button> ';
+            h+='<button class="btn-sm-custom btn-edit" onclick="editMember('+m.id+')" title="Edit"><i class="fa fa-pencil"></i></button> ';
+            h+='<button class="btn-sm-custom btn-del" onclick="deleteMember('+m.id+')" title="Delete"><i class="fa fa-trash"></i></button>';
+            h+='</td></tr>';
+        });
+        h+='</tbody></table>';
+        $('#membersTable').html(h);
+    }
+
+    $('#memberSearch').on('input', filterMembers);
+    $('#memberStatusFilter').on('change', filterMembers);
+
+    function filterMembers(){
+        var q = ($('#memberSearch').val()||'').toLowerCase();
+        var status = $('#memberStatusFilter').val();
+        var list = _allMembers.filter(function(m){
+            var matchStatus = !status || m.status === status;
+            var matchQ = !q || (m.name||'').toLowerCase().indexOf(q)!==-1 || (m.phone||'').indexOf(q)!==-1 || (m.email||'').toLowerCase().indexOf(q)!==-1 || (m.id_card_number||'').toLowerCase().indexOf(q)!==-1;
+            return matchStatus && matchQ;
+        });
+        renderMembers(list);
+    }
+
+    function viewMember(id){
+        var m=_allMembers.find(function(x){return x.id===id;});
+        if(!m)return;
+        var roles = m.roles ? m.roles.split(',').map(function(r){return r.trim();}).join(', ') : 'None';
+        var photoHtml = m.photo ? '<img src="/uploads/'+m.photo+'" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);">' : '<i class="fa fa-user-circle" style="font-size:80px;color:#ccc;"></i>';
+        var html = '<div style="text-align:center;margin-bottom:15px;">'+photoHtml+'</div>';
+        html += '<div class="detail-row"><span class="dl">Name</span><span class="dv">'+esc(m.name)+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">Phone</span><span class="dv">'+esc(m.phone)+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">Email</span><span class="dv">'+esc(m.email||'-')+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">Address</span><span class="dv">'+esc(m.address||'-')+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">ID Card Number</span><span class="dv">'+esc(m.id_card_number||'-')+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">Status</span><span class="dv"><span class="badge-'+(m.status||'pending')+'">'+(m.status||'pending')+'</span></span></div>';
+        html += '<div class="detail-row"><span class="dl">Roles</span><span class="dv">'+roles+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">Working Valid Till</span><span class="dv">'+(m.working_valid_till ? fmtDate(m.working_valid_till) : '-')+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">Member Valid From</span><span class="dv">'+fmtDate(m.valid_from)+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">Member Valid Till</span><span class="dv">'+fmtDate(m.valid_till)+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">Applied On</span><span class="dv">'+fmtDate(m.created_at)+'</span></div>';
+
+        $('#memberModalTitle').text('Member Details - ' + m.name);
+        $('#memberModalBody').html(html);
+
+        var actions = '';
+        if(m.status==='pending'){
+            actions += '<button class="btn btn-sm" style="background:var(--green);color:#fff;margin-right:8px;" onclick="closeMemberModal();approveMember('+m.id+');"><i class="fa fa-check"></i> Approve</button>';
+            actions += '<button class="btn btn-sm btn-danger" onclick="closeMemberModal();rejectMember('+m.id+');"><i class="fa fa-times"></i> Reject</button>';
+        }
+        $('#memberModalActions').html(actions);
+        $('#memberModal').addClass('active');
+    }
+
+    function editMember(id){
+        var m=_allMembers.find(function(x){return x.id===id;});
+        if(!m)return;
+        var allRoles = ['Coordinator','Manager','Seva Pramukh','Event Incharge','Donation Incharge','Accounts','Volunteer','Other'];
+        var currentRoles = m.roles ? m.roles.split(',').map(function(r){return r.trim();}) : [];
+
+        var html = '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Assign Roles</label><div class="checkbox-group">';
+        allRoles.forEach(function(r){
+            var checked = currentRoles.indexOf(r)!==-1 ? 'checked' : '';
+            html += '<label><input type="checkbox" class="member-role-cb" value="'+r+'" '+checked+'> '+r+'</label>';
+        });
+        html += '</div></div>';
+        html += '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Working Valid Till</label>';
+        html += '<input type="date" class="form-control form-control-sm" id="editMemberValidTill" value="'+(m.working_valid_till||'')+'"></div>';
+        html += '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Status</label>';
+        html += '<select class="form-control form-control-sm" id="editMemberStatus">';
+        ['pending','approved','rejected'].forEach(function(s){
+            html += '<option value="'+s+'" '+(m.status===s?'selected':'')+'>'+s+'</option>';
+        });
+        html += '</select></div>';
+        html += '<button class="btn btn-sm" style="background:var(--green);color:#fff;" onclick="saveMemberEdit('+m.id+')"><i class="fa fa-save"></i> Save Changes</button>';
+
+        $('#memberModalTitle').text('Edit Member - ' + m.name);
+        $('#memberModalBody').html(html);
+        $('#memberModalActions').html('');
+        $('#memberModal').addClass('active');
+    }
+
+    function saveMemberEdit(id){
+        var roles = [];
+        $('.member-role-cb:checked').each(function(){ roles.push($(this).val()); });
+        var payload = {
+            roles: roles.join(', '),
+            working_valid_till: $('#editMemberValidTill').val() || '',
+            status: $('#editMemberStatus').val()
+        };
+        ajax(API+'/members/'+id,{method:'PUT',contentType:'application/json',data:JSON.stringify(payload)})
+            .done(function(){ closeMemberModal(); loadMembers(); });
+    }
+
+    function approveMember(id){
+        ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'approved'})}).done(function(){loadMembers();});
+    }
+    function rejectMember(id){
+        if(!confirm('Reject this member?'))return;
+        ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'rejected'})}).done(function(){loadMembers();});
+    }
+    function deleteMember(id){
+        if(!confirm('Delete this member permanently?'))return;
+        ajax(API+'/members/'+id,{method:'DELETE'}).done(function(){loadMembers();});
+    }
+    function closeMemberModal(){ $('#memberModal').removeClass('active'); }
+
+    /* =================== DONATIONS =================== */
+    function loadDonations(){
+        ajax(API+'/donations').done(function(data){
+            if(!data||!data.length){$('#donationsTable').html('<div class="empty-state"><i class="fa fa-inr"></i> No donations</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>Donor</th><th>Amount</th><th>Phone</th><th>Status</th><th>Date</th></tr></thead><tbody>';
+            data.forEach(function(d){
+                var badge='badge-'+(d.status||'pending');
+                h+='<tr><td>'+esc(d.donor_name)+'</td><td>\u20B9'+(parseFloat(d.amount)||0).toLocaleString('en-IN')+'</td><td>'+esc(d.phone||'-')+'</td>';
+                h+='<td><select class="form-control-sm-custom" onchange="updateDonationStatus('+d.id+',this.value)">';
+                ['pending','completed','failed'].forEach(function(s){
+                    h+='<option value="'+s+'" '+(d.status===s?'selected':'')+'>'+s+'</option>';
+                });
+                h+='</select></td><td>'+fmtDate(d.created_at)+'</td></tr>';
             });
             h+='</tbody></table>';
-            $('#dashPending').html(h);
+            $('#donationsTable').html(h);
         });
-        ajax(API+'/contacts').done(function(data){
-            if(!data||!data.length){$('#dashContacts').html('<div class="empty-state"><i class="fa fa-inbox"></i> No messages</div>');return;}
-            var h='<table class="table table-sm"><thead><tr><th>Name</th><th>Message</th></tr></thead><tbody>';
-            data.slice(0,5).forEach(function(c){
-                h+='<tr><td>'+esc(c.name)+'</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(c.message)+'</td></tr>';
-            });
-            h+='</tbody></table>';
-            $('#dashContacts').html(h);
-        });
+    }
+    function updateDonationStatus(id,status){
+        ajax(API+'/donations/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:status})}).done(function(){loadDonations();});
     }
 
     /* =================== EVENTS =================== */
@@ -459,73 +552,37 @@
             .done(function(){resetEventForm();loadEvents();});
     });
 
-    /* =================== MEMBERS =================== */
-    function loadMembers(){
-        ajax(API+'/members').done(function(data){
-            if(!data||!data.length){$('#membersTable').html('<div class="empty-state"><i class="fa fa-users"></i> No members</div>');return;}
-            var h='<table class="table table-hover"><thead><tr><th>Photo</th><th>Name</th><th>Phone</th><th>ID Card</th><th>Valid From</th><th>Valid Till</th><th>Status</th><th>Action</th></tr></thead><tbody>';
-            data.forEach(function(m){
-                var ph=m.photo?'<img src="'+m.photo+'" class="member-photo">':'<i class="fa fa-user-circle" style="font-size:30px;color:#ccc;"></i>';
-                var badge='badge-'+(m.status||'pending');
-                h+='<tr><td>'+ph+'</td><td>'+esc(m.name)+'</td><td>'+esc(m.phone)+'</td><td>'+esc(m.id_card_number||'-')+'</td>';
-                h+='<td>'+fmtDate(m.valid_from)+'</td><td>'+fmtDate(m.valid_till)+'</td>';
-                h+='<td><span class="'+badge+'">'+(m.status||'pending')+'</span></td><td>';
-                if(m.status==='pending'){
-                    h+='<button class="btn-sm-custom btn-green" onclick="approveMember('+m.id+')"><i class="fa fa-check"></i></button> ';
-                    h+='<button class="btn-sm-custom btn-del" onclick="rejectMember('+m.id+')"><i class="fa fa-times"></i></button>';
-                } else {
-                    h+='<span style="color:#999;font-size:12px;">-</span>';
-                }
-                h+='</td></tr>';
-            });
-            h+='</tbody></table>';
-            $('#membersTable').html(h);
-        });
-    }
-    function approveMember(id){
-        ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'approved'})}).done(function(){loadMembers();loadDashboard();});
-    }
-    function rejectMember(id){
-        if(!confirm('Reject this member?'))return;
-        ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'rejected'})}).done(function(){loadMembers();loadDashboard();});
-    }
-
-    /* =================== DONATIONS =================== */
-    function loadDonations(){
-        ajax(API+'/donations').done(function(data){
-            if(!data||!data.length){$('#donationsTable').html('<div class="empty-state"><i class="fa fa-inr"></i> No donations</div>');return;}
-            var h='<table class="table table-hover"><thead><tr><th>Donor</th><th>Amount</th><th>Phone</th><th>Status</th><th>Date</th></tr></thead><tbody>';
-            data.forEach(function(d){
-                var badge='badge-'+(d.status||'pending');
-                h+='<tr><td>'+esc(d.donor_name)+'</td><td>\u20B9'+(parseFloat(d.amount)||0).toLocaleString('en-IN')+'</td><td>'+esc(d.phone||'-')+'</td>';
-                h+='<td><select class="form-control-sm-custom" onchange="updateDonationStatus('+d.id+',this.value)">';
-                ['pending','completed','failed'].forEach(function(s){
-                    h+='<option value="'+s+'" '+(d.status===s?'selected':'')+'>'+s+'</option>';
-                });
-                h+='</select></td><td>'+fmtDate(d.created_at)+'</td></tr>';
-            });
-            h+='</tbody></table>';
-            $('#donationsTable').html(h);
-        });
-    }
-    function updateDonationStatus(id,status){
-        ajax(API+'/donations/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:status})}).done(function(){loadDonations();loadDashboard();});
-    }
-
     /* =================== CONTACTS =================== */
     function loadContacts(){
         ajax(API+'/contacts').done(function(data){
-            if(!data||!data.length){$('#contactsTable').html('<div class="empty-state"><i class="fa fa-envelope"></i> No messages</div>');return;}
-            var h='<table class="table table-hover"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Topic</th><th>Message</th><th>Date</th></tr></thead><tbody>';
-            data.forEach(function(c){
-                h+='<tr><td>'+esc(c.name)+'</td><td>'+esc(c.phone||'-')+'</td><td>'+esc(c.email||'-')+'</td><td>'+esc(c.topic||'-')+'</td>';
-                h+='<td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+esc(c.message)+'">'+esc(c.message)+'</td>';
-                h+='<td>'+fmtDate(c.created_at)+'</td></tr>';
+            _allContacts = data || [];
+            if(!_allContacts.length){$('#contactsTable').html('<div class="empty-state"><i class="fa fa-envelope"></i> No messages</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Topic</th><th>Message</th><th>Date</th><th>Action</th></tr></thead><tbody>';
+            _allContacts.forEach(function(c,i){
+                h+='<tr><td>'+(i+1)+'</td><td>'+esc(c.name)+'</td><td>'+esc(c.phone||'-')+'</td><td>'+esc(c.email||'-')+'</td><td>'+esc(c.topic||'-')+'</td>';
+                h+='<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(c.message)+'</td>';
+                h+='<td>'+fmtDate(c.created_at)+'</td>';
+                h+='<td><button class="btn-sm-custom btn-blue" onclick="viewContact('+i+')"><i class="fa fa-eye"></i> View</button></td></tr>';
             });
             h+='</tbody></table>';
             $('#contactsTable').html(h);
         });
     }
+    function viewContact(i){
+        var c = _allContacts[i];
+        if(!c) return;
+        var html = '';
+        html += '<div class="detail-row"><span class="dl">Name</span><span class="dv">'+esc(c.name)+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">Phone</span><span class="dv">'+esc(c.phone||'-')+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">Email</span><span class="dv">'+esc(c.email||'-')+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">Topic</span><span class="dv">'+esc(c.topic||'-')+'</span></div>';
+        html += '<div class="detail-row"><span class="dl">Date</span><span class="dv">'+fmtDate(c.created_at)+'</span></div>';
+        html += '<div style="margin-top:15px;"><label style="font-weight:600;font-size:13px;color:#888;">Message:</label>';
+        html += '<div class="msg-full" style="background:#f9f5f0;padding:15px;border-radius:8px;margin-top:8px;">'+esc(c.message)+'</div></div>';
+        $('#contactModalBody').html(html);
+        $('#contactModal').addClass('active');
+    }
+    function closeContactModal(){ $('#contactModal').removeClass('active'); }
 
     /* =================== GALLERY =================== */
     function loadGallery(){
@@ -543,7 +600,7 @@
     }
     function deleteGallery(id){
         if(!confirm('Delete this image?'))return;
-        ajax(API+'/gallery/'+id,{method:'DELETE'}).done(function(){loadGallery();loadDashboard();});
+        ajax(API+'/gallery/'+id,{method:'DELETE'}).done(function(){loadGallery();});
     }
     $('#galleryForm').on('submit',function(e){
         e.preventDefault();
@@ -552,64 +609,7 @@
         var img=document.getElementById('galleryImage').files[0];
         if(img) fd.append('image',img);
         $.ajax({url:API+'/gallery',headers:authHeaders(),method:'POST',data:fd,processData:false,contentType:false})
-            .done(function(){$('#galleryForm')[0].reset();loadGallery();loadDashboard();});
-    });
-
-    /* =================== STAFF =================== */
-    function loadStaff(){
-        ajax(API+'/staff').done(function(data){
-            if(!data||!data.length){$('#staffTable').html('<div class="empty-state"><i class="fa fa-user-secret"></i> No staff</div>');return;}
-            var h='<table class="table table-hover"><thead><tr><th>Photo</th><th>Name</th><th>Phone</th><th>Email</th><th>Designation</th><th>Address</th><th>Action</th></tr></thead><tbody>';
-            data.forEach(function(s){
-                var ph=s.photo?'<img src="'+s.photo+'" class="staff-photo">':'<i class="fa fa-user-circle" style="font-size:30px;color:#ccc;"></i>';
-                h+='<tr><td>'+ph+'</td><td>'+esc(s.name)+'</td><td>'+esc(s.phone)+'</td><td>'+esc(s.email||'-')+'</td><td>'+esc(s.designation||'-')+'</td>';
-                h+='<td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(s.address||'-')+'</td><td>';
-                h+='<button class="btn-sm-custom btn-edit" onclick="editStaff('+s.id+')"><i class="fa fa-pencil"></i></button> ';
-                h+='<button class="btn-sm-custom btn-del" onclick="deleteStaff('+s.id+')"><i class="fa fa-trash"></i></button>';
-                h+='</td></tr>';
-            });
-            h+='</tbody></table>';
-            $('#staffTable').html(h);
-        });
-    }
-    function editStaff(id){
-        ajax(API+'/staff').done(function(data){
-            var s=(data||[]).find(function(x){return x.id===id;});
-            if(!s)return;
-            $('#staffId').val(s.id);
-            $('#staffName').val(s.name);
-            $('#staffPhone').val(s.phone);
-            $('#staffEmail').val(s.email||'');
-            $('#staffDesignation').val(s.designation||'');
-            $('#staffAddress').val(s.address||'');
-            $('#staffFormTitle').html('<i class="fa fa-pencil"></i> Edit Staff');
-            $('html,body').animate({scrollTop:$('#page-staff').offset().top-80},300);
-        });
-    }
-    function deleteStaff(id){
-        if(!confirm('Delete this staff member?'))return;
-        ajax(API+'/staff/'+id,{method:'DELETE'}).done(function(){loadStaff();loadDashboard();});
-    }
-    function resetStaffForm(){
-        $('#staffForm')[0].reset();
-        $('#staffId').val('');
-        $('#staffFormTitle').html('<i class="fa fa-plus"></i> Add Staff');
-    }
-    $('#staffForm').on('submit',function(e){
-        e.preventDefault();
-        var fd=new FormData();
-        fd.append('name',$('#staffName').val());
-        fd.append('phone',$('#staffPhone').val());
-        fd.append('email',$('#staffEmail').val());
-        fd.append('designation',$('#staffDesignation').val());
-        fd.append('address',$('#staffAddress').val());
-        var img=document.getElementById('staffPhoto').files[0];
-        if(img) fd.append('photo',img);
-        var id=$('#staffId').val();
-        var method=id?'PUT':'POST';
-        var url=id?API+'/staff/'+id:API+'/staff';
-        $.ajax({url:url,headers:authHeaders(),method:method,data:fd,processData:false,contentType:false})
-            .done(function(){resetStaffForm();loadStaff();});
+            .done(function(){$('#galleryForm')[0].reset();loadGallery();});
     });
 
     /* =================== USERS =================== */
@@ -627,8 +627,6 @@
                 h+='</select></td><td>';
                 if(u.email!=='admin@goshala.org'){
                     h+='<button class="btn-sm-custom btn-del" onclick="deleteUser('+u.id+')"><i class="fa fa-trash"></i></button>';
-                } else {
-                    h+='<span style="color:#999;font-size:11px;">Primary</span>';
                 }
                 h+='</td></tr>';
             });
@@ -685,29 +683,8 @@
             $('#ciEmail').val(map.email||'');
             $('#ciHours').val(map.working_hours||'');
             $('#ciMap').val(map.map_embed||'');
-            updateContactPreview();
         });
     }
-    function updateContactPreview(){
-        var addr=$('#ciAddress').val()||'—';
-        var phone=[$('#ciPhone').val(),$('#ciPhone2').val()].filter(Boolean).join(', ')||'—';
-        var email=$('#ciEmail').val()||'—';
-        var hours=$('#ciHours').val()||'—';
-        var map=$('#ciMap').val()||'';
-        $('#ciPreviewAddr').text(addr);
-        $('#ciPreviewPhone').text(phone);
-        $('#ciPreviewEmail').text(email);
-        $('#ciPreviewHours').text(hours);
-        if(map){
-            $('#ciPreviewMap').attr('src',map);
-            $('#ciPreviewMapWrap').show();
-            $('#ciPreviewMapMsg').hide();
-        } else {
-            $('#ciPreviewMapWrap').hide();
-            $('#ciPreviewMapMsg').show();
-        }
-    }
-    $('#ciAddress, #ciPhone, #ciPhone2, #ciEmail, #ciHours, #ciMap').on('input',function(){updateContactPreview();});
     $('#contactInfoForm').on('submit',function(e){
         e.preventDefault();
         var settings=[
@@ -719,13 +696,15 @@
             {key:'map_embed',value:$('#ciMap').val()}
         ];
         ajax(API+'/settings',{method:'PUT',contentType:'application/json',data:JSON.stringify({settings:settings})})
-            .done(function(){$('#contactInfoMsg').html('<div class="alert alert-success" style="padding:8px 14px;font-size:13px;border-radius:6px;">Contact info saved successfully!</div>');setTimeout(function(){$('#contactInfoMsg').html('');},3000);})
-            .fail(function(){$('#contactInfoMsg').html('<div class="alert alert-danger" style="padding:8px 14px;font-size:13px;border-radius:6px;">Failed to save. Please try again.</div>');});
+            .done(function(){$('#contactInfoMsg').html('<div class="alert alert-success" style="padding:8px 14px;font-size:13px;border-radius:6px;">Saved!</div>');setTimeout(function(){$('#contactInfoMsg').html('');},3000);});
     });
 
     /* =================== UTILS =================== */
     function esc(s){return s?(s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):'';}
     function fmtDate(d){return d?new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'-';}
+
+    $(document).on('click',function(e){ if($(e.target).hasClass('modal-overlay')){ $(e.target).removeClass('active'); } });
+    $(document).on('keydown',function(e){ if(e.key==='Escape'){ $('.modal-overlay').removeClass('active'); } });
     </script>
 </body>
 </html>

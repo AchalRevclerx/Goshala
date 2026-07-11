@@ -116,10 +116,15 @@ async function initDB() {
     photo TEXT,
     id_card_number TEXT,
     status TEXT DEFAULT 'pending',
+    roles TEXT DEFAULT '',
+    working_valid_till TEXT,
     valid_from TEXT,
     valid_till TEXT,
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
+
+  try { db.run("ALTER TABLE members ADD COLUMN roles TEXT DEFAULT ''"); } catch(e) {}
+  try { db.run("ALTER TABLE members ADD COLUMN working_valid_till TEXT"); } catch(e) {}
 
   db.run(`CREATE TABLE IF NOT EXISTS donations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -513,6 +518,24 @@ app.put('/api/members/:id/status', authMiddleware, (req, res) => {
     return res.status(400).json({ error: 'Invalid status' });
   }
   runSQL('UPDATE members SET status = ? WHERE id = ?', [status, req.params.id]);
+  res.json({ success: true });
+});
+
+app.put('/api/members/:id', authMiddleware, (req, res) => {
+  const { status, roles, working_valid_till } = req.body;
+  const member = queryOne('SELECT * FROM members WHERE id = ?', [req.params.id]);
+  if (!member) return res.status(404).json({ error: 'Member not found' });
+  const newStatus = status || member.status;
+  const newRoles = roles !== undefined ? roles : (member.roles || '');
+  const newValidTill = working_valid_till !== undefined ? working_valid_till : (member.working_valid_till || '');
+  runSQL('UPDATE members SET status = ?, roles = ?, working_valid_till = ? WHERE id = ?', [newStatus, newRoles, newValidTill, req.params.id]);
+  res.json({ success: true });
+});
+
+app.delete('/api/members/:id', authMiddleware, (req, res) => {
+  const member = queryOne('SELECT * FROM members WHERE id = ?', [req.params.id]);
+  if (!member) return res.status(404).json({ error: 'Member not found' });
+  runSQL('DELETE FROM members WHERE id = ?', [req.params.id]);
   res.json({ success: true });
 });
 
