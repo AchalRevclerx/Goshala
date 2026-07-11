@@ -3,1057 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Gallery - श्री प्रेमानंद गौशाला</title>
+    <title>Gallery - श्री प्रेमानंद गोशाला</title>
     <link rel="icon" type="image/png" href="icon/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Acme&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/new.css">
+    <link rel="stylesheet" href="css/shared.css">
     <style>
-        :root {
-            --background-color: #8B4513;
-            --text-color: #8B4513;
-            --light-bg: #FFF8F0;
-            --gold: #D4A017;
-            --green: #2E8B57;
-        }
-        * { padding:0; margin:0; box-sizing:border-box; }
-        body {
-            font-family:'Bree Serif',serif;
-            background:var(--light-bg);
-            overflow-x:hidden;
-        }
-
-        /* ===== Fixed Left Social Sidebar ===== */
-        .social-sidebar {
-            position:fixed;
-            top:50%;
-            left:0;
-            transform:translateY(-50%);
-            z-index:9999;
-            display:flex;
-            flex-direction:column;
-            gap:6px;
-            padding:8px 4px;
-            background:#fff;
-            border-radius:0 12px 12px 0;
-            box-shadow:0 4px 20px rgba(0,0,0,0.15);
-        }
-        .social-sidebar a {
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            width:42px;
-            height:42px;
-            border-radius:50%;
-            color:#fff;
-            font-size:18px;
-            text-decoration:none;
-            transition:0.3s;
-        }
-        .social-sidebar a:hover { transform:scale(1.15); }
-        .social-sidebar a.whatsapp { background:#25D366; }
-        .social-sidebar a.facebook { background:#1877F2; }
-        .social-sidebar a.instagram {
-            background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 70%,#285AEB 100%);
-        }
-        .social-sidebar a.youtube { background:#FF0000; }
-
-        /* ===== Top Bar / Enquiry ===== */
-        .top-bar {
-            background:var(--background-color);
-            padding:6px 0;
-            font-size:13px;
-            color:#fff;
-        }
-        .top-bar a { color:#fff; text-decoration:none; }
-        .top-bar .social-icons i {
-            margin-left:12px;
-            font-size:15px;
-            transition:0.3s;
-        }
-        .top-bar .social-icons i:hover { color:var(--gold); }
-
-        /* ===== Header / Navbar Top ===== */
-        .header-top {
-            background:#fff;
-            position:fixed;
-            top:0;
-            width:100%;
-            z-index:9998;
-            box-shadow:0 2px 15px rgba(0,0,0,0.08);
-            height:70px;
-            display:flex;
-            align-items:center;
-        }
-        .header-top .container-fluid {
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-        }
-        .header-top .logo-area {
-            display:flex;
-            align-items:center;
-            gap:12px;
-        }
-        .header-top .logo-area img { height:50px; }
-        .header-top .site-title {
-            font-family:'Acme',sans-serif;
-            font-size:22px;
-            color:var(--background-color);
-            line-height:1.2;
-        }
-        .header-top .site-title small {
-            display:block;
-            font-size:12px;
-            color:#888;
-            font-family:'Bree Serif',serif;
-        }
-        .header-top .header-right {
-            display:flex;
-            align-items:center;
-            gap:15px;
-        }
-        .header-top .header-right .social-icons a {
-            color:var(--background-color);
-            margin:0 6px;
-            font-size:18px;
-        }
-        .header-top .header-right .social-icons a:hover { color:var(--gold); }
-        .enquiry-btn {
-            background:var(--background-color);
-            color:#fff;
-            padding:8px 22px;
-            border-radius:50px;
-            text-decoration:none;
-            font-size:14px;
-            font-weight:600;
-            transition:0.3s;
-            display:inline-flex;
-            align-items:center;
-            gap:8px;
-        }
-        .enquiry-btn:hover { background:var(--gold); color:#fff; text-decoration:none; }
-        .hamburger-menu {
-            display:none;
-            background:none;
-            border:none;
-            font-size:26px;
-            color:var(--background-color);
-            cursor:pointer;
-            padding:4px 8px;
-        }
-
-        /* ===== Navigation ===== */
-        .nav-bar {
-            background:var(--background-color);
-            margin-top:70px;
-            position:sticky;
-            top:0;
-            z-index:9997;
-        }
-        .nav-bar .navbar-nav .nav-item .nav-link {
-            color:#fff !important;
-            padding:12px 16px;
-            font-size:13px;
-            font-weight:600;
-            transition:0.3s;
-            text-transform:uppercase;
-            font-family:'Acme',sans-serif;
-            letter-spacing:0.5px;
-        }
-        .nav-bar .navbar-nav .nav-item .nav-link:hover,
-        .nav-bar .navbar-nav .nav-item .nav-link.active {
-            background:var(--gold);
-            color:#fff !important;
-        }
-        .nav-bar .navbar-nav .nav-item .nav-link i { margin-right:4px; }
-        .nav-bar .dropdown-menu {
-            background:var(--background-color);
-            border:none;
-            border-radius:0 0 8px 8px;
-            padding:8px 0;
-            min-width:200px;
-        }
-        .nav-bar .dropdown-menu .dropdown-item {
-            color:#fff;
-            padding:8px 20px;
-            font-size:13px;
-            transition:0.3s;
-            border-bottom:1px solid rgba(255,255,255,0.1);
-        }
-        .nav-bar .dropdown-menu .dropdown-item:last-child { border-bottom:none; }
-        .nav-bar .dropdown-menu .dropdown-item:hover {
-            background:var(--gold);
-            color:#fff;
-        }
-        .nav-bar .dropdown-toggle::after {
-            margin-left:6px;
-            vertical-align:middle;
-        }
-
-        /* ===== Mobile Nav Overlay ===== */
-        .mobile-nav-overlay {
-            display:none;
-            position:fixed;
-            top:0;
-            left:0;
-            width:100%;
-            height:100%;
-            background:rgba(0,0,0,0.5);
-            backdrop-filter:blur(4px);
-            z-index:99999;
-        }
-        .mobile-nav-overlay.active { display:block; }
-        .mobile-nav {
-            position:fixed;
-            top:0;
-            left:-280px;
-            width:280px;
-            height:100%;
-            background:#fff;
-            z-index:100000;
-            overflow-y:auto;
-            transition:0.3s;
-            box-shadow:2px 0 20px rgba(0,0,0,0.2);
-        }
-        .mobile-nav.active { left:0; }
-        .mobile-nav .mobile-nav-header {
-            background:var(--background-color);
-            color:#fff;
-            padding:15px;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-        }
-        .mobile-nav .mobile-nav-header h5 { margin:0; font-family:'Acme',sans-serif; }
-        .mobile-nav .mobile-nav-header button {
-            background:none;
-            border:none;
-            color:#fff;
-            font-size:22px;
-            cursor:pointer;
-        }
-        .mobile-nav .mobile-nav-links { padding:10px 0; }
-        .mobile-nav .mobile-nav-links a {
-            display:block;
-            padding:12px 20px;
-            color:#333;
-            text-decoration:none;
-            font-size:15px;
-            border-bottom:1px solid #f0f0f0;
-            transition:0.3s;
-        }
-        .mobile-nav .mobile-nav-links a:hover,
-        .mobile-nav .mobile-nav-links a.active {
-            background:var(--light-bg);
-            color:var(--background-color);
-            padding-left:28px;
-        }
-        .mobile-nav .mobile-nav-links .dropdown-toggle-nav {
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            cursor:pointer;
-        }
-        .mobile-nav .mobile-nav-links .sub-menu {
-            display:none;
-            padding-left:20px;
-            background:#fafafa;
-        }
-        .mobile-nav .mobile-nav-links .sub-menu.show { display:block; }
-        .mobile-nav .mobile-nav-links .sub-menu a { font-size:14px; }
-
-        /* ===== Page Hero ===== */
-        .page-hero {
-            background:linear-gradient(rgba(139,69,19,0.85),rgba(139,69,19,0.85)),url('images/IMG-20260708-WA0003.jpg');
-            background-size:cover;
-            background-position:center;
-            padding:80px 0 60px;
-            text-align:center;
-            color:#fff;
-            margin-top:0;
-        }
-        .page-hero h1 {
-            font-family:'Acme',sans-serif;
-            font-size:48px;
-            margin-bottom:10px;
-        }
-        .page-hero p { font-size:18px; opacity:0.9; }
-        .page-hero .breadcrumb {
-            background:transparent;
-            justify-content:center;
-            margin:0;
-            padding:10px 0 0;
-        }
-        .page-hero .breadcrumb-item,
-        .page-hero .breadcrumb-item a {
-            color:rgba(255,255,255,0.8);
-            text-decoration:none;
-        }
-        .page-hero .breadcrumb-item a:hover { color:var(--gold); }
-        .page-hero .breadcrumb-item.active { color:#fff; }
-        .page-hero .breadcrumb-item+.breadcrumb-item::before { color:rgba(255,255,255,0.5); }
-
-        /* ===== Gallery Section ===== */
-        .gallery-page-section {
-            padding:60px 0;
-        }
-        .gallery-page-section .head_item3 {
-            width:100%;
-            text-align:center;
-            margin:0 0 40px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-        }
-        .gallery-page-section .head_item3 span {
-            background:var(--green);
-            color:#fff;
-            padding:12px 40px;
-            border-radius:8px;
-            font-size:24px;
-            font-weight:bold;
-            display:inline-block;
-            text-transform:uppercase;
-            box-shadow:0 4px 15px rgba(46,139,87,0.3);
-        }
-        .gallery-grid-page {
-            display:grid;
-            grid-template-columns:repeat(4,1fr);
-            gap:15px;
-        }
-        .gallery-grid-page .gallery-item {
-            border-radius:8px;
-            overflow:hidden;
-            position:relative;
-            cursor:pointer;
-        }
-        .gallery-grid-page .gallery-item img {
-            width:100%;
-            height:220px;
-            object-fit:cover;
-            transition:0.3s;
-        }
-        .gallery-grid-page .gallery-item:hover img { transform:scale(1.1); }
-        .gallery-grid-page .gallery-item .gallery-overlay {
-            position:absolute;
-            top:0; left:0; width:100%; height:100%;
-            background:rgba(139,69,19,0.6);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            opacity:0;
-            transition:0.3s;
-        }
-        .gallery-grid-page .gallery-item:hover .gallery-overlay { opacity:1; }
-        .gallery-grid-page .gallery-item .gallery-overlay i { color:#fff; font-size:30px; }
-
-        /* ===== Lightbox ===== */
-        .lightbox-overlay {
-            display:none;
-            position:fixed;
-            top:0; left:0; width:100%; height:100%;
-            background:rgba(0,0,0,0.85);
-            z-index:100001;
-            justify-content:center;
-            align-items:center;
-            padding:40px;
-        }
-        .lightbox-overlay.active { display:flex; }
-        .lightbox-overlay img {
-            max-width:90%;
-            max-height:90%;
-            border-radius:8px;
-            box-shadow:0 10px 40px rgba(0,0,0,0.5);
-        }
-        .lightbox-close {
-            position:absolute;
-            top:20px;
-            right:30px;
-            color:#fff;
-            font-size:36px;
-            cursor:pointer;
-            transition:0.3s;
-            background:none;
-            border:none;
-            z-index:100002;
-        }
-        .lightbox-close:hover { color:var(--gold); transform:rotate(90deg); }
-        .lightbox-nav {
-            position:absolute;
-            top:50%;
-            transform:translateY(-50%);
-            color:#fff;
-            font-size:40px;
-            cursor:pointer;
-            transition:0.3s;
-            background:none;
-            border:none;
-            padding:10px 15px;
-            z-index:100002;
-        }
-        .lightbox-nav:hover { color:var(--gold); }
-        .lightbox-prev { left:20px; }
-        .lightbox-next { right:20px; }
-        .lightbox-caption {
-            position:absolute;
-            bottom:20px;
-            left:0;
-            width:100%;
-            text-align:center;
-            color:#fff;
-            font-size:16px;
-            padding:10px;
-        }
-
-        /* ===== Footer ===== */
-        .contact-footer {
-            background:var(--background-color);
-            color:#fff;
-            padding:50px 0 0;
-        }
-        .contact-footer h5 {
-            font-family:'Acme',sans-serif;
-            color:var(--gold);
-            margin-bottom:20px;
-            position:relative;
-            padding-bottom:10px;
-        }
-        .contact-footer h5::after {
-            content:'';
-            position:absolute;
-            bottom:0;
-            left:0;
-            width:40px;
-            height:2px;
-            background:#fff;
-        }
-        .contact-footer .footer-logo img { height:80px; margin-bottom:15px; }
-        .contact-footer .footer-logo p {
-            font-size:14px;
-            line-height:1.7;
-            color:rgba(255,255,255,0.8);
-        }
-        .contact-footer .footer-contact p {
-            margin-bottom:12px;
-            font-size:14px;
-            display:flex;
-            align-items:flex-start;
-            gap:10px;
-            color:rgba(255,255,255,0.8);
-        }
-        .contact-footer .footer-contact p i {
-            color:var(--gold);
-            font-size:18px;
-            min-width:20px;
-            margin-top:3px;
-        }
-        .contact-footer .footer-links a {
-            display:block;
-            color:rgba(255,255,255,0.8);
-            padding:5px 0;
-            text-decoration:none;
-            font-size:14px;
-            transition:0.3s;
-        }
-        .contact-footer .footer-links a:hover {
-            color:var(--gold);
-            padding-left:5px;
-        }
-        .contact-footer .footer-social a {
-            display:inline-flex;
-            width:38px;
-            height:38px;
-            background:rgba(255,255,255,0.1);
-            border-radius:50%;
-            align-items:center;
-            justify-content:center;
-            color:#fff;
-            margin:0 5px 5px 0;
-            font-size:16px;
-            transition:0.3s;
-            text-decoration:none;
-        }
-        .contact-footer .footer-social a:hover {
-            background:var(--gold);
-            color:#fff;
-        }
-        .footer-bottom {
-            background:rgba(0,0,0,0.2);
-            padding:15px 0;
-            margin-top:40px;
-            font-size:14px;
-        }
-        .footer-bottom a { color:var(--gold); text-decoration:none; }
-        .footer-bottom a:hover { text-decoration:underline; }
-
-        /* ===== Floating Buttons ===== */
-        .floating-buttons {
-            position:fixed;
-            bottom:20px;
-            right:20px;
-            z-index:9999;
-            display:flex;
-            flex-direction:column;
-            gap:10px;
-        }
-        .floating-buttons a {
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            width:52px;
-            height:52px;
-            border-radius:50%;
-            color:#fff;
-            font-size:24px;
-            text-decoration:none;
-            box-shadow:0 4px 15px rgba(0,0,0,0.25);
-            transition:0.3s;
-        }
-        .floating-buttons a:hover { transform:scale(1.1); }
-        .floating-buttons .fb-whatsapp { background:#25D366; }
-        .floating-buttons .fb-donate { background:var(--green); }
-        .floating-buttons .fb-problem {
-            background:var(--gold);
-            font-size:13px;
-            width:auto;
-            padding:0 18px;
-            border-radius:25px;
-            font-weight:600;
-        }
-
-        /* ===== Responsive ===== */
-        @media only screen and (max-width:1200px) {
-            .gallery-grid-page { grid-template-columns:repeat(3,1fr); }
-        }
-        @media only screen and (max-width:992px) {
-            .hamburger-menu { display:block; }
-            .header-top .header-right .social-icons { display:none; }
-            .nav-bar .navbar-nav { display:none; }
-            .page-hero h1 { font-size:36px; }
-            .gallery-grid-page { grid-template-columns:repeat(2,1fr); }
-        }
-        @media only screen and (max-width:768px) {
-            .header-top .site-title { font-size:16px; }
-            .header-top .site-title small { font-size:10px; }
-            .page-hero { padding:60px 0 40px; }
-            .page-hero h1 { font-size:28px; }
-            .gallery-page-section .head_item3 span { font-size:18px; padding:10px 25px; }
-            .gallery-grid-page { grid-template-columns:repeat(2,1fr); }
-        }
-        @media only screen and (max-width:576px) {
-            .header-top .logo-area img { height:36px; }
-            .header-top .site-title { font-size:14px; }
-            .page-hero h1 { font-size:24px; }
-            .gallery-grid-page { grid-template-columns:1fr; }
-            .gallery-grid-page .gallery-item img { height:200px; }
-            .lightbox-overlay { padding:20px; }
-            .lightbox-nav { font-size:28px; }
-            .lightbox-close { top:10px; right:15px; font-size:28px; }
+        .page-hero{background:linear-gradient(rgba(139,69,19,0.85),rgba(139,69,19,0.85)),url('images/IMG-20260708-WA0006.jpg');}
+        .gallery-page-section{padding:60px 0;}
+        .gallery-page-section .head_item3{width:100%;text-align:center;margin:0 0 40px;display:flex;align-items:center;justify-content:center;}
+        .gallery-page-section .head_item3 span{background:var(--background-color);color:#fff;padding:12px 40px;border-radius:8px;font-size:24px;font-weight:bold;display:inline-block;text-transform:uppercase;box-shadow:0 4px 15px rgba(139,69,19,0.3);}
+        .gallery-grid-page{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:15px;}
+        .gallery-grid-page .gallery-item-page{position:relative;border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.1);cursor:pointer;aspect-ratio:4/3;}
+        .gallery-grid-page .gallery-item-page img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s;}
+        .gallery-grid-page .gallery-item-page:hover img{transform:scale(1.1);}
+        .gallery-grid-page .gallery-item-page .gallery-overlay{position:absolute;inset:0;background:rgba(139,69,19,0.7);display:flex;align-items:center;justify-content:center;opacity:0;transition:0.3s;}
+        .gallery-grid-page .gallery-item-page:hover .gallery-overlay{opacity:1;}
+        .gallery-grid-page .gallery-item-page .gallery-overlay i{color:#fff;font-size:30px;}
+        .lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;align-items:center;justify-content:center;z-index:9999;}
+        .lightbox-overlay.active{display:flex;}
+        .lightbox-overlay img{max-width:90%;max-height:90vh;border-radius:8px;}
+        .lightbox-overlay .lightbox-close{position:absolute;top:20px;right:30px;color:#fff;font-size:36px;cursor:pointer;z-index:10000;}
+        .lightbox-overlay .lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);color:#fff;font-size:40px;cursor:pointer;padding:15px;z-index:10000;}
+        .lightbox-overlay .lightbox-nav.prev{left:20px;}
+        .lightbox-overlay .lightbox-nav.next{right:20px;}
+        @media only screen and (max-width:768px){
+            .gallery-page-section .head_item3 span{font-size:18px;padding:10px 25px;}
+            .gallery-grid-page{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== Fixed Left Social Sidebar ===== -->
-    <div class="social-sidebar">
-        <a href="https://wa.me/917000000000" target="_blank" class="whatsapp" title="WhatsApp"><i class="fa fa-whatsapp"></i></a>
-        <a href="https://facebook.com" target="_blank" class="facebook" title="Facebook"><i class="fa fa-facebook"></i></a>
-        <a href="https://instagram.com" target="_blank" class="instagram" title="Instagram"><i class="fa fa-instagram"></i></a>
-        <a href="https://youtube.com" target="_blank" class="youtube" title="YouTube"><i class="fa fa-youtube-play"></i></a>
-    </div>
-
-    <!-- ===== Top Bar ===== -->
-    <div class="top-bar d-none d-md-block">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-left">
-                    <i class="fa fa-phone" style="margin-right:5px;"></i> +91-7000000000 &nbsp;|&nbsp;
-                    <i class="fa fa-envelope" style="margin-right:5px;"></i> info@premanandgoshala.org
-                </div>
-                <div class="col-md-6 text-center text-md-right social-icons">
-                    <a href="#"><i class="fa fa-facebook"></i></a>
-                    <a href="#"><i class="fa fa-twitter"></i></a>
-                    <a href="#"><i class="fa fa-instagram"></i></a>
-                    <a href="#"><i class="fa fa-youtube-play"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== Header / Navbar Top ===== -->
-    <header class="header-top">
-        <div class="container-fluid px-4">
-            <div class="logo-area">
-                <button class="hamburger-menu" onclick="toggleMobileNav()">
-                    <i class="fa fa-bars"></i>
-                </button>
-                <a href="index.html">
-                    <img src="images/logo.jpg" alt="Logo">
-                </a>
-                <div class="site-title">
-                    श्री प्रेमानंद गोशाला
-                    <small>गौ सेवा ही मानव सेवा</small>
-                </div>
-            </div>
-            <div class="header-right">
-                <div class="social-icons">
-                    <a href="#"><i class="fa fa-facebook-square"></i></a>
-                    <a href="#"><i class="fa fa-twitter-square"></i></a>
-                    <a href="#"><i class="fa fa-instagram"></i></a>
-                    <a href="#"><i class="fa fa-youtube-play"></i></a>
-                </div>
-                <a href="contact.html" class="enquiry-btn">
-                    <i class="fa fa-phone"></i> Enquiry Now
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <!-- ===== Navigation ===== -->
-    <nav class="nav-bar">
-        <div class="container">
-            <ul class="nav navbar-nav flex-row justify-content-center">
-                <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-home"></i> Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="member-apply.html"><i class="fa fa-user-plus"></i> Member Apply</a></li>
-                <li class="nav-item"><a class="nav-link" href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a></li>
-                <li class="nav-item"><a class="nav-link" href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a></li>
-                <li class="nav-item"><a class="nav-link" href="donation_form.html"><i class="fa fa-heart"></i> Donate</a></li>
-                <li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
-                <li class="nav-item"><a class="nav-link active" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
-                <li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>
-                <li class="nav-item"><a class="nav-link" href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a></li>
-                <li class="nav-item"><a class="nav-link" href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="aboutus.html" id="aboutDropdown" data-toggle="dropdown">About Us</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="aboutus.html">About Us</a>
-                        <a class="dropdown-item" href="#">Management Team</a>
-                        <a class="dropdown-item" href="#">Working Staff</a>
-                        <a class="dropdown-item" href="#">Our Team</a>
-                        <a class="dropdown-item" href="#">Achievements</a>
-                        <a class="dropdown-item" href="#">Certifications</a>
-                        <a class="dropdown-item" href="#">Annual Report 3 Year</a>
-                        <a class="dropdown-item" href="#">Audit Report 3 Year</a>
-                        <a class="dropdown-item" href="#">ITR 3 Year</a>
-                        <a class="dropdown-item" href="#">Memorandum</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="linksDropdown" data-toggle="dropdown">Important Links</a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#">Crowdfunding</a>
-                        <a class="dropdown-item" href="#">Our Solutions</a>
-                        <a class="dropdown-item" href="#">Your Problems</a>
-                        <a class="dropdown-item" href="#">Our Project</a>
-                        <a class="dropdown-item" href="#">Geographical Location of Work</a>
-                        <a class="dropdown-item" href="#">Projects Funding</a>
-                        <a class="dropdown-item" href="#">Programs & Activities</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" data-toggle="dropdown"><i class="fa fa-sign-in"></i> Login</a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="admin-login.html">Coordinator Login</a>
-                        <a class="dropdown-item" href="admin-login.html">Manager Login</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- ===== Mobile Navigation Overlay ===== -->
-    <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileNav()"></div>
-    <div class="mobile-nav" id="mobileNav">
-        <div class="mobile-nav-header">
-            <h5><i class="fa fa-cow"></i> श्री प्रेमानंद गोशाला</h5>
-            <button onclick="toggleMobileNav()"><i class="fa fa-times"></i></button>
-        </div>
-        <div class="mobile-nav-links">
-            <a href="index.html"><i class="fa fa-home"></i> Home</a>
-            <a href="member-apply.html"><i class="fa fa-user-plus"></i> Member Apply</a>
-            <a href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a>
-            <a href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a>
-            <a href="donation_form.html"><i class="fa fa-heart"></i> Donate</a>
-            <a href="donors.html"><i class="fa fa-list"></i> List of Donors</a>
-            <a href="gallery.html" class="active"><i class="fa fa-image"></i> Gallery</a>
-            <a href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a>
-            <a href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a>
-            <a href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a>
-            <div>
-                <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)">
-                    <span><i class="fa fa-info-circle"></i> About Us</span>
-                    <i class="fa fa-chevron-down"></i>
-                </a>
-                <div class="sub-menu">
-                    <a href="aboutus.html">About Us</a>
-                    <a href="#">Management Team</a>
-                    <a href="#">Working Staff</a>
-                    <a href="#">Our Team</a>
-                    <a href="#">Achievements</a>
-                    <a href="#">Certifications</a>
-                    <a href="#">Annual Report 3 Year</a>
-                    <a href="#">Audit Report 3 Year</a>
-                    <a href="#">ITR 3 Year</a>
-                    <a href="#">Memorandum</a>
-                </div>
-            </div>
-            <div>
-                <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)">
-                    <span><i class="fa fa-link"></i> Important Links</span>
-                    <i class="fa fa-chevron-down"></i>
-                </a>
-                <div class="sub-menu">
-                    <a href="#">Crowdfunding</a>
-                    <a href="#">Our Solutions</a>
-                    <a href="#">Your Problems</a>
-                    <a href="#">Our Project</a>
-                    <a href="#">Geographical Location of Work</a>
-                    <a href="#">Projects Funding</a>
-                    <a href="#">Programs & Activities</a>
-                </div>
-            </div>
-            <div>
-                <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)">
-                    <span><i class="fa fa-sign-in"></i> Login</span>
-                    <i class="fa fa-chevron-down"></i>
-                </a>
-                <div class="sub-menu">
-                    <a href="admin-login.html">Coordinator Login</a>
-                    <a href="admin-login.html">Manager Login</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== Hero Banner ===== -->
-    <section class="page-hero">
-        <div class="container">
-            <h1><i class="fa fa-image"></i> Photo Gallery</h1>
-            <p>Glimpses of गौ सेवा at श्री प्रेमानंद गोशाला</p>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Photo Gallery</li>
-                </ol>
-            </nav>
-        </div>
-    </section>
-
-    <!-- ===== Gallery Section ===== -->
-    <section class="gallery-page-section">
-        <div class="container">
-            <div class="head_item3" data-aos="fade-down">
-                <span><i class="fa fa-image"></i> Photo Gallery</span>
-            </div>
-            <div class="gallery-grid-page" id="galleryGrid">
-                <div class="gallery-item" data-aos="zoom-in" onclick="openLightbox(0)">
-                    <img src="images/IMG-20260708-WA0002.jpg" alt="Gallery Image 1">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="50" onclick="openLightbox(1)">
-                    <img src="images/IMG-20260708-WA0001.jpg" alt="Gallery Image 2">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100" onclick="openLightbox(2)">
-                    <img src="images/IMG-20260708-WA0006.jpg" alt="Gallery Image 3">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="150" onclick="openLightbox(3)">
-                    <img src="images/IMG-20260708-WA0005.jpg" alt="Gallery Image 4">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" onclick="openLightbox(4)">
-                    <img src="images/IMG-20260708-WA0003.jpg" alt="Gallery Image 5">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="50" onclick="openLightbox(5)">
-                    <img src="images/IMG-20260708-WA0002.jpg" alt="Gallery Image 6">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100" onclick="openLightbox(6)">
-                    <img src="images/IMG-20260708-WA0001.jpg" alt="Gallery Image 7">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="150" onclick="openLightbox(7)">
-                    <img src="images/IMG-20260708-WA0006.jpg" alt="Gallery Image 8">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" onclick="openLightbox(8)">
-                    <img src="images/IMG-20260708-WA0005.jpg" alt="Gallery Image 9">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="50" onclick="openLightbox(9)">
-                    <img src="images/IMG-20260708-WA0003.jpg" alt="Gallery Image 10">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100" onclick="openLightbox(10)">
-                    <img src="images/IMG-20260708-WA0002.jpg" alt="Gallery Image 11">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="150" onclick="openLightbox(11)">
-                    <img src="images/IMG-20260708-WA0001.jpg" alt="Gallery Image 12">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" onclick="openLightbox(12)">
-                    <img src="images/IMG-20260708-WA0006.jpg" alt="Gallery Image 13">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="50" onclick="openLightbox(13)">
-                    <img src="images/IMG-20260708-WA0005.jpg" alt="Gallery Image 14">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100" onclick="openLightbox(14)">
-                    <img src="images/IMG-20260708-WA0003.jpg" alt="Gallery Image 15">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="150" onclick="openLightbox(15)">
-                    <img src="images/IMG-20260708-WA0002.jpg" alt="Gallery Image 16">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" onclick="openLightbox(16)">
-                    <img src="images/IMG-20260708-WA0001.jpg" alt="Gallery Image 17">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="50" onclick="openLightbox(17)">
-                    <img src="images/IMG-20260708-WA0006.jpg" alt="Gallery Image 18">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100" onclick="openLightbox(18)">
-                    <img src="images/IMG-20260708-WA0005.jpg" alt="Gallery Image 19">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="150" onclick="openLightbox(19)">
-                    <img src="images/IMG-20260708-WA0003.jpg" alt="Gallery Image 20">
-                    <div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== Lightbox Overlay ===== -->
-    <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox(event)">
-        <button class="lightbox-close" onclick="closeLightbox(event)">&times;</button>
-        <button class="lightbox-nav lightbox-prev" onclick="changeLightbox(-1)">&#10094;</button>
-        <img id="lightboxImage" src="" alt="Lightbox">
-        <button class="lightbox-nav lightbox-next" onclick="changeLightbox(1)">&#10095;</button>
-        <div class="lightbox-caption" id="lightboxCaption"></div>
-    </div>
-
-    <!-- ===== Footer ===== -->
-    <footer class="contact-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="footer-logo">
-                        <a href="index.html"><img src="images/logo.jpg" alt="Logo"></a>
-                        <h5>श्री प्रेमानंद गोशाला</h5>
-                        <p>गौ सेवा ही मानव सेवा के उद्देश्य के साथ समर्पित। हम बूढ़ी, बीमार और बेसहारा गायों की सेवा और संरक्षण के लिए प्रतिबद्ध हैं।</p>
-                    </div>
-                    <div class="footer-contact mt-3">
-                        <p><i class="fa fa-map-marker"></i> गौशाला रोड, वृंदावन, जिला मथुरा, उत्तर प्रदेश - 281121</p>
-                        <p><i class="fa fa-phone"></i> +91-7000000000, +91-7000000001</p>
-                        <p><i class="fa fa-envelope"></i> info@premanandgoshala.org</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <h5>Useful Links</h5>
-                    <div class="footer-links">
-                        <a href="index.html"><i class="fa fa-angle-right"></i> Home</a>
-                        <a href="member-apply.html"><i class="fa fa-angle-right"></i> Member Apply</a>
-                        <a href="id-card.html"><i class="fa fa-angle-right"></i> ID Card Download</a>
-                        <a href="events.html"><i class="fa fa-angle-right"></i> Upcoming Event</a>
-                        <a href="donation_form.html"><i class="fa fa-angle-right"></i> Donate</a>
-                        <a href="donors.html"><i class="fa fa-angle-right"></i> List of Donors</a>
-                        <a href="gallery.html"><i class="fa fa-angle-right"></i> Gallery</a>
-                        <a href="contact-us.html"><i class="fa fa-angle-right"></i> Contact Us</a>
-                        <a href="aboutus.html"><i class="fa fa-angle-right"></i> About Us</a>
-                        <a href="#"><i class="fa fa-angle-right"></i> Important Links</a>
-                        <a href="#"><i class="fa fa-angle-right"></i> Login</a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <h5>Follow Us</h5>
-                    <div class="footer-social">
-                        <a href="#"><i class="fa fa-facebook"></i></a>
-                        <a href="#"><i class="fa fa-twitter"></i></a>
-                        <a href="#"><i class="fa fa-instagram"></i></a>
-                        <a href="#"><i class="fa fa-youtube-play"></i></a>
-                        <a href="#"><i class="fa fa-whatsapp"></i></a>
-                    </div>
-                    <div class="mt-4">
-                        <h5>Donate Now</h5>
-                        <p style="color:rgba(255,255,255,0.8);font-size:14px;">Your contribution helps us feed and care for our cows. Every donation matters!</p>
-                        <a href="donation_form.html" class="enquiry-btn" style="background:var(--gold);"><i class="fa fa-heart"></i> Donate Now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
+    <div id="main-content">
+        <section class="page-hero">
             <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-6 text-center text-md-left mb-2 mb-md-0">
-                        Copyright &copy; 2026, All Right Reserved <strong>श्री प्रेमानंद गोशाला</strong>
-                    </div>
-                    <div class="col-md-6 text-center text-md-right">
-                        <a href="#">Terms &amp; Condition</a> &nbsp;|&nbsp;
-                        <a href="#">Privacy Policy</a> &nbsp;|&nbsp;
-                        <a href="#">Disclaimer</a> &nbsp;|&nbsp;
-                        <a href="#">Refund Policy</a>
-                    </div>
+                <h1><i class="fa fa-camera"></i> Gallery</h1>
+                <p>Moments from Our Gaushala</p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Gallery</li>
+                    </ol>
+                </nav>
+            </div>
+        </section>
+
+        <section class="gallery-page-section">
+            <div class="container">
+                <div class="head_item3" data-aos="fade-down">
+                    <span><i class="fa fa-camera"></i> Photo Gallery</span>
                 </div>
-                <div class="row mt-2">
-                    <div class="col-12 text-center" style="font-size:13px;color:rgba(255,255,255,0.6);">
-                        Website Designed By - <a href="#" style="color:var(--gold);">Fragron Infotech</a>, Mob. - 7000131032
-                    </div>
+                <div class="gallery-grid-page" id="galleryGridPage">
                 </div>
             </div>
-        </div>
-    </footer>
+        </section>
 
-    <!-- ===== Floating Action Buttons ===== -->
-    <div class="floating-buttons">
-        <a href="https://wa.me/917000000000" target="_blank" class="fb-whatsapp" title="WhatsApp">
-            <i class="fa fa-whatsapp"></i>
-        </a>
-        <a href="donation_form.html" class="fb-donate" title="Donate">
-            <i class="fa fa-heart"></i>
-        </a>
-        <a href="#" class="fb-problem">
-            <i class="fa fa-exclamation-triangle"></i> Register Problem
-        </a>
+        <div class="lightbox-overlay" id="lightbox">
+            <span class="lightbox-close" id="lightboxClose"><i class="fa fa-times"></i></span>
+            <span class="lightbox-nav prev" id="lightboxPrev"><i class="fa fa-chevron-left"></i></span>
+            <img id="lightboxImg" src="" alt="Gallery Image">
+            <span class="lightbox-nav next" id="lightboxNext"><i class="fa fa-chevron-right"></i></span>
+        </div>
     </div>
 
-    <!-- ===== Scripts ===== -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/shared.js"></script>
     <script>
-        // Hide Receipts link for non-logged-in users
-        if (!localStorage.getItem('admin_token')) {
-            $('a[href="receipts.html"]').parent('.nav-item').hide();
-        }
-
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
-
-        // Mobile Navigation Toggle
-        function toggleMobileNav() {
-            $('#mobileNav').toggleClass('active');
-            $('#mobileNavOverlay').toggleClass('active');
-            $('body').toggleClass('overflow-hidden');
-        }
-
-        // Mobile Submenu Toggle
-        function toggleMobileSubMenu(el) {
-            $(el).next('.sub-menu').toggleClass('show');
-            $(el).find('.fa-chevron-down').toggleClass('fa-chevron-up');
-        }
-
-        // Active page highlighting
-        $(function() {
-            var path = window.location.pathname;
-            var page = path.split('/').pop();
-
-            $('.nav-bar .navbar-nav .nav-link, .mobile-nav-links a').each(function() {
-                var href = $(this).attr('href');
-                if (href === page || (page === '' && href === 'index.html')) {
-                    $(this).addClass('active');
-                }
-            });
-
-            loadGallery();
-        });
+        var galleryImages = [];
+        var currentLightboxIndex = 0;
 
         function loadGallery() {
-            $.get('/api/gallery', function(images) {
-                if (!images || images.length === 0) return;
-                var grid = $('#galleryGrid');
+            $.get('/api/gallery', function(data) {
+                galleryImages = data.images || [];
+                var grid = $('#galleryGridPage');
                 grid.empty();
-                images.forEach(function(img, i) {
-                    var delay = (i % 4) * 50;
-                    var item = $('<div class="gallery-item" data-aos="zoom-in" data-aos-delay="' + delay + '" onclick="openLightbox(' + i + ')">' +
-                        '<img src="/uploads/' + img.image + '" alt="' + (img.title || 'Gallery Image') + '">' +
-                        '<div class="gallery-overlay"><i class="fa fa-search-plus"></i></div>' +
-                        '</div>');
+                if (galleryImages.length === 0) {
+                    grid.html('<p class="text-center" style="grid-column:1/-1;color:#888;">No images available.</p>');
+                    return;
+                }
+                galleryImages.forEach(function(img, i) {
+                    var item = '<div class="gallery-item-page" data-index="' + i + '" data-aos="fade-up" data-aos-delay="' + (i % 4) * 100 + '">' +
+                        '<img src="' + img.url + '" alt="' + (img.title || 'Gallery Image') + '">' +
+                        '<div class="gallery-overlay"><i class="fa fa-expand"></i></div>' +
+                        '</div>';
                     grid.append(item);
                 });
-                rebuildGalleryArray();
-                AOS.refresh();
+            }).fail(function() {
+                $('#galleryGridPage').html('<p class="text-center" style="grid-column:1/-1;color:#888;">Failed to load gallery.</p>');
             });
         }
-
-        function rebuildGalleryArray() {
-            galleryImages = [];
-            $('#galleryGrid .gallery-item img').each(function() {
-                galleryImages.push({
-                    src: $(this).attr('src'),
-                    alt: $(this).attr('alt')
-                });
-            });
-        }
-
-        // ===== Lightbox Functionality =====
-        var galleryImages = [];
-
-        function initGalleryImages() {
-            $('#galleryGrid .gallery-item img').each(function() {
-                galleryImages.push({
-                    src: $(this).attr('src'),
-                    alt: $(this).attr('alt')
-                });
-            });
-        }
-        initGalleryImages();
-
-        var currentImageIndex = 0;
 
         function openLightbox(index) {
-            currentImageIndex = index;
-            updateLightbox();
-            $('#lightboxOverlay').addClass('active');
-            $('body').addClass('overflow-hidden');
+            currentLightboxIndex = index;
+            $('#lightboxImg').attr('src', galleryImages[index].url);
+            $('#lightbox').addClass('active');
+            $('body').css('overflow', 'hidden');
         }
 
-        function closeLightbox(e) {
-            if (e) e.stopPropagation();
-            $('#lightboxOverlay').removeClass('active');
-            $('body').removeClass('overflow-hidden');
+        function closeLightbox() {
+            $('#lightbox').removeClass('active');
+            $('body').css('overflow', '');
         }
 
-        function changeLightbox(dir) {
-            currentImageIndex += dir;
-            if (currentImageIndex < 0) currentImageIndex = galleryImages.length - 1;
-            if (currentImageIndex >= galleryImages.length) currentImageIndex = 0;
-            updateLightbox();
+        function navigateLightbox(dir) {
+            currentLightboxIndex = (currentLightboxIndex + dir + galleryImages.length) % galleryImages.length;
+            $('#lightboxImg').attr('src', galleryImages[currentLightboxIndex].url);
         }
 
-        function updateLightbox() {
-            var img = galleryImages[currentImageIndex];
-            $('#lightboxImage').attr('src', img.src);
-            $('#lightboxCaption').text(img.alt + ' (' + (currentImageIndex + 1) + '/' + galleryImages.length + ')');
-        }
-
-        // Keyboard navigation for lightbox
-        $(document).keydown(function(e) {
-            if ($('#lightboxOverlay').hasClass('active')) {
-                if (e.key === 'Escape') closeLightbox(e);
-                if (e.key === 'ArrowLeft') changeLightbox(-1);
-                if (e.key === 'ArrowRight') changeLightbox(1);
-            }
+        $(document).on('click', '.gallery-item-page', function() {
+            openLightbox(parseInt($(this).data('index')));
         });
+
+        $('#lightboxClose').on('click', closeLightbox);
+        $('#lightboxPrev').on('click', function() { navigateLightbox(-1); });
+        $('#lightboxNext').on('click', function() { navigateLightbox(1); });
+        $('#lightbox').on('click', function(e) { if (e.target === this) closeLightbox(); });
+        $(document).on('keydown', function(e) {
+            if (!$('#lightbox').hasClass('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navigateLightbox(-1);
+            if (e.key === 'ArrowRight') navigateLightbox(1);
+        });
+
+        loadGallery();
     </script>
 </body>
 </html>

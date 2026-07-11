@@ -92,6 +92,7 @@
             <a href="#" data-page="gallery"><i class="fa fa-image"></i> Gallery</a>
             <a href="#" data-page="staff"><i class="fa fa-user-secret"></i> Staff</a>
             <a href="#" data-page="users"><i class="fa fa-user-circle"></i> Users & Roles</a>
+            <a href="#" data-page="contact-info"><i class="fa fa-address-book"></i> Contact Info</a>
             <a href="#" data-page="settings"><i class="fa fa-cog"></i> Settings</a>
             <a href="#" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</a>
         </nav>
@@ -239,19 +240,62 @@
                 <div class="table-wrap" id="usersTable"><div class="empty-state"><i class="fa fa-user-circle"></i> No users</div></div>
             </div>
 
+            <!-- CONTACT INFO -->
+            <div class="page" id="page-contact-info">
+                <div class="form-section">
+                    <h6><i class="fa fa-address-book"></i> Contact Information</h6>
+                    <p style="color:#888;font-size:13px;margin-bottom:18px;">Manage the contact details shown on the Contact Us page of your website.</p>
+                    <form id="contactInfoForm">
+                        <div class="row">
+                            <div class="col-md-12"><label><i class="fa fa-map-marker"></i> Address</label><textarea class="form-control form-control-sm" id="ciAddress" rows="2" placeholder="Full address of the gaushala"></textarea></div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6"><label><i class="fa fa-phone"></i> Phone (Primary)</label><input type="text" class="form-control form-control-sm" id="ciPhone" placeholder="+91-XXXXXXXXXX"></div>
+                            <div class="col-md-6"><label><i class="fa fa-phone"></i> Phone (Secondary)</label><input type="text" class="form-control form-control-sm" id="ciPhone2" placeholder="+91-XXXXXXXXXX"></div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6"><label><i class="fa fa-envelope"></i> Email</label><input type="email" class="form-control form-control-sm" id="ciEmail" placeholder="info@example.com"></div>
+                            <div class="col-md-6"><label><i class="fa fa-clock-o"></i> Working Hours</label><input type="text" class="form-control form-control-sm" id="ciHours" placeholder="Mon - Sun: 6:00 AM - 8:00 PM"></div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12"><label><i class="fa fa-map"></i> Google Maps Embed URL</label><textarea class="form-control form-control-sm" id="ciMap" rows="2" placeholder="Paste Google Maps embed URL here"></textarea></div>
+                        </div>
+                        <div class="mt-3"><button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;"><i class="fa fa-save"></i> Save Contact Info</button></div>
+                        <div id="contactInfoMsg" class="mt-2"></div>
+                    </form>
+                </div>
+
+                <div class="form-section">
+                    <h6><i class="fa fa-eye"></i> Preview — What visitors see on Contact Us page</h6>
+                    <div style="background:#f9f5f0;border-radius:10px;padding:20px;border:1px dashed #ccc;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 style="color:var(--bg);"><i class="fa fa-info-circle"></i> Contact Card</h6>
+                                <p><strong>Address:</strong> <span id="ciPreviewAddr">—</span></p>
+                                <p><strong>Phone:</strong> <span id="ciPreviewPhone">—</span></p>
+                                <p><strong>Email:</strong> <span id="ciPreviewEmail">—</span></p>
+                                <p><strong>Working Hours:</strong> <span id="ciPreviewHours">—</span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 style="color:var(--bg);"><i class="fa fa-map"></i> Map Preview</h6>
+                                <div id="ciPreviewMapWrap" style="display:none;"><iframe id="ciPreviewMap" src="" style="width:100%;height:200px;border:1px solid #ddd;border-radius:8px;" allowfullscreen="" loading="lazy"></iframe></div>
+                                <p id="ciPreviewMapMsg" style="color:#999;">No map URL set</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- SETTINGS -->
             <div class="page" id="page-settings">
                 <div class="form-section">
                     <h6><i class="fa fa-cog"></i> Site Settings</h6>
                     <form id="settingsForm">
                         <div class="row" id="settingsFields">
+                            <div class="col-md-12"><div class="alert alert-info" style="padding:10px 14px;font-size:13px;border-radius:6px;"><i class="fa fa-info-circle"></i> Contact details (address, phone, email, working hours, map) are managed in the <strong>Contact Info</strong> section.</div></div>
                             <div class="col-md-6"><label>Site Name</label><input type="text" class="form-control form-control-sm" data-key="site_name"></div>
                             <div class="col-md-6"><label>Site Name (Hindi)</label><input type="text" class="form-control form-control-sm" data-key="site_name_hi"></div>
                             <div class="col-md-6"><label>Tagline</label><input type="text" class="form-control form-control-sm" data-key="tagline"></div>
-                            <div class="col-md-6"><label>Email</label><input type="email" class="form-control form-control-sm" data-key="email"></div>
-                            <div class="col-md-6"><label>Phone</label><input type="text" class="form-control form-control-sm" data-key="phone"></div>
-                            <div class="col-md-6"><label>Phone 2</label><input type="text" class="form-control form-control-sm" data-key="phone2"></div>
-                            <div class="col-md-12"><label>Address</label><textarea class="form-control form-control-sm" data-key="address" rows="2"></textarea></div>
                             <div class="col-md-6"><label>CIN Number</label><input type="text" class="form-control form-control-sm" data-key="cin_number"></div>
                             <div class="col-md-6"><label>Registration Number</label><input type="text" class="form-control form-control-sm" data-key="registration_number"></div>
                             <div class="col-md-12"><hr><strong>Bank Details</strong></div>
@@ -262,14 +306,12 @@
                             <div class="col-md-4"><label>MICR</label><input type="text" class="form-control form-control-sm" data-key="bank_micr"></div>
                             <div class="col-md-4"><label>Branch</label><input type="text" class="form-control form-control-sm" data-key="bank_branch"></div>
                             <div class="col-md-4"><label>UPI ID</label><input type="text" class="form-control form-control-sm" data-key="upi_id"></div>
-                            <div class="col-md-12"><hr><strong>Social & Other</strong></div>
+                            <div class="col-md-12"><hr><strong>Social Links</strong></div>
                             <div class="col-md-4"><label>WhatsApp</label><input type="text" class="form-control form-control-sm" data-key="whatsapp"></div>
                             <div class="col-md-4"><label>Facebook</label><input type="text" class="form-control form-control-sm" data-key="facebook"></div>
                             <div class="col-md-4"><label>Instagram</label><input type="text" class="form-control form-control-sm" data-key="instagram"></div>
                             <div class="col-md-4"><label>YouTube</label><input type="text" class="form-control form-control-sm" data-key="youtube"></div>
                             <div class="col-md-4"><label>Twitter</label><input type="text" class="form-control form-control-sm" data-key="twitter"></div>
-                            <div class="col-md-4"><label>Working Hours</label><input type="text" class="form-control form-control-sm" data-key="working_hours"></div>
-                            <div class="col-md-12"><label>Map Embed URL</label><textarea class="form-control form-control-sm" data-key="map_embed" rows="2"></textarea></div>
                         </div>
                         <div class="mt-3"><button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;">Save Settings</button></div>
                     </form>
@@ -316,6 +358,7 @@
             if(pg==='staff') loadStaff();
             if(pg==='users') loadUsers();
             if(pg==='settings') loadSettings();
+            if(pg==='contact-info') loadContactInfo();
             $('#sidebar').removeClass('open');
         });
     }
@@ -629,6 +672,55 @@
         });
         ajax(API+'/settings',{method:'PUT',contentType:'application/json',data:JSON.stringify({settings:settings})})
             .done(function(){alert('Settings saved!');});
+    });
+
+    /* =================== CONTACT INFO =================== */
+    function loadContactInfo(){
+        ajax(API+'/settings/all').done(function(data){
+            var map={};
+            (data||[]).forEach(function(s){map[s.key]=s.value;});
+            $('#ciAddress').val(map.address||'');
+            $('#ciPhone').val(map.phone||'');
+            $('#ciPhone2').val(map.phone2||'');
+            $('#ciEmail').val(map.email||'');
+            $('#ciHours').val(map.working_hours||'');
+            $('#ciMap').val(map.map_embed||'');
+            updateContactPreview();
+        });
+    }
+    function updateContactPreview(){
+        var addr=$('#ciAddress').val()||'—';
+        var phone=[$('#ciPhone').val(),$('#ciPhone2').val()].filter(Boolean).join(', ')||'—';
+        var email=$('#ciEmail').val()||'—';
+        var hours=$('#ciHours').val()||'—';
+        var map=$('#ciMap').val()||'';
+        $('#ciPreviewAddr').text(addr);
+        $('#ciPreviewPhone').text(phone);
+        $('#ciPreviewEmail').text(email);
+        $('#ciPreviewHours').text(hours);
+        if(map){
+            $('#ciPreviewMap').attr('src',map);
+            $('#ciPreviewMapWrap').show();
+            $('#ciPreviewMapMsg').hide();
+        } else {
+            $('#ciPreviewMapWrap').hide();
+            $('#ciPreviewMapMsg').show();
+        }
+    }
+    $('#ciAddress, #ciPhone, #ciPhone2, #ciEmail, #ciHours, #ciMap').on('input',function(){updateContactPreview();});
+    $('#contactInfoForm').on('submit',function(e){
+        e.preventDefault();
+        var settings=[
+            {key:'address',value:$('#ciAddress').val()},
+            {key:'phone',value:$('#ciPhone').val()},
+            {key:'phone2',value:$('#ciPhone2').val()},
+            {key:'email',value:$('#ciEmail').val()},
+            {key:'working_hours',value:$('#ciHours').val()},
+            {key:'map_embed',value:$('#ciMap').val()}
+        ];
+        ajax(API+'/settings',{method:'PUT',contentType:'application/json',data:JSON.stringify({settings:settings})})
+            .done(function(){$('#contactInfoMsg').html('<div class="alert alert-success" style="padding:8px 14px;font-size:13px;border-radius:6px;">Contact info saved successfully!</div>');setTimeout(function(){$('#contactInfoMsg').html('');},3000);})
+            .fail(function(){$('#contactInfoMsg').html('<div class="alert alert-danger" style="padding:8px 14px;font-size:13px;border-radius:6px;">Failed to save. Please try again.</div>');});
     });
 
     /* =================== UTILS =================== */
