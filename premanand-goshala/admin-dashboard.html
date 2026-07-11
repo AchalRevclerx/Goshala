@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - श्री प्रेमानंद गोशाला</title>
+    <link rel="icon" type="image/png" href="icon/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Acme&display=swap">
+    <style>
+        :root { --bg: #8B4513; --gold: #D4A017; --green: #2E8B57; --light: #FFF8F0; }
+        * { padding:0; margin:0; box-sizing:border-box; }
+        body { font-family:'Bree Serif',serif; background:var(--light); }
+        .topbar { background:var(--bg); color:#fff; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+        .topbar h5 { font-family:'Acme',sans-serif; margin:0; }
+        .topbar .user-info { display:flex; align-items:center; gap:15px; font-size:14px; }
+        .topbar .user-info .logout-btn { background:rgba(255,255,255,0.2); color:#fff; border:none; padding:6px 18px; border-radius:50px; cursor:pointer; transition:0.3s; font-size:13px; }
+        .topbar .user-info .logout-btn:hover { background:var(--gold); }
+        .container { padding:30px 20px; }
+        .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:15px; margin-bottom:30px; }
+        .stat-card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 4px 15px rgba(0,0,0,0.06); text-align:center; }
+        .stat-card i { font-size:32px; color:var(--bg); margin-bottom:8px; }
+        .stat-card h3 { font-family:'Acme',sans-serif; color:var(--bg); margin:0; font-size:28px; }
+        .stat-card p { color:#999; margin:0; font-size:13px; }
+        .section-title { font-family:'Acme',sans-serif; color:var(--bg); margin:25px 0 15px; padding-bottom:8px; border-bottom:2px solid var(--gold); }
+        .table-wrap { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.06); margin-bottom:25px; }
+        .table-wrap table { margin:0; font-size:14px; }
+        .table-wrap th { background:var(--bg); color:#fff; font-weight:600; border:none; }
+        .table-wrap td, .table-wrap th { padding:10px 12px; vertical-align:middle; }
+        .badge-pending { background:#ffc107; color:#333; }
+        .badge-completed { background:var(--green); color:#fff; }
+        .badge-approved { background:var(--green); color:#fff; }
+        .badge-rejected { background:#dc3545; color:#fff; }
+        .empty-state { text-align:center; padding:40px; color:#999; }
+        .empty-state i { font-size:40px; display:block; margin-bottom:10px; }
+        @media (max-width:768px) { .stats-grid { grid-template-columns:repeat(2,1fr); } .topbar h5 { font-size:16px; } }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <h5><i class="fa fa-shield"></i> Admin Dashboard</h5>
+        <div class="user-info">
+            <span id="adminName"><i class="fa fa-user-circle"></i> Admin</span>
+            <button class="logout-btn" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card"><i class="fa fa-users"></i><h3 id="statMembers">-</h3><p>Total Members</p></div>
+            <div class="stat-card"><i class="fa fa-rupee"></i><h3 id="statDonations">-</h3><p>Total Donations</p></div>
+            <div class="stat-card"><i class="fa fa-inr"></i><h3 id="statAmount">-</h3><p>Amount Collected</p></div>
+            <div class="stat-card"><i class="fa fa-calendar"></i><h3 id="statEvents">-</h3><p>Events</p></div>
+            <div class="stat-card"><i class="fa fa-image"></i><h3 id="statGallery">-</h3><p>Gallery Images</p></div>
+            <div class="stat-card"><i class="fa fa-envelope"></i><h3 id="statContacts">-</h3><p>Messages</p></div>
+        </div>
+
+        <h5 class="section-title"><i class="fa fa-envelope"></i> Recent Messages</h5>
+        <div class="table-wrap" id="contactsTable"><div class="empty-state"><i class="fa fa-inbox"></i> No messages yet</div></div>
+
+        <h5 class="section-title"><i class="fa fa-rupee"></i> Recent Donations</h5>
+        <div class="table-wrap" id="donationsTable"><div class="empty-state"><i class="fa fa-inr"></i> No donations yet</div></div>
+
+        <h5 class="section-title"><i class="fa fa-users"></i> Recent Members</h5>
+        <div class="table-wrap" id="membersTable"><div class="empty-state"><i class="fa fa-user-plus"></i> No members yet</div></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script>
+        function getToken() { return localStorage.getItem('admin_token'); }
+        function authHeaders() { return { 'Authorization': 'Bearer ' + getToken() }; }
+
+        var user = JSON.parse(localStorage.getItem('admin_user') || '{}');
+        if (!getToken()) { window.location.href = 'admin-login.html'; }
+        $('#adminName').text(user.name || 'Admin');
+
+        function logout() {
+            localStorage.removeItem('admin_token');
+            localStorage.removeItem('admin_user');
+            window.location.href = 'admin-login.html';
+        }
+
+        $(function() {
+            loadStats();
+            loadContacts();
+            loadDonations();
+            loadMembers();
+        });
+
+        function loadStats() {
+            $.ajax({ url: '/api/stats', headers: authHeaders() })
+                .done(function(d) {
+                    $('#statMembers').text(d.memberCount || 0);
+                    $('#statDonations').text(d.donationCount || 0);
+                    $('#statAmount').text('₹' + (d.donationTotal || 0).toLocaleString('en-IN'));
+                    $('#statEvents').text(d.eventCount || 0);
+                    $('#statGallery').text(d.galleryCount || 0);
+                    $('#statContacts').text(d.contactCount || 0);
+                });
+        }
+
+        function loadContacts() {
+            $.ajax({ url: '/api/contacts', headers: authHeaders() })
+                .done(function(data) {
+                    if (!data || !data.length) return;
+                    var html = '<table class="table table-hover"><thead><tr><th>Name</th><th>Phone</th><th>Topic</th><th>Message</th><th>Date</th></tr></thead><tbody>';
+                    data.slice(0, 5).forEach(function(c) {
+                        var d = c.created_at ? new Date(c.created_at).toLocaleDateString('en-IN') : '';
+                        html += '<tr><td>' + (c.name || '') + '</td><td>' + (c.phone || '') + '</td><td>' + (c.topic || '-') + '</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + (c.message || '') + '</td><td>' + d + '</td></tr>';
+                    });
+                    html += '</tbody></table>';
+                    $('#contactsTable').html(html);
+                });
+        }
+
+        function loadDonations() {
+            $.ajax({ url: '/api/donations', headers: authHeaders() })
+                .done(function(data) {
+                    if (!data || !data.length) return;
+                    var html = '<table class="table table-hover"><thead><tr><th>Donor</th><th>Phone</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>';
+                    data.slice(0, 5).forEach(function(d) {
+                        var dt = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN') : '';
+                        var status = d.status || 'pending';
+                        var badge = 'badge badge-pill badge-' + status;
+                        html += '<tr><td>' + (d.donor_name || '') + '</td><td>' + (d.phone || '') + '</td><td>₹' + (parseFloat(d.amount) || 0).toLocaleString('en-IN') + '</td><td><span class="' + badge + '">' + status + '</span></td><td>' + dt + '</td></tr>';
+                    });
+                    html += '</tbody></table>';
+                    $('#donationsTable').html(html);
+                });
+        }
+
+        function loadMembers() {
+            $.ajax({ url: '/api/members', headers: authHeaders() })
+                .done(function(data) {
+                    if (!data || !data.length) return;
+                    var html = '<table class="table table-hover"><thead><tr><th>Name</th><th>Phone</th><th>ID Card</th><th>Status</th><th>Date</th></tr></thead><tbody>';
+                    data.slice(0, 5).forEach(function(m) {
+                        var dt = m.created_at ? new Date(m.created_at).toLocaleDateString('en-IN') : '';
+                        var status = m.status || 'pending';
+                        var badge = 'badge badge-pill badge-' + status;
+                        html += '<tr><td>' + (m.name || '') + '</td><td>' + (m.phone || '') + '</td><td>' + (m.id_card_number || '-') + '</td><td><span class="' + badge + '">' + status + '</span></td><td>' + dt + '</td></tr>';
+                    });
+                    html += '</tbody></table>';
+                    $('#membersTable').html(html);
+                });
+        }
+    </script>
+</body>
+</html>
