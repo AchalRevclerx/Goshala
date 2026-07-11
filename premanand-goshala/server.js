@@ -379,6 +379,18 @@ app.post('/api/member/apply', upload.single('photo'), (req, res) => {
   if (!name || !phone) {
     return res.status(400).json({ error: 'Name and phone required' });
   }
+  const cleanPhone = phone.trim();
+  const cleanEmail = email ? email.trim() : null;
+  const phoneResults = db.exec("SELECT id FROM members WHERE phone = '" + cleanPhone.replace(/'/g, "''") + "'");
+  if (phoneResults.length > 0 && phoneResults[0].values.length > 0) {
+    return res.status(400).json({ error: 'This phone number is already registered.' });
+  }
+  if (cleanEmail) {
+    const emailResults = db.exec("SELECT id FROM members WHERE email = '" + cleanEmail.replace(/'/g, "''") + "'");
+    if (emailResults.length > 0 && emailResults[0].values.length > 0) {
+      return res.status(400).json({ error: 'This email address is already registered.' });
+    }
+  }
   const idCard = 'GOS' + Date.now().toString().slice(-8);
   const photoPath = req.file ? req.file.filename : null;
   const validFrom = new Date().toISOString();
