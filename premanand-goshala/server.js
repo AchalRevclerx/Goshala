@@ -383,8 +383,8 @@ app.post('/api/member/apply', upload.single('photo'), (req, res) => {
   const photoPath = req.file ? req.file.filename : null;
   const validFrom = new Date().toISOString();
   const validTill = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString();
-  runSQL('INSERT INTO members (name, phone, email, address, photo, id_card_number, valid_from, valid_till) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
-    name, phone, email || null, address || null, photoPath, idCard, validFrom, validTill
+  runSQL('INSERT INTO members (name, phone, email, address, photo, id_card_number, status, valid_from, valid_till) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+    name, phone, email || null, address || null, photoPath, idCard, 'approved', validFrom, validTill
   ]);
   res.status(201).json({ success: true, id_card_number: idCard, message: 'Application submitted. Your ID: ' + idCard });
 });
@@ -498,28 +498,28 @@ app.get('/api/activities', (req, res) => {
 
 // ===== Member Search (public) =====
 app.get('/api/member/search', (req, res) => {
-  const { member_id, phone } = req.query;
+  const { member_id, phone, mobile } = req.query;
+  const phoneVal = phone || mobile;
   let member;
   if (member_id) {
     member = queryOne('SELECT * FROM members WHERE id_card_number = ?', [member_id]);
-  } else if (phone) {
-    member = queryOne('SELECT * FROM members WHERE phone = ?', [phone]);
+  } else if (phoneVal) {
+    member = queryOne('SELECT * FROM members WHERE phone = ?', [phoneVal]);
   } else {
     return res.status(400).json({ error: 'Provide member_id or phone' });
   }
   if (!member) return res.status(404).json({ error: 'Member not found' });
-  if (member.status !== 'approved') {
-    return res.status(404).json({ error: 'Member not yet approved' });
-  }
   res.json({
+    status: member.status,
     name: member.name,
-    member_id: member.id_card_number,
+    memberId: member.id_card_number,
+    mobile: member.phone,
     phone: member.phone,
     email: member.email,
     address: member.address,
     photo: member.photo,
-    valid_from: member.valid_from,
-    valid_till: member.valid_till
+    joinDate: member.valid_from,
+    validTill: member.valid_till
   });
 });
 

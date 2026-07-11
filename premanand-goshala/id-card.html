@@ -76,12 +76,16 @@
                     <h4><i class="fa fa-search"></i> Search Your ID Card</h4>
                     <form id="searchForm">
                         <div class="form-row align-items-end">
-                            <div class="form-group col-md-8">
+                            <div class="form-group col-md-5">
                                 <label>Mobile Number</label>
-                                <input type="tel" id="searchMobile" class="form-control" placeholder="Enter your registered mobile number" required>
+                                <input type="tel" id="searchMobile" class="form-control" placeholder="Enter registered mobile number">
                             </div>
-                            <div class="form-group col-md-4">
-                                <button type="submit" class="search-btn"><i class="fa fa-search"></i> Search</button>
+                            <div class="form-group col-md-5">
+                                <label>Or Member ID</label>
+                                <input type="text" id="searchMemberId" class="form-control" placeholder="Enter your member ID (e.g. GOS...)">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <button type="submit" class="search-btn" style="width:100%;"><i class="fa fa-search"></i> Search</button>
                             </div>
                         </div>
                     </form>
@@ -99,38 +103,56 @@
     <script src="js/app.js"></script>
     <script src="js/shared.js"></script>
     <script>
-        function searchMember(mobile) {
+        function showCard(data) {
+            var photoSrc = data.photo ? '/uploads/' + data.photo : 'icon/favicon.png';
+            var d = new Date(data.validTill);
+            var validity = 'Valid till ' + d.toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'});
+            var cardHtml = '<div class="idcard-preview">' +
+                '<div class="idcard" id="idCard">' +
+                '<div class="idcard-top">' +
+                '<img src="' + photoSrc + '" alt="Photo">' +
+                '<h5>श्री प्रेमानंद गोशाला</h5>' +
+                '<p>Shri Premand Gaushala, Mathura</p>' +
+                '</div>' +
+                '<div class="idcard-middle">' +
+                '<div class="detail-row"><span class="label">Name</span><span class="value">' + data.name + '</span></div>' +
+                '<div class="detail-row"><span class="label">Mobile</span><span class="value">' + data.mobile + '</span></div>' +
+                '<div class="detail-row"><span class="label">Member ID</span><span class="value">' + data.memberId + '</span></div>' +
+                '<div class="detail-row"><span class="label">Join Date</span><span class="value">' + new Date(data.joinDate).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) + '</span></div>' +
+                '</div>' +
+                '<div class="idcard-validity">' + validity + '</div>' +
+                '<div class="idcard-footer-bar">Jai Gaumata!</div>' +
+                '</div></div>' +
+                '<div class="text-center"><button class="btn-download" onclick="downloadIDCard()"><i class="fa fa-download"></i> Download ID Card</button></div>';
+            $('#cardResult').html(cardHtml);
+        }
+
+        function handleSearchResult(data) {
+            if (data.status === 'approved') {
+                showCard(data);
+            } else if (data.status === 'pending') {
+                $('#cardResult').html('<div class="not-approved"><i class="fa fa-clock-o"></i><h5>Application Pending</h5><p>Your application is under review. Please check back later.</p></div>');
+            } else if (data.status === 'rejected') {
+                $('#cardResult').html('<div class="not-approved" style="background:#f8d7da;border-color:#f5c6cb;"><i class="fa fa-times-circle" style="color:#721c24;"></i><h5 style="color:#721c24;">Application Rejected</h5><p>Your application has been rejected. Please contact the office.</p></div>');
+            } else {
+                showCard(data);
+            }
+        }
+
+        function searchMember() {
+            var mobile = $('#searchMobile').val().trim();
+            var memberId = $('#searchMemberId').val().trim();
+            if (!mobile && !memberId) {
+                $('#cardResult').html('<div class="no-member"><i class="fa fa-info-circle"></i><h5>Please Enter Details</h5><p>Enter your mobile number or member ID to search.</p></div>');
+                return;
+            }
             $('#cardResult').html('<div class="text-center"><i class="fa fa-spinner fa-spin" style="font-size:40px;color:var(--gold);"></i><p class="mt-2">Searching...</p></div>');
-            $.get('/api/members/search?mobile=' + mobile, function(data) {
-                if (data.status === 'approved') {
-                    var validity = 'Valid till ' + data.validTill;
-                    var cardHtml = '<div class="idcard-preview">' +
-                        '<div class="idcard" id="idCard">' +
-                        '<div class="idcard-top">' +
-                        '<img src="' + (data.photo || 'icon/favicon.png') + '" alt="Photo">' +
-                        '<h5>श्री प्रेमानंद गोशाला</h5>' +
-                        '<p>Shri Premand Gaushala, Mathura</p>' +
-                        '</div>' +
-                        '<div class="idcard-middle">' +
-                        '<div class="detail-row"><span class="label">Name</span><span class="value">' + data.name + '</span></div>' +
-                        '<div class="detail-row"><span class="label">Mobile</span><span class="value">' + data.mobile + '</span></div>' +
-                        '<div class="detail-row"><span class="label">Member ID</span><span class="value">' + data.memberId + '</span></div>' +
-                        '<div class="detail-row"><span class="label">Join Date</span><span class="value">' + data.joinDate + '</span></div>' +
-                        '</div>' +
-                        '<div class="idcard-validity">' + validity + '</div>' +
-                        '<div class="idcard-footer-bar">Jai Gaumata!</div>' +
-                        '</div></div>' +
-                        '<div class="text-center"><button class="btn-download" onclick="downloadIDCard()"><i class="fa fa-download"></i> Download ID Card</button></div>';
-                    $('#cardResult').html(cardHtml);
-                } else if (data.status === 'pending') {
-                    $('#cardResult').html('<div class="not-approved"><i class="fa fa-clock-o"></i><h5>Application Pending</h5><p>Your application is under review. Please check back later.</p></div>');
-                } else if (data.status === 'rejected') {
-                    $('#cardResult').html('<div class="not-approved" style="background:#f8d7da;border-color:#f5c6cb;"><i class="fa fa-times-circle" style="color:#721c24;"></i><h5 style="color:#721c24;">Application Rejected</h5><p>Your application has been rejected. Please contact the office.</p></div>');
-                } else {
-                    $('#cardResult').html('<div class="no-member"><i class="fa fa-user-times"></i><h5>No Member Found</h5><p>No member found with this mobile number. Please register first.</p></div>');
-                }
-            }).fail(function() {
-                $('#cardResult').html('<div class="no-member"><i class="fa fa-exclamation-triangle"></i><h5>Error</h5><p>Something went wrong. Please try again.</p></div>');
+            var url = '/api/member/search?phone=' + encodeURIComponent(mobile) + '&mobile=' + encodeURIComponent(mobile) + '&member_id=' + encodeURIComponent(memberId);
+            $.get(url, function(data) {
+                handleSearchResult(data);
+            }).fail(function(xhr) {
+                var msg = (xhr.responseJSON && xhr.responseJSON.error) || 'Something went wrong. Please try again.';
+                $('#cardResult').html('<div class="no-member"><i class="fa fa-exclamation-triangle"></i><h5>Error</h5><p>' + msg + '</p></div>');
             });
         }
 
@@ -146,7 +168,7 @@
 
         $('#searchForm').on('submit', function(e) {
             e.preventDefault();
-            searchMember($('#searchMobile').val().trim());
+            searchMember();
         });
     </script>
 </body>
