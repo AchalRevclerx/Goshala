@@ -254,12 +254,6 @@ function adminMiddleware(req, res, next) {
   next();
 }
 
-app.use('/uploads', express.static(UPLOADS_DIR));
-app.use(express.static(PUBLIC_DIR, {
-  extensions: ['html'],
-  index: 'index.html'
-}));
-
 // ===== Settings API =====
 app.get('/api/settings', (req, res) => {
   const settings = queryAll('SELECT key, value FROM settings');
@@ -601,6 +595,12 @@ app.get('/api/stats', authMiddleware, (req, res) => {
   const pendingMembers = queryOne("SELECT COUNT(*) as count FROM members WHERE status = 'pending'").count;
   res.json({ memberCount, donationCount, donationTotal, contactCount, eventCount, galleryCount, staffCount, pendingMembers });
 });
+
+app.use('/uploads', express.static(UPLOADS_DIR));
+app.use(express.static(PUBLIC_DIR, {
+  extensions: ['html'],
+  index: 'index.html'
+}));
 
 app.get('*', (req, res) => {
   const filePath = path.join(PUBLIC_DIR, req.path);
