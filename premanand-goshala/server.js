@@ -103,9 +103,10 @@ async function initDB() {
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    role TEXT DEFAULT 'admin',
+    role TEXT DEFAULT 'staff',
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
+
   db.run(`CREATE TABLE IF NOT EXISTS members (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -115,8 +116,11 @@ async function initDB() {
     photo TEXT,
     id_card_number TEXT,
     status TEXT DEFAULT 'pending',
+    valid_from TEXT,
+    valid_till TEXT,
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
+
   db.run(`CREATE TABLE IF NOT EXISTS donations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     donor_name TEXT NOT NULL,
@@ -128,10 +132,10 @@ async function initDB() {
     payment_method TEXT DEFAULT 'offline',
     transaction_id TEXT,
     photo TEXT,
-    receipt TEXT,
     status TEXT DEFAULT 'pending',
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
+
   db.run(`CREATE TABLE IF NOT EXISTS events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
@@ -142,6 +146,7 @@ async function initDB() {
     image TEXT,
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
+
   db.run(`CREATE TABLE IF NOT EXISTS contacts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -151,17 +156,36 @@ async function initDB() {
     message TEXT NOT NULL,
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
+
   db.run(`CREATE TABLE IF NOT EXISTS gallery (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT,
     image TEXT NOT NULL,
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
+
   db.run(`CREATE TABLE IF NOT EXISTS activities (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     description TEXT,
     image TEXT,
+    created_at DATETIME DEFAULT (datetime('now'))
+  )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS settings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    key TEXT UNIQUE NOT NULL,
+    value TEXT
+  )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS staff (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    phone TEXT,
+    email TEXT,
+    address TEXT,
+    designation TEXT,
+    photo TEXT,
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
@@ -172,6 +196,39 @@ async function initDB() {
       'Super Admin', 'admin@goshala.org', hash, 'admin'
     ]);
     console.log('Default admin created: admin@goshala.org / admin123');
+  }
+
+  const settingsExist = queryOne('SELECT COUNT(*) as count FROM settings');
+  if (settingsExist.count === 0) {
+    const defaultSettings = [
+      ['site_name', 'Shri Premand Gaushala'],
+      ['site_name_hi', 'श्री प्रेमानंद गोशाला'],
+      ['tagline', 'गौ सेवा ही मानव सेवा'],
+      ['address', 'Gaushala Road, Vrindavan, District Mathura, Uttar Pradesh - 281121'],
+      ['phone', '+91-7000000000'],
+      ['phone2', '+91-7000000001'],
+      ['email', 'info@premanandgaushala.org'],
+      ['cin_number', 'U00000UP2024NPL000000'],
+      ['registration_number', 'REG/2024/000001'],
+      ['bank_name', 'Bank of Baroda, Mathura'],
+      ['bank_holder', 'Shri Premand Gaushala'],
+      ['bank_account', '12345678901234'],
+      ['bank_ifsc', 'BARB0VRINDA'],
+      ['bank_micr', '281012025'],
+      ['bank_branch', 'Vrindavan, Mathura'],
+      ['upi_id', 'premanandgaushala@upi'],
+      ['whatsapp', 'https://wa.me/917000000000'],
+      ['facebook', 'https://facebook.com'],
+      ['instagram', 'https://instagram.com'],
+      ['youtube', 'https://youtube.com'],
+      ['twitter', 'https://twitter.com'],
+      ['map_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113200.52538001038!2d77.60682787278276!3d27.523688100000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397371e0b4d2ca53%3A0x7c1ec6c5d0f50d09!2sVrindavan%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1690000000000'],
+      ['working_hours', 'Mon - Sun: 6:00 AM - 8:00 PM']
+    ];
+    defaultSettings.forEach(([key, value]) => {
+      runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
+    });
+    console.log('Default settings created');
   }
 
   saveDB();
@@ -190,12 +247,49 @@ function authMiddleware(req, res, next) {
   }
 }
 
+function adminMiddleware(req, res, next) {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  next();
+}
+
 app.use('/uploads', express.static(UPLOADS_DIR));
 app.use(express.static(PUBLIC_DIR, {
   extensions: ['html'],
   index: 'index.html'
 }));
 
+// ===== Settings API =====
+app.get('/api/settings', (req, res) => {
+  const settings = queryAll('SELECT key, value FROM settings');
+  const obj = {};
+  settings.forEach(s => { obj[s.key] = s.value; });
+  res.json(obj);
+});
+
+app.get('/api/settings/all', authMiddleware, (req, res) => {
+  const settings = queryAll('SELECT * FROM settings ORDER BY id');
+  res.json(settings);
+});
+
+app.put('/api/settings', authMiddleware, adminMiddleware, (req, res) => {
+  const { settings } = req.body;
+  if (!settings || !Array.isArray(settings)) {
+    return res.status(400).json({ error: 'Settings array required' });
+  }
+  settings.forEach(({ key, value }) => {
+    const existing = queryOne('SELECT id FROM settings WHERE key = ?', [key]);
+    if (existing) {
+      runSQL('UPDATE settings SET value = ? WHERE key = ?', [value, key]);
+    } else {
+      runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
+    }
+  });
+  res.json({ success: true });
+});
+
+// ===== Auth API =====
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -223,6 +317,29 @@ app.post('/api/auth/register', authMiddleware, (req, res) => {
   res.status(201).json({ id, name, email, role: role || 'staff' });
 });
 
+// ===== Users Management (Admin) =====
+app.get('/api/users', authMiddleware, adminMiddleware, (req, res) => {
+  const users = queryAll('SELECT id, name, email, role, created_at FROM users ORDER BY created_at DESC');
+  res.json(users);
+});
+
+app.put('/api/users/:id/role', authMiddleware, adminMiddleware, (req, res) => {
+  const { role } = req.body;
+  if (!['admin', 'staff', 'coordinator', 'manager'].includes(role)) {
+    return res.status(400).json({ error: 'Invalid role' });
+  }
+  runSQL('UPDATE users SET role = ? WHERE id = ?', [role, req.params.id]);
+  res.json({ success: true });
+});
+
+app.delete('/api/users/:id', authMiddleware, adminMiddleware, (req, res) => {
+  const user = queryOne('SELECT * FROM users WHERE id = ?', [req.params.id]);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  runSQL('DELETE FROM users WHERE id = ?', [req.params.id]);
+  res.json({ success: true });
+});
+
+// ===== Contact API =====
 app.post('/api/contact', (req, res) => {
   const { name, phone, email, topic, message } = req.body;
   if (!name || !phone || !message) {
@@ -234,37 +351,51 @@ app.post('/api/contact', (req, res) => {
   res.status(201).json({ success: true, message: 'Message sent successfully' });
 });
 
+// ===== Donate API =====
 app.post('/api/donate', upload.fields([
-  { name: 'photo', maxCount: 5 },
-  { name: 'receipt', maxCount: 5 }
+  { name: 'photo', maxCount: 5 }
 ]), (req, res) => {
   const { donor_name, phone, email, pan, address, amount, payment_method, transaction_id } = req.body;
   if (!donor_name || !phone || !amount) {
     return res.status(400).json({ error: 'Name, phone, and amount required' });
   }
   const photoPaths = req.files?.photo ? req.files.photo.map(f => f.filename) : [];
-  const receiptPaths = req.files?.receipt ? req.files.receipt.map(f => f.filename) : [];
   runSQL(
-    'INSERT INTO donations (donor_name, phone, email, pan, address, amount, payment_method, transaction_id, photo, receipt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    'INSERT INTO donations (donor_name, phone, email, pan, address, amount, payment_method, transaction_id, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [donor_name, phone, email || null, pan || null, address || null,
     parseFloat(amount), payment_method || 'offline', transaction_id || null,
-    photoPaths.join(','), receiptPaths.join(',')]
+    photoPaths.join(',')]
   );
   res.status(201).json({ success: true, message: 'Donation recorded successfully' });
 });
 
-app.post('/api/member/apply', (req, res) => {
+app.get('/api/donations/public', (req, res) => {
+  const donations = queryAll('SELECT donor_name, address, amount, created_at FROM donations ORDER BY created_at DESC');
+  res.json(donations);
+});
+
+app.get('/api/donations/my', authMiddleware, (req, res) => {
+  const donations = queryAll('SELECT * FROM donations ORDER BY created_at DESC');
+  res.json(donations);
+});
+
+// ===== Member API =====
+app.post('/api/member/apply', upload.single('photo'), (req, res) => {
   const { name, phone, email, address } = req.body;
   if (!name || !phone) {
     return res.status(400).json({ error: 'Name and phone required' });
   }
   const idCard = 'GOS' + Date.now().toString().slice(-8);
-  runSQL('INSERT INTO members (name, phone, email, address, id_card_number) VALUES (?, ?, ?, ?, ?)', [
-    name, phone, email || null, address || null, idCard
+  const photoPath = req.file ? req.file.filename : null;
+  const validFrom = new Date().toISOString();
+  const validTill = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString();
+  runSQL('INSERT INTO members (name, phone, email, address, photo, id_card_number, valid_from, valid_till) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
+    name, phone, email || null, address || null, photoPath, idCard, validFrom, validTill
   ]);
   res.status(201).json({ success: true, id_card_number: idCard, message: 'Application submitted. Your ID: ' + idCard });
 });
 
+// ===== Events API =====
 app.get('/api/events', (req, res) => {
   const events = queryAll('SELECT * FROM events ORDER BY date DESC');
   res.json(events);
@@ -307,6 +438,7 @@ app.delete('/api/events/:id', authMiddleware, (req, res) => {
   res.json({ success: true });
 });
 
+// ===== Gallery API =====
 app.get('/api/gallery', (req, res) => {
   const images = queryAll('SELECT * FROM gallery ORDER BY created_at DESC');
   res.json(images);
@@ -328,7 +460,8 @@ app.delete('/api/gallery/:id', authMiddleware, (req, res) => {
   res.json({ success: true });
 });
 
-app.get('/api/donations', (req, res) => {
+// ===== Donations API (admin) =====
+app.get('/api/donations', authMiddleware, (req, res) => {
   const donations = queryAll('SELECT * FROM donations ORDER BY created_at DESC');
   res.json(donations);
 });
@@ -342,6 +475,7 @@ app.put('/api/donations/:id/status', authMiddleware, (req, res) => {
   res.json({ success: true });
 });
 
+// ===== Members API (admin) =====
 app.get('/api/members', authMiddleware, (req, res) => {
   const members = queryAll('SELECT * FROM members ORDER BY created_at DESC');
   res.json(members);
@@ -356,16 +490,19 @@ app.put('/api/members/:id/status', authMiddleware, (req, res) => {
   res.json({ success: true });
 });
 
+// ===== Contacts API (admin) =====
 app.get('/api/contacts', authMiddleware, (req, res) => {
   const contacts = queryAll('SELECT * FROM contacts ORDER BY created_at DESC');
   res.json(contacts);
 });
 
+// ===== Activities API =====
 app.get('/api/activities', (req, res) => {
   const activities = queryAll('SELECT * FROM activities ORDER BY created_at DESC LIMIT 10');
   res.json(activities);
 });
 
+// ===== Member Search (public) =====
 app.get('/api/member/search', (req, res) => {
   const { member_id, phone } = req.query;
   let member;
@@ -377,6 +514,9 @@ app.get('/api/member/search', (req, res) => {
     return res.status(400).json({ error: 'Provide member_id or phone' });
   }
   if (!member) return res.status(404).json({ error: 'Member not found' });
+  if (member.status !== 'approved') {
+    return res.status(404).json({ error: 'Member not yet approved' });
+  }
   res.json({
     name: member.name,
     member_id: member.id_card_number,
@@ -384,10 +524,72 @@ app.get('/api/member/search', (req, res) => {
     email: member.email,
     address: member.address,
     photo: member.photo,
-    valid_till: member.created_at
+    valid_from: member.valid_from,
+    valid_till: member.valid_till
   });
 });
 
+// ===== Staff API =====
+app.get('/api/staff', (req, res) => {
+  const staff = queryAll('SELECT id, name, phone, address, designation, photo FROM staff ORDER BY created_at DESC');
+  res.json(staff);
+});
+
+app.get('/api/staff/search', (req, res) => {
+  const { address, name } = req.query;
+  let sql = 'SELECT id, name, phone, address, designation, photo FROM staff WHERE 1=1';
+  const params = [];
+  if (address) {
+    sql += ' AND address LIKE ?';
+    params.push('%' + address + '%');
+  }
+  if (name) {
+    sql += ' AND name LIKE ?';
+    params.push('%' + name + '%');
+  }
+  sql += ' ORDER BY name';
+  const staff = queryAll(sql, params);
+  res.json(staff);
+});
+
+app.post('/api/staff', authMiddleware, adminMiddleware, upload.single('photo'), (req, res) => {
+  const { name, phone, email, address, designation } = req.body;
+  if (!name) return res.status(400).json({ error: 'Name required' });
+  const photo = req.file ? req.file.filename : null;
+  const id = runInsert('INSERT INTO staff (name, phone, email, address, designation, photo) VALUES (?, ?, ?, ?, ?, ?)', [
+    name, phone || null, email || null, address || null, designation || null, photo
+  ]);
+  res.status(201).json({ success: true, id });
+});
+
+app.put('/api/staff/:id', authMiddleware, adminMiddleware, upload.single('photo'), (req, res) => {
+  const existing = queryOne('SELECT * FROM staff WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Staff not found' });
+  const { name, phone, email, address, designation } = req.body;
+  const photo = req.file ? req.file.filename : existing.photo;
+  runSQL('UPDATE staff SET name = ?, phone = ?, email = ?, address = ?, designation = ?, photo = ? WHERE id = ?', [
+    name || existing.name, phone ?? existing.phone, email ?? existing.email,
+    address ?? existing.address, designation ?? existing.designation, photo, req.params.id
+  ]);
+  if (req.file && existing.photo) {
+    const oldPath = path.join(UPLOADS_DIR, existing.photo);
+    if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+  }
+  res.json({ success: true });
+});
+
+app.delete('/api/staff/:id', authMiddleware, adminMiddleware, (req, res) => {
+  const existing = queryOne('SELECT * FROM staff WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Staff not found' });
+  runSQL('DELETE FROM staff WHERE id = ?', [req.params.id]);
+  if (existing.photo) {
+    const imgPath = path.join(UPLOADS_DIR, existing.photo);
+    if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+  }
+  res.json({ success: true });
+});
+
+// ===== Stats =====
 app.get('/api/stats', authMiddleware, (req, res) => {
   const memberCount = queryOne('SELECT COUNT(*) as count FROM members').count;
   const donationCount = queryOne('SELECT COUNT(*) as count FROM donations').count;
@@ -395,7 +597,9 @@ app.get('/api/stats', authMiddleware, (req, res) => {
   const contactCount = queryOne('SELECT COUNT(*) as count FROM contacts').count;
   const eventCount = queryOne('SELECT COUNT(*) as count FROM events').count;
   const galleryCount = queryOne('SELECT COUNT(*) as count FROM gallery').count;
-  res.json({ memberCount, donationCount, donationTotal, contactCount, eventCount, galleryCount });
+  const staffCount = queryOne('SELECT COUNT(*) as count FROM staff').count;
+  const pendingMembers = queryOne("SELECT COUNT(*) as count FROM members WHERE status = 'pending'").count;
+  res.json({ memberCount, donationCount, donationTotal, contactCount, eventCount, galleryCount, staffCount, pendingMembers });
 });
 
 app.get('*', (req, res) => {

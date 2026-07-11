@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - श्री प्रेमानंद गोशाला | Premanand Goshala</title>
+    <title>About Us - श्री प्रेमानंद गौशाला | Premanand Gaushala</title>
     <link rel="icon" type="image/png" href="icon/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -160,10 +160,12 @@
         .nav-bar .navbar-nav .nav-item .nav-link {
             color:#fff !important;
             padding:12px 16px;
-            font-size:14px;
+            font-size:13px;
             font-weight:600;
             transition:0.3s;
             text-transform:uppercase;
+            font-family:'Acme',sans-serif;
+            letter-spacing:0.5px;
         }
         .nav-bar .navbar-nav .nav-item .nav-link:hover,
         .nav-bar .navbar-nav .nav-item .nav-link.active {
@@ -712,6 +714,8 @@
                 <li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
                 <li class="nav-item"><a class="nav-link" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a></li>
+                <li class="nav-item"><a class="nav-link" href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle active" href="aboutus.html" id="aboutDropdown" data-toggle="dropdown">About Us</a>
                     <div class="dropdown-menu">
@@ -766,6 +770,8 @@
             <a href="donors.html"><i class="fa fa-list"></i> List of Donors</a>
             <a href="gallery.html"><i class="fa fa-image"></i> Gallery</a>
             <a href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a>
+            <a href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a>
+            <a href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a>
             <div>
                 <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)">
                     <span><i class="fa fa-info-circle"></i> About Us</span>
@@ -838,13 +844,13 @@
             <div class="about-welcome" data-aos="fade-up">
                 <div class="row align-items-center">
                     <div class="col-lg-5 mb-4 mb-lg-0">
-                        <img src="images/IMG-20260708-WA0006.jpg" alt="Premanand Goshala" class="img-fluid rounded">
+                        <img src="images/IMG-20260708-WA0006.jpg" alt="Premanand Gaushala" class="img-fluid rounded">
                     </div>
                     <div class="col-lg-7">
                         <h3><i class="fa fa-quote-left" style="color:var(--gold);"></i> Welcome to श्री प्रेमानंद गोशाला</h3>
-                        <p><strong>श्री प्रेमानंद गोशाला</strong> is a sacred cow shelter (गोशाला) dedicated to the protection, care, and welfare of cows. Established with the divine vision of serving गौ माता (Mother Cow), our goshala is a haven for abandoned, old, injured, and stray cows who find love, compassion, and a dignified life here.</p>
-                        <p>We believe that गौ सेवा ही मानव सेवा — serving cows is serving humanity. Our goshala is not just a shelter; it is a spiritual sanctuary where cows are revered as mothers and cared for with utmost devotion. Rooted in the timeless principles of Sanatana Dharma, we strive to uphold the sacred tradition of cow protection (गौ संरक्षण) that has been an integral part of Indian culture for millennia.</p>
-                        <p>At Premanand Goshala, every cow receives nutritious feed, clean water, regular veterinary check-ups, and a loving environment. We are committed to giving these gentle beings the respect and dignity they deserve.</p>
+                        <p><strong>श्री प्रेमानंद गोशाला</strong> is a sacred cow shelter (Gaushala) dedicated to the protection, care, and welfare of cows. Established with the divine vision of serving गौ माता (Mother Cow), our gaushala is a haven for abandoned, old, injured, and stray cows who find love, compassion, and a dignified life here.</p>
+                        <p>We believe that गौ सेवा ही मानव सेवा — serving cows is serving humanity. Our gaushala is not just a shelter; it is a spiritual sanctuary where cows are revered as mothers and cared for with utmost devotion. Rooted in the timeless principles of Sanatana Dharma, we strive to uphold the sacred tradition of cow protection (गौ संरक्षण) that has been an integral part of Indian culture for millennia.</p>
+                        <p>At Premanand Gaushala, every cow receives nutritious feed, clean water, regular veterinary check-ups, and a loving environment. We are committed to giving these gentle beings the respect and dignity they deserve.</p>
                     </div>
                 </div>
             </div>
@@ -974,7 +980,7 @@
                 </div>
                 <div class="timeline-item">
                     <h5>2021 - First Expansion</h5>
-                    <p>With the blessings of saints and support from the community, the goshala expanded to accommodate 30 cows. Regular medical check-ups and a proper feeding schedule were established.</p>
+                    <p>With the blessings of saints and support from the community, the gaushala expanded to accommodate 30 cows. Regular medical check-ups and a proper feeding schedule were established.</p>
                 </div>
                 <div class="timeline-item">
                     <h5>2022 - Community Engagement</h5>
@@ -1088,6 +1094,11 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/app.js"></script>
     <script>
+        // Hide Receipts link for non-logged-in users
+        if (!localStorage.getItem('admin_token')) {
+            $('a[href="receipts.html"]').parent('.nav-item').hide();
+        }
+
         // Initialize AOS
         AOS.init({
             duration: 800,

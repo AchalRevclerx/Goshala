@@ -18,6 +18,8 @@
         :root { --background-color: #8B4513; --text-color: #8B4513; --light-bg: #FFF8F0; --gold: #D4A017; --green: #2E8B57; }
         * { padding:0; margin:0; box-sizing:border-box; }
         body { font-family:'Bree Serif',serif; background:var(--light-bg); overflow-x:hidden; }
+
+        /* Social Sidebar */
         .social-sidebar { position:fixed; top:50%; left:0; transform:translateY(-50%); z-index:9999; display:flex; flex-direction:column; gap:6px; padding:8px 4px; background:#fff; border-radius:0 12px 12px 0; box-shadow:0 4px 20px rgba(0,0,0,0.15); }
         .social-sidebar a { display:flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:50%; color:#fff; font-size:18px; text-decoration:none; transition:0.3s; }
         .social-sidebar a:hover { transform:scale(1.15); }
@@ -25,10 +27,14 @@
         .social-sidebar a.facebook { background:#1877F2; }
         .social-sidebar a.instagram { background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 70%,#285AEB 100%); }
         .social-sidebar a.youtube { background:#FF0000; }
+
+        /* Top Bar */
         .top-bar { background:var(--background-color); padding:6px 0; font-size:13px; color:#fff; }
         .top-bar a { color:#fff; text-decoration:none; }
         .top-bar .social-icons i { margin-left:12px; font-size:15px; transition:0.3s; }
         .top-bar .social-icons i:hover { color:var(--gold); }
+
+        /* Header */
         .header-top { background:#fff; position:fixed; top:0; width:100%; z-index:9998; box-shadow:0 2px 15px rgba(0,0,0,0.08); height:70px; display:flex; align-items:center; }
         .header-top .container-fluid { display:flex; align-items:center; justify-content:space-between; }
         .header-top .logo-area { display:flex; align-items:center; gap:12px; }
@@ -41,8 +47,10 @@
         .enquiry-btn { background:var(--background-color); color:#fff; padding:8px 22px; border-radius:50px; text-decoration:none; font-size:14px; font-weight:600; transition:0.3s; display:inline-flex; align-items:center; gap:8px; }
         .enquiry-btn:hover { background:var(--gold); color:#fff; text-decoration:none; }
         .hamburger-menu { display:none; background:none; border:none; font-size:26px; color:var(--background-color); cursor:pointer; padding:4px 8px; }
+
+        /* Navbar */
         .nav-bar { background:var(--background-color); margin-top:70px; position:sticky; top:0; z-index:9997; }
-        .nav-bar .navbar-nav .nav-item .nav-link { color:#fff !important; padding:12px 16px; font-size:14px; font-weight:600; transition:0.3s; text-transform:uppercase; }
+        .nav-bar .navbar-nav .nav-item .nav-link { color:#fff !important; padding:12px 16px; font-size:13px; font-weight:600; transition:0.3s; text-transform:uppercase; font-family:'Acme',sans-serif; letter-spacing:0.5px; }
         .nav-bar .navbar-nav .nav-item .nav-link:hover, .nav-bar .navbar-nav .nav-item .nav-link.active { background:var(--gold); color:#fff !important; }
         .nav-bar .navbar-nav .nav-item .nav-link i { margin-right:4px; }
         .nav-bar .dropdown-menu { background:var(--background-color); border:none; border-radius:0 0 8px 8px; padding:8px 0; min-width:200px; }
@@ -50,6 +58,8 @@
         .nav-bar .dropdown-menu .dropdown-item:last-child { border-bottom:none; }
         .nav-bar .dropdown-menu .dropdown-item:hover { background:var(--gold); color:#fff; }
         .nav-bar .dropdown-toggle::after { margin-left:6px; vertical-align:middle; }
+
+        /* Mobile Nav */
         .mobile-nav-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); z-index:99999; }
         .mobile-nav-overlay.active { display:block; }
         .mobile-nav { position:fixed; top:0; left:-280px; width:280px; height:100%; background:#fff; z-index:100000; overflow-y:auto; transition:0.3s; box-shadow:2px 0 20px rgba(0,0,0,0.2); }
@@ -64,6 +74,8 @@
         .mobile-nav .mobile-nav-links .sub-menu { display:none; padding-left:20px; background:#fafafa; }
         .mobile-nav .mobile-nav-links .sub-menu.show { display:block; }
         .mobile-nav .mobile-nav-links .sub-menu a { font-size:14px; }
+
+        /* Page Hero */
         .page-hero { background:linear-gradient(rgba(139,69,19,0.85),rgba(139,69,19,0.85)); background-size:cover; background-position:center; padding:80px 0 60px; text-align:center; color:#fff; margin-top:0; }
         .page-hero h1 { font-family:'Acme',sans-serif; font-size:48px; margin-bottom:10px; }
         .page-hero p { font-size:18px; opacity:0.9; }
@@ -72,36 +84,174 @@
         .page-hero .breadcrumb-item a:hover { color:var(--gold); }
         .page-hero .breadcrumb-item.active { color:#fff; }
         .page-hero .breadcrumb-item+.breadcrumb-item::before { color:rgba(255,255,255,0.5); }
+
+        /* ID Card Section */
         .idcard-section { padding:60px 0; }
         .idcard-section .head_item3 { width:100%; text-align:center; margin:0 0 40px; display:flex; align-items:center; justify-content:center; }
         .idcard-section .head_item3 span { background:var(--green); color:#fff; padding:12px 40px; border-radius:8px; font-size:24px; font-weight:bold; display:inline-block; text-transform:uppercase; box-shadow:0 4px 15px rgba(46,139,87,0.3); }
+
+        /* Search Box */
         .idcard-search-box { background:#fff; border-radius:12px; padding:30px; box-shadow:0 4px 20px rgba(0,0,0,0.08); margin-bottom:40px; }
         .idcard-search-box .form-group { margin-bottom:0; }
         .idcard-search-box input[type="text"] { border:2px solid #e0d6cc; border-radius:50px; padding:12px 20px; font-size:16px; transition:0.3s; }
         .idcard-search-box input[type="text"]:focus { border-color:var(--background-color); outline:none; box-shadow:0 0 0 3px rgba(139,69,19,0.1); }
         .idcard-search-box .btn-search { background:var(--background-color); color:#fff; border-radius:50px; padding:12px 40px; font-weight:600; border:none; cursor:pointer; transition:0.3s; }
         .idcard-search-box .btn-search:hover { background:var(--gold); }
+
+        /* ID Card Preview */
         .idcard-preview { background:#fff; border-radius:12px; padding:30px; box-shadow:0 4px 20px rgba(0,0,0,0.08); text-align:center; display:none; }
-        .idcard-preview .idcard { max-width:340px; margin:0 auto; background:linear-gradient(135deg, #f5eee6 0%, #fff 100%); border:2px solid var(--gold); border-radius:12px; overflow:hidden; box-shadow:0 8px 30px rgba(0,0,0,0.12); }
-        .idcard-preview .idcard-header { background:var(--background-color); color:#fff; padding:15px; text-align:center; }
-        .idcard-preview .idcard-header img { height:45px; margin-bottom:5px; }
-        .idcard-preview .idcard-header h6 { font-family:'Acme',sans-serif; margin:0; font-size:15px; }
-        .idcard-preview .idcard-header small { font-size:11px; opacity:0.9; }
-        .idcard-preview .idcard-body { padding:20px 20px 15px; text-align:center; }
-        .idcard-preview .idcard-body .photo-placeholder { width:90px; height:90px; border-radius:50%; margin:0 auto 12px; background:#e0d6cc; display:flex; align-items:center; justify-content:center; font-size:36px; color:var(--background-color); overflow:hidden; border:3px solid var(--gold); }
-        .idcard-preview .idcard-body .photo-placeholder img { width:100%; height:100%; object-fit:cover; }
-        .idcard-preview .idcard-body h5 { font-family:'Acme',sans-serif; color:var(--background-color); margin-bottom:2px; }
-        .idcard-preview .idcard-body .id-details { text-align:left; margin-top:12px; }
-        .idcard-preview .idcard-body .id-details table { width:100%; font-size:13px; }
-        .idcard-preview .idcard-body .id-details table td { padding:4px 0; }
-        .idcard-preview .idcard-body .id-details table td:first-child { font-weight:600; color:var(--background-color); width:90px; }
-        .idcard-preview .idcard-footer { background:var(--gold); color:#fff; padding:8px; text-align:center; font-size:10px; letter-spacing:1px; }
-        .idcard-preview .btn-download { background:var(--green); color:#fff; border-radius:50px; padding:12px 40px; font-weight:600; border:none; cursor:pointer; transition:0.3s; margin-top:20px; display:inline-flex; align-items:center; gap:8px; }
-        .idcard-preview .btn-download:hover { background:#236b43; }
+
+        /* ============ THE ID CARD ============ */
+        .idcard {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid var(--gold);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        /* Top Section: Logo left, Org name right */
+        .idcard-top {
+            display: flex;
+            align-items: center;
+            background: var(--background-color);
+            padding: 14px 18px;
+            gap: 14px;
+        }
+        .idcard-top .idcard-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #fff;
+        }
+        .idcard-top .idcard-org-info {
+            flex: 1;
+        }
+        .idcard-top .idcard-org-info h4 {
+            font-family: 'Acme', sans-serif;
+            color: #fff;
+            font-size: 17px;
+            margin: 0 0 2px;
+            line-height: 1.2;
+        }
+        .idcard-top .idcard-org-info small {
+            color: rgba(255,255,255,0.8);
+            font-size: 11px;
+            font-style: italic;
+        }
+
+        /* Middle Section: Photo left, Details right */
+        .idcard-middle {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px 18px 10px;
+            gap: 16px;
+        }
+        .idcard-photo-wrap {
+            flex-shrink: 0;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            overflow: hidden;
+            background: #f0e8df;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .idcard-photo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .idcard-photo-wrap .fa-user {
+            font-size: 36px;
+            color: var(--background-color);
+        }
+        .idcard-details-right {
+            flex: 1;
+            min-width: 0;
+        }
+        .idcard-details-right h5 {
+            font-family: 'Acme', sans-serif;
+            color: var(--background-color);
+            font-size: 16px;
+            margin: 0 0 8px;
+            word-break: break-word;
+        }
+
+        /* Details Table */
+        .idcard-details-right .idcard-table {
+            width: 100%;
+            font-size: 12px;
+            border-collapse: collapse;
+        }
+        .idcard-details-right .idcard-table td {
+            padding: 3px 4px;
+            vertical-align: top;
+            word-break: break-word;
+        }
+        .idcard-details-right .idcard-table td:first-child {
+            font-weight: 700;
+            color: var(--background-color);
+            white-space: nowrap;
+            width: 100px;
+        }
+
+        /* Validity Bar */
+        .idcard-validity {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            background: linear-gradient(135deg, var(--gold), #e6b800);
+            padding: 6px 18px;
+            font-size: 11px;
+            color: #fff;
+            font-weight: 600;
+        }
+        .idcard-validity span { white-space: nowrap; }
+
+        /* Footer */
+        .idcard-footer-bar {
+            background: var(--background-color);
+            color: #fff;
+            text-align: center;
+            padding: 8px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Status badges */
+        .member-status { margin-top: 12px; }
+        .member-status .badge { font-size: 13px; padding: 6px 16px; border-radius: 20px; }
+        .badge-approved { background: var(--green); color: #fff; }
+        .badge-pending { background: var(--gold); color: #fff; }
+        .badge-rejected { background: #dc3545; color: #fff; }
+
+        /* Download Button */
+        .idcard-preview .btn-download { background:var(--green); color:#fff; border-radius:50px; padding:12px 40px; font-weight:600; border:none; cursor:pointer; transition:0.3s; margin-top:20px; display:inline-flex; align-items:center; gap:8px; font-size:15px; }
+        .idcard-preview .btn-download:hover { background:#236b43; color:#fff; text-decoration:none; }
         .idcard-preview .btn-download i { font-size:18px; }
+
+        /* No Member */
         .no-member { text-align:center; padding:60px 20px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); display:none; }
         .no-member i { font-size:60px; color:#ddd; margin-bottom:15px; }
         .no-member h4 { color:#999; }
+
+        /* Not Approved Warning */
+        .not-approved { text-align:center; padding:40px 20px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); display:none; }
+        .not-approved i { font-size:50px; color:var(--gold); margin-bottom:15px; }
+        .not-approved h4 { color:var(--background-color); margin-bottom:8px; }
+        .not-approved p { color:#777; font-size:14px; }
+
+        /* Footer */
         .contact-footer { background:var(--background-color); color:#fff; padding:50px 0 0; }
         .contact-footer h5 { font-family:'Acme',sans-serif; color:var(--gold); margin-bottom:20px; position:relative; padding-bottom:10px; }
         .contact-footer h5::after { content:''; position:absolute; bottom:0; left:0; width:40px; height:2px; background:#fff; }
@@ -116,29 +266,69 @@
         .footer-bottom { background:rgba(0,0,0,0.2); padding:15px 0; margin-top:40px; font-size:14px; }
         .footer-bottom a { color:var(--gold); text-decoration:none; }
         .footer-bottom a:hover { text-decoration:underline; }
+
+        /* Floating Buttons */
         .floating-buttons { position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px; }
         .floating-buttons a { display:flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:50%; color:#fff; font-size:24px; text-decoration:none; box-shadow:0 4px 15px rgba(0,0,0,0.25); transition:0.3s; }
         .floating-buttons a:hover { transform:scale(1.1); }
         .floating-buttons .fb-whatsapp { background:#25D366; }
         .floating-buttons .fb-donate { background:var(--green); }
         .floating-buttons .fb-problem { background:var(--gold); font-size:13px; width:auto; padding:0 18px; border-radius:25px; font-weight:600; }
-        @media only screen and (max-width:992px) { .hamburger-menu { display:block; } .header-top .header-right .social-icons { display:none; } .nav-bar .navbar-nav { display:none; } .page-hero h1 { font-size:36px; } }
-        @media only screen and (max-width:768px) { .header-top .site-title { font-size:16px; } .header-top .site-title small { font-size:10px; } .page-hero { padding:60px 0 40px; } .page-hero h1 { font-size:28px; } .idcard-section .head_item3 span { font-size:18px; padding:10px 25px; } .idcard-search-box { padding:20px; } }
-        @media only screen and (max-width:576px) { .header-top .logo-area img { height:36px; } .header-top .site-title { font-size:14px; } .page-hero h1 { font-size:24px; } }
+
+        /* Responsive */
+        @media only screen and (max-width:992px) {
+            .hamburger-menu { display:block; }
+            .header-top .header-right .social-icons { display:none; }
+            .nav-bar .navbar-nav { display:none; }
+            .page-hero h1 { font-size:36px; }
+        }
+        @media only screen and (max-width:768px) {
+            .header-top .site-title { font-size:16px; }
+            .header-top .site-title small { font-size:10px; }
+            .page-hero { padding:60px 0 40px; }
+            .page-hero h1 { font-size:28px; }
+            .idcard-section .head_item3 span { font-size:18px; padding:10px 25px; }
+            .idcard-search-box { padding:20px; }
+            .idcard { max-width: 360px; }
+            .idcard-top .idcard-org-info h4 { font-size: 15px; }
+            .idcard-photo-wrap { width: 75px; height: 75px; }
+            .idcard-validity { gap: 14px; font-size: 10px; }
+        }
+        @media only screen and (max-width:576px) {
+            .header-top .logo-area img { height:36px; }
+            .header-top .site-title { font-size:14px; }
+            .page-hero h1 { font-size:24px; }
+            .idcard { max-width: 320px; }
+            .idcard-middle { padding: 12px 14px 8px; gap: 12px; }
+            .idcard-photo-wrap { width: 65px; height: 65px; }
+            .idcard-details-right h5 { font-size: 14px; }
+            .idcard-details-right .idcard-table { font-size: 11px; }
+            .idcard-details-right .idcard-table td:first-child { width: 80px; }
+            .idcard-top { padding: 12px 14px; gap: 10px; }
+            .idcard-top .idcard-logo { width: 50px; height: 50px; }
+            .idcard-top .idcard-org-info h4 { font-size: 13px; }
+        }
     </style>
 </head>
 <body>
-    <div class="social-sidebar">
+    <!-- Social Sidebar -->
+    <div class="social-sidebar" id="socialSidebar">
         <a href="https://wa.me/917000000000" target="_blank" class="whatsapp" title="WhatsApp"><i class="fa fa-whatsapp"></i></a>
         <a href="https://facebook.com" target="_blank" class="facebook" title="Facebook"><i class="fa fa-facebook"></i></a>
         <a href="https://instagram.com" target="_blank" class="instagram" title="Instagram"><i class="fa fa-instagram"></i></a>
         <a href="https://youtube.com" target="_blank" class="youtube" title="YouTube"><i class="fa fa-youtube-play"></i></a>
     </div>
+
+    <!-- Top Bar -->
     <div class="top-bar d-none d-md-block">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-left"><i class="fa fa-phone" style="margin-right:5px;"></i> +91-7000000000 &nbsp;|&nbsp; <i class="fa fa-envelope" style="margin-right:5px;"></i> info@premanandgoshala.org</div>
-                <div class="col-md-6 text-center text-md-right social-icons">
+                <div class="col-md-6 text-center text-md-left" id="topBarContact">
+                    <i class="fa fa-phone" style="margin-right:5px;"></i> <span id="topBarPhone">+91-7000000000</span>
+                    &nbsp;|&nbsp;
+                    <i class="fa fa-envelope" style="margin-right:5px;"></i> <span id="topBarEmail">info@premanandgaushala.org</span>
+                </div>
+                <div class="col-md-6 text-center text-md-right social-icons" id="topBarSocial">
                     <a href="#"><i class="fa fa-facebook"></i></a>
                     <a href="#"><i class="fa fa-twitter"></i></a>
                     <a href="#"><i class="fa fa-instagram"></i></a>
@@ -147,6 +337,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Header -->
     <header class="header-top">
         <div class="container-fluid px-4">
             <div class="logo-area">
@@ -155,7 +347,7 @@
                 <div class="site-title">श्री प्रेमानंद गोशाला <small>गौ सेवा ही मानव सेवा</small></div>
             </div>
             <div class="header-right">
-                <div class="social-icons">
+                <div class="social-icons" id="headerSocial">
                     <a href="#"><i class="fa fa-facebook-square"></i></a>
                     <a href="#"><i class="fa fa-twitter-square"></i></a>
                     <a href="#"><i class="fa fa-instagram"></i></a>
@@ -165,6 +357,8 @@
             </div>
         </div>
     </header>
+
+    <!-- Navbar -->
     <nav class="nav-bar">
         <div class="container">
             <ul class="nav navbar-nav flex-row justify-content-center">
@@ -176,6 +370,8 @@
                 <li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
                 <li class="nav-item"><a class="nav-link" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a></li>
+                <li class="nav-item"><a class="nav-link" href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="aboutus.html" id="aboutDropdown" data-toggle="dropdown">About Us</a>
                     <div class="dropdown-menu">
@@ -200,7 +396,7 @@
                         <a class="dropdown-item" href="#">Our Project</a>
                         <a class="dropdown-item" href="#">Geographical Location of Work</a>
                         <a class="dropdown-item" href="#">Projects Funding</a>
-                        <a class="dropdown-item" href="#">Programs & Activities</a>
+                        <a class="dropdown-item" href="#">Programs &amp; Activities</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -213,6 +409,8 @@
             </ul>
         </div>
     </nav>
+
+    <!-- Mobile Nav Overlay -->
     <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileNav()"></div>
     <div class="mobile-nav" id="mobileNav">
         <div class="mobile-nav-header">
@@ -228,6 +426,8 @@
             <a href="donors.html"><i class="fa fa-list"></i> List of Donors</a>
             <a href="gallery.html"><i class="fa fa-image"></i> Gallery</a>
             <a href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a>
+            <a href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a>
+            <a href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a>
             <div>
                 <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-info-circle"></i> About Us</span><i class="fa fa-chevron-down"></i></a>
                 <div class="sub-menu">
@@ -252,7 +452,7 @@
                     <a href="#">Our Project</a>
                     <a href="#">Geographical Location of Work</a>
                     <a href="#">Projects Funding</a>
-                    <a href="#">Programs & Activities</a>
+                    <a href="#">Programs &amp; Activities</a>
                 </div>
             </div>
             <div>
@@ -264,6 +464,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Page Hero -->
     <section class="page-hero">
         <div class="container">
             <h1><i class="fa fa-id-card"></i> ID Card Download</h1>
@@ -276,11 +478,17 @@
             </nav>
         </div>
     </section>
+
+    <!-- ID Card Section -->
     <section class="idcard-section">
         <div class="container">
-            <div class="head_item3" data-aos="fade-down"><span><i class="fa fa-id-card"></i> Download ID Card</span></div>
+            <div class="head_item3" data-aos="fade-down">
+                <span><i class="fa fa-id-card"></i> Download ID Card</span>
+            </div>
             <div class="row justify-content-center">
-                <div class="col-lg-6">
+                <div class="col-lg-7">
+
+                    <!-- Search Box -->
                     <div class="idcard-search-box" data-aos="fade-up">
                         <form id="idcardSearchForm" autocomplete="off">
                             <div class="form-group">
@@ -296,32 +504,65 @@
                         </form>
                         <div id="searchError" class="alert alert-danger mt-3 d-none"></div>
                     </div>
+
+                    <!-- ID Card Preview -->
                     <div id="idcardPreview" class="idcard-preview" data-aos="fade-up">
                         <div class="idcard" id="idcardElement">
-                            <div class="idcard-header">
-                                <img src="images/logo.jpg" alt="Logo">
-                                <h6>श्री प्रेमानंद गोशाला</h6>
-                                <small>गौ सेवा ही मानव सेवा</small>
+
+                            <!-- Top: Logo + Org Name -->
+                            <div class="idcard-top">
+                                <img src="images/logo.jpg" alt="Logo" class="idcard-logo" id="cardLogo">
+                                <div class="idcard-org-info">
+                                    <h4 id="cardOrgName">श्री प्रेमानंद गोशाला</h4>
+                                    <small id="cardTagline">गौ सेवा ही मानव सेवा</small>
+                                </div>
                             </div>
-                            <div class="idcard-body">
-                                <div class="photo-placeholder" id="memberPhoto">
+
+                            <!-- Middle: Photo + Details -->
+                            <div class="idcard-middle">
+                                <div class="idcard-photo-wrap" id="memberPhoto">
                                     <i class="fa fa-user"></i>
                                 </div>
-                                <h5 id="cardName">---</h5>
-                                <div class="id-details">
-                                    <table>
+                                <div class="idcard-details-right">
+                                    <h5 id="cardName">---</h5>
+                                    <table class="idcard-table">
                                         <tr><td>Member ID</td><td>: <span id="cardMemberId">---</span></td></tr>
                                         <tr><td>Phone</td><td>: <span id="cardPhone">---</span></td></tr>
                                         <tr><td>Email</td><td>: <span id="cardEmail">---</span></td></tr>
                                         <tr><td>Address</td><td>: <span id="cardAddress">---</span></td></tr>
-                                        <tr><td>Valid Till</td><td>: <span id="cardValidTill">---</span></td></tr>
+                                        <tr><td>CIN No.</td><td>: <span id="cardCin">---</span></td></tr>
+                                        <tr><td>Reg. No.</td><td>: <span id="cardRegNo">---</span></td></tr>
                                     </table>
                                 </div>
                             </div>
-                            <div class="idcard-footer">MEMBER IDENTITY CARD</div>
+
+                            <!-- Validity Bar -->
+                            <div class="idcard-validity">
+                                <span><i class="fa fa-calendar-check-o"></i> Valid From: <span id="cardValidFrom">---</span></span>
+                                <span><i class="fa fa-calendar-times-o"></i> Valid Till: <span id="cardValidTill">---</span></span>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="idcard-footer-bar">MEMBER IDENTITY CARD</div>
                         </div>
+
+                        <!-- Member Status Badge -->
+                        <div class="member-status" id="memberStatusWrap" style="display:none;">
+                            <span class="badge" id="memberStatusBadge">---</span>
+                        </div>
+
                         <button class="btn-download" onclick="downloadIDCard()"><i class="fa fa-download"></i> Download ID Card</button>
                     </div>
+
+                    <!-- Not Approved -->
+                    <div id="notApproved" class="not-approved" data-aos="fade-up">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        <h4>Membership Not Yet Approved</h4>
+                        <p>Your membership application is currently pending approval. The ID card will be available once your membership is approved by the admin.</p>
+                        <a href="member-apply.html" class="btn mt-3" style="background:var(--gold);color:#fff;border-radius:50px;padding:10px 30px;"><i class="fa fa-user-plus"></i> Apply for Membership</a>
+                    </div>
+
+                    <!-- No Member Found -->
                     <div id="noMember" class="no-member" data-aos="fade-up">
                         <i class="fa fa-frown-o"></i>
                         <h4>Member Not Found</h4>
@@ -332,6 +573,8 @@
             </div>
         </div>
     </section>
+
+    <!-- Footer -->
     <footer class="contact-footer">
         <div class="container">
             <div class="row">
@@ -342,9 +585,9 @@
                         <p>गौ सेवा ही मानव सेवा के उद्देश्य के साथ समर्पित। हम बूढ़ी, बीमार और बेसहारा गायों की सेवा और संरक्षण के लिए प्रतिबद्ध हैं।</p>
                     </div>
                     <div class="footer-contact mt-3">
-                        <p><i class="fa fa-map-marker"></i> गौशाला रोड, वृंदावन, जिला मथुरा, उत्तर प्रदेश - 281121</p>
-                        <p><i class="fa fa-phone"></i> +91-7000000000, +91-7000000001</p>
-                        <p><i class="fa fa-envelope"></i> info@premanandgoshala.org</p>
+                        <p id="footerAddress"><i class="fa fa-map-marker"></i> गौशाला रोड, वृंदावन, जिला मथुरा, उत्तर प्रदेश - 281121</p>
+                        <p id="footerPhone"><i class="fa fa-phone"></i> +91-7000000000, +91-7000000001</p>
+                        <p id="footerEmail"><i class="fa fa-envelope"></i> info@premanandgaushala.org</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 mb-4">
@@ -365,7 +608,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 mb-4">
                     <h5>Follow Us</h5>
-                    <div class="footer-social">
+                    <div class="footer-social" id="footerSocial">
                         <a href="#"><i class="fa fa-facebook"></i></a>
                         <a href="#"><i class="fa fa-twitter"></i></a>
                         <a href="#"><i class="fa fa-instagram"></i></a>
@@ -392,11 +635,15 @@
             </div>
         </div>
     </footer>
+
+    <!-- Floating Buttons -->
     <div class="floating-buttons">
         <a href="https://wa.me/917000000000" target="_blank" class="fb-whatsapp" title="WhatsApp"><i class="fa fa-whatsapp"></i></a>
         <a href="donation_form.html" class="fb-donate" title="Donate"><i class="fa fa-heart"></i></a>
         <a href="#" class="fb-problem"><i class="fa fa-exclamation-triangle"></i> Register Problem</a>
     </div>
+
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
@@ -404,61 +651,141 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="js/app.js"></script>
     <script>
+        // Hide Receipts link for non-logged-in users
+        if (!localStorage.getItem('admin_token')) {
+            $('a[href="receipts.html"]').parent('.nav-item').hide();
+        }
+
         AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
-        function toggleMobileNav() { $('#mobileNav').toggleClass('active'); $('#mobileNavOverlay').toggleClass('active'); $('body').toggleClass('overflow-hidden'); }
-        function toggleMobileSubMenu(el) { $(el).next('.sub-menu').toggleClass('show'); $(el).find('.fa-chevron-down').toggleClass('fa-chevron-up'); }
-        $(function() {
+
+        function toggleMobileNav() {
+            $('#mobileNav').toggleClass('active');
+            $('#mobileNavOverlay').toggleClass('active');
+            $('body').toggleClass('overflow-hidden');
+        }
+
+        function toggleMobileSubMenu(el) {
+            $(el).next('.sub-menu').toggleClass('show');
+            $(el).find('.fa-chevron-down').toggleClass('fa-chevron-up');
+        }
+
+        var appSettings = {};
+
+        $(function () {
             var path = window.location.pathname;
             var page = path.split('/').pop();
-            $('.nav-bar .navbar-nav .nav-link, .mobile-nav-links a').each(function() {
+            $('.nav-bar .navbar-nav .nav-link, .mobile-nav-links a').each(function () {
                 var href = $(this).attr('href');
-                if (href === page || (page === '' && href === 'index.html')) { $(this).addClass('active'); }
+                if (href === page || (page === '' && href === 'index.html')) {
+                    $(this).addClass('active');
+                }
             });
-            $('#idcardSearchForm').on('submit', function(e) {
+
+            loadSettings();
+
+            $('#idcardSearchForm').on('submit', function (e) {
                 e.preventDefault();
                 searchMember();
             });
         });
+
+        function loadSettings() {
+            $.get('/api/settings')
+                .done(function (s) {
+                    appSettings = s || {};
+                    if (s.phone) { $('#topBarPhone').text(s.phone); $('#footerPhone').html('<i class="fa fa-phone"></i> ' + s.phone); }
+                    if (s.site_name_hi) { $('#cardOrgName').text(s.site_name_hi); }
+                    if (s.tagline) { $('#cardTagline').text(s.tagline); }
+                    if (s.address) { $('#footerAddress').html('<i class="fa fa-map-marker"></i> ' + s.address); }
+                    if (s.cin_number) { $('#cardCin').text(s.cin_number); }
+                    if (s.registration_number) { $('#cardRegNo').text(s.registration_number); }
+
+                    var socialHtml = '';
+                    if (s.facebook) { socialHtml += '<a href="' + s.facebook + '" target="_blank"><i class="fa fa-facebook"></i></a>'; }
+                    if (s.twitter) { socialHtml += '<a href="' + s.twitter + '" target="_blank"><i class="fa fa-twitter"></i></a>'; }
+                    if (s.instagram) { socialHtml += '<a href="' + s.instagram + '" target="_blank"><i class="fa fa-instagram"></i></a>'; }
+                    if (s.youtube) { socialHtml += '<a href="' + s.youtube + '" target="_blank"><i class="fa fa-youtube-play"></i></a>'; }
+                    if (s.whatsapp) { socialHtml += '<a href="https://wa.me/' + s.whatsapp.replace(/[^0-9]/g, '') + '" target="_blank"><i class="fa fa-whatsapp"></i></a>'; }
+                    if (socialHtml) { $('#footerSocial').html(socialHtml); }
+                })
+                .fail(function () {
+                    console.log('Settings could not be loaded.');
+                });
+        }
+
         function searchMember() {
             var query = $('#searchInput').val().trim();
             if (!query) { return; }
+
             var searchBy = /^(GOS|MEM)\d+$/i.test(query) ? 'member_id' : 'phone';
+
             $('#searchError').addClass('d-none');
             $('#idcardPreview').hide();
             $('#noMember').hide();
+            $('#notApproved').hide();
+
             $.get('/api/member/search?' + searchBy + '=' + encodeURIComponent(query))
-                .done(function(member) {
+                .done(function (member) {
                     if (!member || member.error) {
                         $('#noMember').show();
                         return;
                     }
+
+                    if (member.status !== 'approved') {
+                        $('#memberStatusWrap').show();
+                        $('#memberStatusBadge').text('Status: ' + (member.status || 'unknown'));
+                        if (member.status === 'pending') {
+                            $('#memberStatusBadge').attr('class', 'badge badge-pending');
+                        } else {
+                            $('#memberStatusBadge').attr('class', 'badge badge-rejected');
+                        }
+                        $('#notApproved').show();
+                        return;
+                    }
+
+                    $('#memberStatusWrap').hide();
+
                     $('#cardName').text(member.name || '---');
                     $('#cardMemberId').text(member.member_id || '---');
                     $('#cardPhone').text(member.phone || '---');
                     $('#cardEmail').text(member.email || '---');
+
                     var addr = [member.address, member.city, member.state].filter(Boolean).join(', ');
                     $('#cardAddress').text(addr || '---');
-                    var validTill = member.valid_till || member.created_at || '---';
-                    if (validTill !== '---') {
-                        validTill = new Date(validTill).toLocaleDateString('en-IN');
+
+                    var validFrom = '---';
+                    if (member.valid_from) {
+                        validFrom = new Date(member.valid_from).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+                    }
+                    $('#cardValidFrom').text(validFrom);
+
+                    var validTill = '---';
+                    if (member.valid_till) {
+                        validTill = new Date(member.valid_till).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+                    } else if (member.valid_from) {
+                        var vf = new Date(member.valid_from);
+                        vf.setMonth(vf.getMonth() + 6);
+                        validTill = vf.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
                     }
                     $('#cardValidTill').text(validTill);
+
                     if (member.photo) {
                         $('#memberPhoto').html('<img src="' + member.photo + '" alt="Photo">');
                     } else {
-                        var initial = member.name ? member.name.charAt(0).toUpperCase() : '?';
-                        $('#memberPhoto').html('<i class="fa fa-user" style="font-size:36px;color:var(--background-color);"></i>');
+                        $('#memberPhoto').html('<i class="fa fa-user"></i>');
                     }
+
                     $('#idcardPreview').show();
                 })
-                .fail(function(xhr) {
+                .fail(function (xhr) {
                     if (xhr.status === 404) {
                         $('#noMember').show();
                     } else {
-                        $('#searchError').removeClass('d-none').text('Server error. Please try again.');
+                        $('#searchError').removeClass('d-none').text('Server error. Please try again later.');
                     }
                 });
         }
+
         function downloadIDCard() {
             var element = document.getElementById('idcardElement');
             if (!element) { return; }
@@ -468,7 +795,7 @@
                 backgroundColor: '#ffffff',
                 useCORS: true,
                 logging: false
-            }).then(function(canvas) {
+            }).then(function (canvas) {
                 var link = document.createElement('a');
                 link.download = name.replace(/\s+/g, '_') + '_ID_Card.png';
                 link.href = canvas.toDataURL('image/png');

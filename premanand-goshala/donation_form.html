@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donate - श्री प्रेमानंद गोशाला</title>
+    <title>Donate - श्री प्रेमानंद गौशाला</title>
     <link rel="icon" type="image/png" href="icon/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -160,10 +160,12 @@
         .nav-bar .navbar-nav .nav-item .nav-link {
             color:#fff !important;
             padding:12px 16px;
-            font-size:14px;
+            font-size:13px;
             font-weight:600;
             transition:0.3s;
             text-transform:uppercase;
+            font-family:'Acme',sans-serif;
+            letter-spacing:0.5px;
         }
         .nav-bar .navbar-nav .nav-item .nav-link:hover,
         .nav-bar .navbar-nav .nav-item .nav-link.active {
@@ -699,7 +701,7 @@
                     <img src="images/logo.jpg" alt="Logo">
                 </a>
                 <div class="site-title">
-                    श्री प्रेमानंद गोशाला
+                    श्री प्रेमानंद गौशाला
                     <small>गौ सेवा ही मानव सेवा</small>
                 </div>
             </div>
@@ -729,6 +731,8 @@
                 <li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
                 <li class="nav-item"><a class="nav-link" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a></li>
+                <li class="nav-item"><a class="nav-link" href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="aboutus.html" id="aboutDropdown" data-toggle="dropdown">About Us</a>
                     <div class="dropdown-menu">
@@ -771,7 +775,7 @@
     <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileNav()"></div>
     <div class="mobile-nav" id="mobileNav">
         <div class="mobile-nav-header">
-            <h5><i class="fa fa-cow"></i> श्री प्रेमानंद गोशाला</h5>
+            <h5><i class="fa fa-cow"></i> श्री प्रेमानंद गौशाला</h5>
             <button onclick="toggleMobileNav()"><i class="fa fa-times"></i></button>
         </div>
         <div class="mobile-nav-links">
@@ -783,6 +787,8 @@
             <a href="donors.html"><i class="fa fa-list"></i> List of Donors</a>
             <a href="gallery.html"><i class="fa fa-image"></i> Gallery</a>
             <a href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a>
+            <a href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a>
+            <a href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a>
             <div>
                 <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)">
                     <span><i class="fa fa-info-circle"></i> About Us</span>
@@ -902,14 +908,6 @@
                             </div>
                             <div class="preview-container" id="photoPreview"></div>
 
-                            <h5 style="color:var(--green);font-family:'Acme',sans-serif;margin:25px 0 15px;"><i class="fa fa-file-image-o"></i> Payment Receipt Upload</h5>
-                            <div class="upload-box" id="receiptUploadBox">
-                                <input type="file" name="receipt" id="receiptInput" accept="image/*" multiple>
-                                <i class="fa fa-file-image-o"></i>
-                                <p>Click to upload payment receipt / screenshot</p>
-                            </div>
-                            <div class="preview-container" id="receiptPreview"></div>
-
                             <button type="submit" class="donate-submit-btn mt-3"><i class="fa fa-heart"></i> Donate Now</button>
                             <div id="donationFormMsg" class="mt-3"></div>
                         </form>
@@ -953,7 +951,7 @@
                         <h4><i class="fa fa-mobile"></i> UPI Payment</h4>
                         <div class="upi-section">
                             <img src="images/IMG-20260708-WA0005.jpg" alt="UPI QR Code">
-                            <p>Scan this QR code with any UPI app</p>
+                            <p><strong>Scan to Pay</strong></p>
                             <div class="upi-id">
                                 <i class="fa fa-google-wallet"></i> premanandgoshala@upi
                             </div>
@@ -985,7 +983,7 @@
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="footer-logo">
                         <a href="index.html"><img src="images/logo.jpg" alt="Logo"></a>
-                        <h5>श्री प्रेमानंद गोशाला</h5>
+                        <h5>श्री प्रेमानंद गौशाला</h5>
                         <p>गौ सेवा ही मानव सेवा के उद्देश्य के साथ समर्पित। हम बूढ़ी, बीमार और बेसहारा गायों की सेवा और संरक्षण के लिए प्रतिबद्ध हैं।</p>
                     </div>
                     <div class="footer-contact mt-3">
@@ -1031,7 +1029,7 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-md-6 text-center text-md-left mb-2 mb-md-0">
-                        Copyright &copy; 2026, All Right Reserved <strong>श्री प्रेमानंद गोशाला</strong>
+                        Copyright &copy; 2026, All Right Reserved <strong>श्री प्रेमानंद गौशाला</strong>
                     </div>
                     <div class="col-md-6 text-center text-md-right">
                         <a href="#">Terms &amp; Condition</a> &nbsp;|&nbsp;
@@ -1069,6 +1067,11 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/app.js"></script>
     <script>
+        // Hide Receipts link for non-logged-in users
+        if (!localStorage.getItem('admin_token')) {
+            $('a[href="receipts.html"]').parent('.nav-item').hide();
+        }
+
         // Initialize AOS
         AOS.init({
             duration: 800,
@@ -1142,7 +1145,7 @@
                 $('#donationAmount').val('');
                 $('.amt-btn').removeClass('active');
                 $('#customAmount').hide();
-                $('#photoPreview, #receiptPreview').empty();
+                $('#photoPreview').empty();
             }).fail(function(xhr) {
                 var msg = xhr.responseJSON?.error || 'Server error. Please try again.';
                 $('#donationFormMsg').html('<div class="alert alert-danger">' + msg + '</div>');
@@ -1154,11 +1157,6 @@
         // Image upload preview - Photo
         $('#photoInput').on('change', function(e) {
             handleFilePreview(e, '#photoPreview');
-        });
-
-        // Image upload preview - Receipt
-        $('#receiptInput').on('change', function(e) {
-            handleFilePreview(e, '#receiptPreview');
         });
 
         function handleFilePreview(e, containerSelector) {

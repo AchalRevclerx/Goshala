@@ -9,140 +9,631 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Acme&display=swap">
     <style>
-        :root { --bg: #8B4513; --gold: #D4A017; --green: #2E8B57; --light: #FFF8F0; }
-        * { padding:0; margin:0; box-sizing:border-box; }
-        body { font-family:'Bree Serif',serif; background:var(--light); }
-        .topbar { background:var(--bg); color:#fff; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
-        .topbar h5 { font-family:'Acme',sans-serif; margin:0; }
-        .topbar .user-info { display:flex; align-items:center; gap:15px; font-size:14px; }
-        .topbar .user-info .logout-btn { background:rgba(255,255,255,0.2); color:#fff; border:none; padding:6px 18px; border-radius:50px; cursor:pointer; transition:0.3s; font-size:13px; }
-        .topbar .user-info .logout-btn:hover { background:var(--gold); }
-        .container { padding:30px 20px; }
-        .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:15px; margin-bottom:30px; }
-        .stat-card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 4px 15px rgba(0,0,0,0.06); text-align:center; }
-        .stat-card i { font-size:32px; color:var(--bg); margin-bottom:8px; }
-        .stat-card h3 { font-family:'Acme',sans-serif; color:var(--bg); margin:0; font-size:28px; }
-        .stat-card p { color:#999; margin:0; font-size:13px; }
-        .section-title { font-family:'Acme',sans-serif; color:var(--bg); margin:25px 0 15px; padding-bottom:8px; border-bottom:2px solid var(--gold); }
-        .table-wrap { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.06); margin-bottom:25px; }
-        .table-wrap table { margin:0; font-size:14px; }
-        .table-wrap th { background:var(--bg); color:#fff; font-weight:600; border:none; }
-        .table-wrap td, .table-wrap th { padding:10px 12px; vertical-align:middle; }
-        .badge-pending { background:#ffc107; color:#333; }
-        .badge-completed { background:var(--green); color:#fff; }
-        .badge-approved { background:var(--green); color:#fff; }
-        .badge-rejected { background:#dc3545; color:#fff; }
-        .empty-state { text-align:center; padding:40px; color:#999; }
-        .empty-state i { font-size:40px; display:block; margin-bottom:10px; }
-        @media (max-width:768px) { .stats-grid { grid-template-columns:repeat(2,1fr); } .topbar h5 { font-size:16px; } }
+        :root{--bg:#8B4513;--gold:#D4A017;--green:#2E8B57;--light:#FFF8F0;--sidebar:#5C2E0A;--sidebarHover:#7A3D1A;}
+        *{padding:0;margin:0;box-sizing:border-box;}
+        body{font-family:'Bree Serif',serif;background:var(--light);overflow-x:hidden;}
+        .sidebar{position:fixed;top:0;left:0;width:240px;height:100vh;background:var(--sidebar);color:#fff;z-index:200;overflow-y:auto;transition:transform .3s;}
+        .sidebar .logo{padding:20px 15px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.1);}
+        .sidebar .logo img{width:50px;height:50px;border-radius:50%;margin-bottom:6px;}
+        .sidebar .logo h4{font-family:'Acme',sans-serif;font-size:15px;margin:0;color:var(--gold);}
+        .sidebar .logo small{color:rgba(255,255,255,0.5);font-size:11px;}
+        .sidebar nav{padding:10px 0;}
+        .sidebar nav a{display:flex;align-items:center;padding:11px 20px;color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;transition:.2s;border-left:3px solid transparent;}
+        .sidebar nav a:hover,.sidebar nav a.active{background:var(--sidebarHover);color:#fff;border-left-color:var(--gold);}
+        .sidebar nav a i{width:22px;margin-right:10px;text-align:center;}
+        .main{margin-left:240px;min-height:100vh;}
+        .topbar{background:var(--bg);color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+        .topbar h5{font-family:'Acme',sans-serif;margin:0;font-size:18px;}
+        .topbar .user-info{display:flex;align-items:center;gap:15px;font-size:13px;}
+        .topbar .user-info .role-badge{background:var(--gold);color:var(--bg);padding:3px 10px;border-radius:50px;font-size:11px;font-weight:700;text-transform:uppercase;}
+        .topbar .user-info .logout-btn{background:rgba(255,255,255,0.2);color:#fff;border:none;padding:6px 16px;border-radius:50px;cursor:pointer;font-size:12px;}
+        .topbar .user-info .logout-btn:hover{background:var(--gold);}
+        .content{padding:24px;}
+        .page{display:none;}
+        .page.active{display:block;}
+        .page-title{font-family:'Acme',sans-serif;color:var(--bg);margin-bottom:20px;padding-bottom:8px;border-bottom:2px solid var(--gold);font-size:22px;}
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:28px;}
+        .stat-card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 4px 15px rgba(0,0,0,0.06);text-align:center;}
+        .stat-card i{font-size:30px;color:var(--bg);margin-bottom:6px;}
+        .stat-card h3{font-family:'Acme',sans-serif;color:var(--bg);margin:0;font-size:26px;}
+        .stat-card p{color:#999;margin:0;font-size:12px;}
+        .table-wrap{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.06);margin-bottom:22px;}
+        .table-wrap table{margin:0;font-size:13px;}
+        .table-wrap th{background:var(--bg);color:#fff;font-weight:600;border:none;padding:10px;}
+        .table-wrap td,.table-wrap th{padding:9px 10px;vertical-align:middle;}
+        .btn-sm-custom{padding:4px 10px;border-radius:6px;font-size:12px;border:none;cursor:pointer;color:#fff;}
+        .btn-edit{background:var(--gold);}
+        .btn-del{background:#dc3545;}
+        .btn-green{background:var(--green);}
+        .btn-orange{background:#e67e22;}
+        .form-section{background:#fff;border-radius:12px;padding:24px;box-shadow:0 4px 15px rgba(0,0,0,0.06);margin-bottom:22px;}
+        .form-section h6{font-family:'Acme',sans-serif;color:var(--bg);margin-bottom:15px;padding-bottom:6px;border-bottom:1px solid #eee;}
+        .badge-pending{background:#ffc107;color:#333;padding:3px 10px;border-radius:50px;font-size:11px;}
+        .badge-completed{background:var(--green);color:#fff;padding:3px 10px;border-radius:50px;font-size:11px;}
+        .badge-approved{background:var(--green);color:#fff;padding:3px 10px;border-radius:50px;font-size:11px;}
+        .badge-rejected{background:#dc3545;color:#fff;padding:3px 10px;border-radius:50px;font-size:11px;}
+        .badge-failed{background:#dc3545;color:#fff;padding:3px 10px;border-radius:50px;font-size:11px;}
+        .badge-staff{background:#6c757d;color:#fff;padding:3px 10px;border-radius:50px;font-size:11px;}
+        .badge-admin{background:var(--gold);color:var(--bg);padding:3px 10px;border-radius:50px;font-size:11px;}
+        .empty-state{text-align:center;padding:40px;color:#999;}
+        .empty-state i{font-size:40px;display:block;margin-bottom:10px;}
+        .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;}
+        .gallery-item{position:relative;border-radius:10px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,0.1);background:#fff;}
+        .gallery-item img{width:100%;height:160px;object-fit:cover;}
+        .gallery-item .gallery-delete{position:absolute;top:6px;right:6px;background:rgba(220,53,69,0.85);color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px;}
+        .gallery-item p{padding:6px 8px;font-size:12px;margin:0;text-align:center;color:#555;}
+        .staff-photo{width:40px;height:40px;border-radius:50%;object-fit:cover;}
+        .member-photo{width:40px;height:40px;border-radius:50%;object-fit:cover;}
+        select.form-control-sm-custom{padding:4px 8px;font-size:13px;border-radius:6px;border:1px solid #ccc;}
+        .hamburger{display:none;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;margin-right:12px;}
+        @media(max-width:768px){
+            .sidebar{transform:translateX(-100%);}
+            .sidebar.open{transform:translateX(0);}
+            .main{margin-left:0;}
+            .hamburger{display:block;}
+            .stats-grid{grid-template-columns:repeat(2,1fr);}
+            .gallery-grid{grid-template-columns:repeat(2,1fr);}
+        }
     </style>
 </head>
 <body>
-    <div class="topbar">
-        <h5><i class="fa fa-shield"></i> Admin Dashboard</h5>
-        <div class="user-info">
-            <span id="adminName"><i class="fa fa-user-circle"></i> Admin</span>
-            <button class="logout-btn" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="icon/favicon.png" alt="Logo">
+            <h4>प्रेमानंद गोशाला</h4>
+            <small>Admin Panel</small>
+        </div>
+        <nav>
+            <a href="#" class="active" data-page="dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
+            <a href="#" data-page="events"><i class="fa fa-calendar"></i> Events</a>
+            <a href="#" data-page="members"><i class="fa fa-users"></i> Members</a>
+            <a href="#" data-page="donations"><i class="fa fa-inr"></i> Donations</a>
+            <a href="#" data-page="contacts"><i class="fa fa-envelope"></i> Contacts</a>
+            <a href="#" data-page="gallery"><i class="fa fa-image"></i> Gallery</a>
+            <a href="#" data-page="staff"><i class="fa fa-user-secret"></i> Staff</a>
+            <a href="#" data-page="users"><i class="fa fa-user-circle"></i> Users & Roles</a>
+            <a href="#" data-page="settings"><i class="fa fa-cog"></i> Settings</a>
+            <a href="#" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</a>
+        </nav>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <div style="display:flex;align-items:center;">
+                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fa fa-bars"></i></button>
+                <h5 id="pageTitle"><i class="fa fa-dashboard"></i> Dashboard</h5>
+            </div>
+            <div class="user-info">
+                <span class="role-badge" id="roleBadge">ADMIN</span>
+                <span id="adminName"><i class="fa fa-user-circle"></i> Admin</span>
+                <button class="logout-btn" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- DASHBOARD -->
+            <div class="page active" id="page-dashboard">
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card"><i class="fa fa-users"></i><h3 id="statMembers">-</h3><p>Members</p></div>
+                    <div class="stat-card"><i class="fa fa-inr"></i><h3 id="statDonations">-</h3><p>Donations</p></div>
+                    <div class="stat-card"><i class="fa fa-rupee"></i><h3 id="statAmount">-</h3><p>Amount</p></div>
+                    <div class="stat-card"><i class="fa fa-calendar"></i><h3 id="statEvents">-</h3><p>Events</p></div>
+                    <div class="stat-card"><i class="fa fa-image"></i><h3 id="statGallery">-</h3><p>Gallery</p></div>
+                    <div class="stat-card"><i class="fa fa-envelope"></i><h3 id="statContacts">-</h3><p>Messages</p></div>
+                    <div class="stat-card"><i class="fa fa-user-secret"></i><h3 id="statStaff">-</h3><p>Staff</p></div>
+                    <div class="stat-card"><i class="fa fa-clock-o"></i><h3 id="statPending">-</h3><p>Pending</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="page-title" style="font-size:16px;"><i class="fa fa-clock-o"></i> Pending Members</h6>
+                        <div class="table-wrap" id="dashPending"><div class="empty-state"><i class="fa fa-check"></i> All clear</div></div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="page-title" style="font-size:16px;"><i class="fa fa-envelope"></i> Recent Messages</h6>
+                        <div class="table-wrap" id="dashContacts"><div class="empty-state"><i class="fa fa-inbox"></i> No messages</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EVENTS -->
+            <div class="page" id="page-events">
+                <div class="form-section">
+                    <h6 id="eventFormTitle"><i class="fa fa-plus"></i> Add Event</h6>
+                    <form id="eventForm" enctype="multipart/form-data">
+                        <input type="hidden" id="eventId">
+                        <div class="row">
+                            <div class="col-md-4"><label>Title *</label><input type="text" class="form-control form-control-sm" id="eventTitle" required></div>
+                            <div class="col-md-4"><label>Date *</label><input type="date" class="form-control form-control-sm" id="eventDate" required></div>
+                            <div class="col-md-4"><label>Time</label><input type="time" class="form-control form-control-sm" id="eventTime"></div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-4"><label>Location</label><input type="text" class="form-control form-control-sm" id="eventLocation"></div>
+                            <div class="col-md-4"><label>Description</label><textarea class="form-control form-control-sm" id="eventDesc" rows="2"></textarea></div>
+                            <div class="col-md-4"><label>Image</label><input type="file" class="form-control form-control-sm" id="eventImage" accept="image/*"></div>
+                        </div>
+                        <div class="mt-2">
+                            <button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;">Save</button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="resetEventForm()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="table-wrap" id="eventsTable"><div class="empty-state"><i class="fa fa-calendar"></i> No events</div></div>
+            </div>
+
+            <!-- MEMBERS -->
+            <div class="page" id="page-members">
+                <div class="table-wrap" id="membersTable"><div class="empty-state"><i class="fa fa-users"></i> No members</div></div>
+            </div>
+
+            <!-- DONATIONS -->
+            <div class="page" id="page-donations">
+                <div class="table-wrap" id="donationsTable"><div class="empty-state"><i class="fa fa-inr"></i> No donations</div></div>
+            </div>
+
+            <!-- CONTACTS -->
+            <div class="page" id="page-contacts">
+                <div class="table-wrap" id="contactsTable"><div class="empty-state"><i class="fa fa-envelope"></i> No messages</div></div>
+            </div>
+
+            <!-- GALLERY -->
+            <div class="page" id="page-gallery">
+                <div class="form-section">
+                    <h6><i class="fa fa-plus"></i> Add Image</h6>
+                    <form id="galleryForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-5"><label>Title</label><input type="text" class="form-control form-control-sm" id="galleryTitle"></div>
+                            <div class="col-md-5"><label>Image *</label><input type="file" class="form-control form-control-sm" id="galleryImage" accept="image/*" required></div>
+                            <div class="col-md-2"><label>&nbsp;</label><button type="submit" class="btn btn-sm btn-block" style="background:var(--green);color:#fff;">Upload</button></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="gallery-grid" id="galleryGrid"><div class="empty-state"><i class="fa fa-image"></i> No images</div></div>
+            </div>
+
+            <!-- STAFF -->
+            <div class="page" id="page-staff">
+                <div class="form-section">
+                    <h6 id="staffFormTitle"><i class="fa fa-plus"></i> Add Staff</h6>
+                    <form id="staffForm" enctype="multipart/form-data">
+                        <input type="hidden" id="staffId">
+                        <div class="row">
+                            <div class="col-md-3"><label>Name *</label><input type="text" class="form-control form-control-sm" id="staffName" required></div>
+                            <div class="col-md-3"><label>Phone *</label><input type="text" class="form-control form-control-sm" id="staffPhone" required></div>
+                            <div class="col-md-3"><label>Email</label><input type="email" class="form-control form-control-sm" id="staffEmail"></div>
+                            <div class="col-md-3"><label>Designation</label><input type="text" class="form-control form-control-sm" id="staffDesignation"></div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-4"><label>Address</label><textarea class="form-control form-control-sm" id="staffAddress" rows="2"></textarea></div>
+                            <div class="col-md-4"><label>Photo</label><input type="file" class="form-control form-control-sm" id="staffPhoto" accept="image/*"></div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;margin-right:8px;">Save</button>
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="resetStaffForm()">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="table-wrap" id="staffTable"><div class="empty-state"><i class="fa fa-user-secret"></i> No staff</div></div>
+            </div>
+
+            <!-- USERS & ROLES -->
+            <div class="page" id="page-users">
+                <div class="form-section">
+                    <h6><i class="fa fa-plus"></i> Add User</h6>
+                    <form id="userForm">
+                        <div class="row">
+                            <div class="col-md-3"><label>Name *</label><input type="text" class="form-control form-control-sm" id="userName" required></div>
+                            <div class="col-md-3"><label>Email *</label><input type="email" class="form-control form-control-sm" id="userEmail" required></div>
+                            <div class="col-md-3"><label>Password *</label><input type="password" class="form-control form-control-sm" id="userPassword" required></div>
+                            <div class="col-md-3"><label>Role</label>
+                                <select class="form-control form-control-sm" id="userRole">
+                                    <option value="staff">Staff</option>
+                                    <option value="coordinator">Coordinator</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-2"><button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;">Create User</button></div>
+                    </form>
+                </div>
+                <div class="table-wrap" id="usersTable"><div class="empty-state"><i class="fa fa-user-circle"></i> No users</div></div>
+            </div>
+
+            <!-- SETTINGS -->
+            <div class="page" id="page-settings">
+                <div class="form-section">
+                    <h6><i class="fa fa-cog"></i> Site Settings</h6>
+                    <form id="settingsForm">
+                        <div class="row" id="settingsFields">
+                            <div class="col-md-6"><label>Site Name</label><input type="text" class="form-control form-control-sm" data-key="site_name"></div>
+                            <div class="col-md-6"><label>Site Name (Hindi)</label><input type="text" class="form-control form-control-sm" data-key="site_name_hi"></div>
+                            <div class="col-md-6"><label>Tagline</label><input type="text" class="form-control form-control-sm" data-key="tagline"></div>
+                            <div class="col-md-6"><label>Email</label><input type="email" class="form-control form-control-sm" data-key="email"></div>
+                            <div class="col-md-6"><label>Phone</label><input type="text" class="form-control form-control-sm" data-key="phone"></div>
+                            <div class="col-md-6"><label>Phone 2</label><input type="text" class="form-control form-control-sm" data-key="phone2"></div>
+                            <div class="col-md-12"><label>Address</label><textarea class="form-control form-control-sm" data-key="address" rows="2"></textarea></div>
+                            <div class="col-md-6"><label>CIN Number</label><input type="text" class="form-control form-control-sm" data-key="cin_number"></div>
+                            <div class="col-md-6"><label>Registration Number</label><input type="text" class="form-control form-control-sm" data-key="registration_number"></div>
+                            <div class="col-md-12"><hr><strong>Bank Details</strong></div>
+                            <div class="col-md-4"><label>Bank Name</label><input type="text" class="form-control form-control-sm" data-key="bank_name"></div>
+                            <div class="col-md-4"><label>Account Holder</label><input type="text" class="form-control form-control-sm" data-key="bank_holder"></div>
+                            <div class="col-md-4"><label>Account No</label><input type="text" class="form-control form-control-sm" data-key="bank_account"></div>
+                            <div class="col-md-4"><label>IFSC</label><input type="text" class="form-control form-control-sm" data-key="bank_ifsc"></div>
+                            <div class="col-md-4"><label>MICR</label><input type="text" class="form-control form-control-sm" data-key="bank_micr"></div>
+                            <div class="col-md-4"><label>Branch</label><input type="text" class="form-control form-control-sm" data-key="bank_branch"></div>
+                            <div class="col-md-4"><label>UPI ID</label><input type="text" class="form-control form-control-sm" data-key="upi_id"></div>
+                            <div class="col-md-12"><hr><strong>Social & Other</strong></div>
+                            <div class="col-md-4"><label>WhatsApp</label><input type="text" class="form-control form-control-sm" data-key="whatsapp"></div>
+                            <div class="col-md-4"><label>Facebook</label><input type="text" class="form-control form-control-sm" data-key="facebook"></div>
+                            <div class="col-md-4"><label>Instagram</label><input type="text" class="form-control form-control-sm" data-key="instagram"></div>
+                            <div class="col-md-4"><label>YouTube</label><input type="text" class="form-control form-control-sm" data-key="youtube"></div>
+                            <div class="col-md-4"><label>Twitter</label><input type="text" class="form-control form-control-sm" data-key="twitter"></div>
+                            <div class="col-md-4"><label>Working Hours</label><input type="text" class="form-control form-control-sm" data-key="working_hours"></div>
+                            <div class="col-md-12"><label>Map Embed URL</label><textarea class="form-control form-control-sm" data-key="map_embed" rows="2"></textarea></div>
+                        </div>
+                        <div class="mt-3"><button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;">Save Settings</button></div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="container">
-        <div class="stats-grid" id="statsGrid">
-            <div class="stat-card"><i class="fa fa-users"></i><h3 id="statMembers">-</h3><p>Total Members</p></div>
-            <div class="stat-card"><i class="fa fa-rupee"></i><h3 id="statDonations">-</h3><p>Total Donations</p></div>
-            <div class="stat-card"><i class="fa fa-inr"></i><h3 id="statAmount">-</h3><p>Amount Collected</p></div>
-            <div class="stat-card"><i class="fa fa-calendar"></i><h3 id="statEvents">-</h3><p>Events</p></div>
-            <div class="stat-card"><i class="fa fa-image"></i><h3 id="statGallery">-</h3><p>Gallery Images</p></div>
-            <div class="stat-card"><i class="fa fa-envelope"></i><h3 id="statContacts">-</h3><p>Messages</p></div>
-        </div>
 
-        <h5 class="section-title"><i class="fa fa-envelope"></i> Recent Messages</h5>
-        <div class="table-wrap" id="contactsTable"><div class="empty-state"><i class="fa fa-inbox"></i> No messages yet</div></div>
-
-        <h5 class="section-title"><i class="fa fa-rupee"></i> Recent Donations</h5>
-        <div class="table-wrap" id="donationsTable"><div class="empty-state"><i class="fa fa-inr"></i> No donations yet</div></div>
-
-        <h5 class="section-title"><i class="fa fa-users"></i> Recent Members</h5>
-        <div class="table-wrap" id="membersTable"><div class="empty-state"><i class="fa fa-user-plus"></i> No members yet</div></div>
-    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
-        function getToken() { return localStorage.getItem('admin_token'); }
-        function authHeaders() { return { 'Authorization': 'Bearer ' + getToken() }; }
+    var API = '/api';
+    function getToken(){ return localStorage.getItem('admin_token'); }
+    function authHeaders(){ return {'Authorization':'Bearer '+getToken()}; }
+    var user = JSON.parse(localStorage.getItem('admin_user')||'{}');
+    if(!getToken()) window.location.href='admin-login.html';
 
-        var user = JSON.parse(localStorage.getItem('admin_user') || '{}');
-        if (!getToken()) { window.location.href = 'admin-login.html'; }
-        $('#adminName').text(user.name || 'Admin');
+    $(function(){
+        $('#adminName').html('<i class="fa fa-user-circle"></i> '+(user.name||'Admin'));
+        $('#roleBadge').text(user.role||'ADMIN');
+        initNav();
+        loadDashboard();
+    });
 
-        function logout() {
-            localStorage.removeItem('admin_token');
-            localStorage.removeItem('admin_user');
-            window.location.href = 'admin-login.html';
-        }
+    function logout(){
+        localStorage.removeItem('admin_token');
+        localStorage.removeItem('admin_user');
+        window.location.href='admin-login.html';
+    }
 
-        $(function() {
-            loadStats();
-            loadContacts();
-            loadDonations();
-            loadMembers();
+    function initNav(){
+        $('.sidebar nav a[data-page]').on('click',function(e){
+            e.preventDefault();
+            var pg=$(this).data('page');
+            $('.sidebar nav a').removeClass('active');
+            $(this).addClass('active');
+            $('.page').removeClass('active');
+            $('#page-'+pg).addClass('active');
+            $('#pageTitle').html($(this).find('i').attr('class')+' '+$(this).text().trim());
+            if(pg==='events') loadEvents();
+            if(pg==='members') loadMembers();
+            if(pg==='donations') loadDonations();
+            if(pg==='contacts') loadContacts();
+            if(pg==='gallery') loadGallery();
+            if(pg==='staff') loadStaff();
+            if(pg==='users') loadUsers();
+            if(pg==='settings') loadSettings();
+            $('#sidebar').removeClass('open');
         });
+    }
 
-        function loadStats() {
-            $.ajax({ url: '/api/stats', headers: authHeaders() })
-                .done(function(d) {
-                    $('#statMembers').text(d.memberCount || 0);
-                    $('#statDonations').text(d.donationCount || 0);
-                    $('#statAmount').text('₹' + (d.donationTotal || 0).toLocaleString('en-IN'));
-                    $('#statEvents').text(d.eventCount || 0);
-                    $('#statGallery').text(d.galleryCount || 0);
-                    $('#statContacts').text(d.contactCount || 0);
-                });
-        }
+    function ajax(url,opts){
+        var defaults={url:url,headers:authHeaders(),dataType:'json'};
+        return $.ajax($.extend(defaults,opts));
+    }
 
-        function loadContacts() {
-            $.ajax({ url: '/api/contacts', headers: authHeaders() })
-                .done(function(data) {
-                    if (!data || !data.length) return;
-                    var html = '<table class="table table-hover"><thead><tr><th>Name</th><th>Phone</th><th>Topic</th><th>Message</th><th>Date</th></tr></thead><tbody>';
-                    data.slice(0, 5).forEach(function(c) {
-                        var d = c.created_at ? new Date(c.created_at).toLocaleDateString('en-IN') : '';
-                        html += '<tr><td>' + (c.name || '') + '</td><td>' + (c.phone || '') + '</td><td>' + (c.topic || '-') + '</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + (c.message || '') + '</td><td>' + d + '</td></tr>';
-                    });
-                    html += '</tbody></table>';
-                    $('#contactsTable').html(html);
-                });
-        }
+    /* =================== DASHBOARD =================== */
+    function loadDashboard(){
+        ajax(API+'/stats').done(function(d){
+            $('#statMembers').text(d.memberCount||0);
+            $('#statDonations').text(d.donationCount||0);
+            $('#statAmount').text('\u20B9'+(d.donationTotal||0).toLocaleString('en-IN'));
+            $('#statEvents').text(d.eventCount||0);
+            $('#statGallery').text(d.galleryCount||0);
+            $('#statContacts').text(d.contactCount||0);
+            $('#statStaff').text(d.staffCount||0);
+            $('#statPending').text(d.pendingMembers||0);
+        });
+        ajax(API+'/members').done(function(data){
+            var pending=(data||[]).filter(function(m){return m.status==='pending';});
+            if(!pending.length){$('#dashPending').html('<div class="empty-state"><i class="fa fa-check"></i> All clear</div>');return;}
+            var h='<table class="table table-sm"><thead><tr><th>Name</th><th>Phone</th><th>Action</th></tr></thead><tbody>';
+            pending.slice(0,5).forEach(function(m){
+                h+='<tr><td>'+esc(m.name)+'</td><td>'+esc(m.phone)+'</td><td>';
+                h+='<button class="btn-sm-custom btn-green" onclick="approveMember('+m.id+')"><i class="fa fa-check"></i></button> ';
+                h+='<button class="btn-sm-custom btn-del" onclick="rejectMember('+m.id+')"><i class="fa fa-times"></i></button>';
+                h+='</td></tr>';
+            });
+            h+='</tbody></table>';
+            $('#dashPending').html(h);
+        });
+        ajax(API+'/contacts').done(function(data){
+            if(!data||!data.length){$('#dashContacts').html('<div class="empty-state"><i class="fa fa-inbox"></i> No messages</div>');return;}
+            var h='<table class="table table-sm"><thead><tr><th>Name</th><th>Message</th></tr></thead><tbody>';
+            data.slice(0,5).forEach(function(c){
+                h+='<tr><td>'+esc(c.name)+'</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(c.message)+'</td></tr>';
+            });
+            h+='</tbody></table>';
+            $('#dashContacts').html(h);
+        });
+    }
 
-        function loadDonations() {
-            $.ajax({ url: '/api/donations', headers: authHeaders() })
-                .done(function(data) {
-                    if (!data || !data.length) return;
-                    var html = '<table class="table table-hover"><thead><tr><th>Donor</th><th>Phone</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>';
-                    data.slice(0, 5).forEach(function(d) {
-                        var dt = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN') : '';
-                        var status = d.status || 'pending';
-                        var badge = 'badge badge-pill badge-' + status;
-                        html += '<tr><td>' + (d.donor_name || '') + '</td><td>' + (d.phone || '') + '</td><td>₹' + (parseFloat(d.amount) || 0).toLocaleString('en-IN') + '</td><td><span class="' + badge + '">' + status + '</span></td><td>' + dt + '</td></tr>';
-                    });
-                    html += '</tbody></table>';
-                    $('#donationsTable').html(html);
-                });
-        }
+    /* =================== EVENTS =================== */
+    function loadEvents(){
+        ajax(API+'/events').done(function(data){
+            if(!data||!data.length){$('#eventsTable').html('<div class="empty-state"><i class="fa fa-calendar"></i> No events</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>Title</th><th>Date</th><th>Time</th><th>Location</th><th>Action</th></tr></thead><tbody>';
+            data.forEach(function(e){
+                h+='<tr><td>'+esc(e.title)+'</td><td>'+esc(e.date)+'</td><td>'+esc(e.time||'-')+'</td><td>'+esc(e.location||'-')+'</td><td>';
+                h+='<button class="btn-sm-custom btn-edit" onclick="editEvent('+e.id+')"><i class="fa fa-pencil"></i></button> ';
+                h+='<button class="btn-sm-custom btn-del" onclick="deleteEvent('+e.id+')"><i class="fa fa-trash"></i></button>';
+                h+='</td></tr>';
+            });
+            h+='</tbody></table>';
+            $('#eventsTable').html(h);
+        });
+    }
+    function editEvent(id){
+        ajax(API+'/events').done(function(data){
+            var e=(data||[]).find(function(x){return x.id===id;});
+            if(!e)return;
+            $('#eventId').val(e.id);
+            $('#eventTitle').val(e.title);
+            $('#eventDate').val(e.date);
+            $('#eventTime').val(e.time||'');
+            $('#eventLocation').val(e.location||'');
+            $('#eventDesc').val(e.description||'');
+            $('#eventFormTitle').html('<i class="fa fa-pencil"></i> Edit Event');
+            $('html,body').animate({scrollTop:$('#page-events').offset().top-80},300);
+        });
+    }
+    function deleteEvent(id){
+        if(!confirm('Delete this event?'))return;
+        ajax(API+'/events/'+id,{method:'DELETE'}).done(function(){loadEvents();});
+    }
+    function resetEventForm(){
+        $('#eventForm')[0].reset();
+        $('#eventId').val('');
+        $('#eventFormTitle').html('<i class="fa fa-plus"></i> Add Event');
+    }
+    $('#eventForm').on('submit',function(e){
+        e.preventDefault();
+        var fd=new FormData();
+        fd.append('title',$('#eventTitle').val());
+        fd.append('date',$('#eventDate').val());
+        fd.append('time',$('#eventTime').val());
+        fd.append('location',$('#eventLocation').val());
+        fd.append('description',$('#eventDesc').val());
+        var img=document.getElementById('eventImage').files[0];
+        if(img) fd.append('image',img);
+        var id=$('#eventId').val();
+        var method=id?'PUT':'POST';
+        var url=id?API+'/events/'+id:API+'/events';
+        $.ajax({url:url,headers:authHeaders(),method:method,data:fd,processData:false,contentType:false})
+            .done(function(){resetEventForm();loadEvents();});
+    });
 
-        function loadMembers() {
-            $.ajax({ url: '/api/members', headers: authHeaders() })
-                .done(function(data) {
-                    if (!data || !data.length) return;
-                    var html = '<table class="table table-hover"><thead><tr><th>Name</th><th>Phone</th><th>ID Card</th><th>Status</th><th>Date</th></tr></thead><tbody>';
-                    data.slice(0, 5).forEach(function(m) {
-                        var dt = m.created_at ? new Date(m.created_at).toLocaleDateString('en-IN') : '';
-                        var status = m.status || 'pending';
-                        var badge = 'badge badge-pill badge-' + status;
-                        html += '<tr><td>' + (m.name || '') + '</td><td>' + (m.phone || '') + '</td><td>' + (m.id_card_number || '-') + '</td><td><span class="' + badge + '">' + status + '</span></td><td>' + dt + '</td></tr>';
-                    });
-                    html += '</tbody></table>';
-                    $('#membersTable').html(html);
+    /* =================== MEMBERS =================== */
+    function loadMembers(){
+        ajax(API+'/members').done(function(data){
+            if(!data||!data.length){$('#membersTable').html('<div class="empty-state"><i class="fa fa-users"></i> No members</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>Photo</th><th>Name</th><th>Phone</th><th>ID Card</th><th>Valid From</th><th>Valid Till</th><th>Status</th><th>Action</th></tr></thead><tbody>';
+            data.forEach(function(m){
+                var ph=m.photo?'<img src="'+m.photo+'" class="member-photo">':'<i class="fa fa-user-circle" style="font-size:30px;color:#ccc;"></i>';
+                var badge='badge-'+(m.status||'pending');
+                h+='<tr><td>'+ph+'</td><td>'+esc(m.name)+'</td><td>'+esc(m.phone)+'</td><td>'+esc(m.id_card_number||'-')+'</td>';
+                h+='<td>'+fmtDate(m.valid_from)+'</td><td>'+fmtDate(m.valid_till)+'</td>';
+                h+='<td><span class="'+badge+'">'+(m.status||'pending')+'</span></td><td>';
+                if(m.status==='pending'){
+                    h+='<button class="btn-sm-custom btn-green" onclick="approveMember('+m.id+')"><i class="fa fa-check"></i></button> ';
+                    h+='<button class="btn-sm-custom btn-del" onclick="rejectMember('+m.id+')"><i class="fa fa-times"></i></button>';
+                } else {
+                    h+='<span style="color:#999;font-size:12px;">-</span>';
+                }
+                h+='</td></tr>';
+            });
+            h+='</tbody></table>';
+            $('#membersTable').html(h);
+        });
+    }
+    function approveMember(id){
+        ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'approved'})}).done(function(){loadMembers();loadDashboard();});
+    }
+    function rejectMember(id){
+        if(!confirm('Reject this member?'))return;
+        ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'rejected'})}).done(function(){loadMembers();loadDashboard();});
+    }
+
+    /* =================== DONATIONS =================== */
+    function loadDonations(){
+        ajax(API+'/donations').done(function(data){
+            if(!data||!data.length){$('#donationsTable').html('<div class="empty-state"><i class="fa fa-inr"></i> No donations</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>Donor</th><th>Amount</th><th>Phone</th><th>Status</th><th>Date</th></tr></thead><tbody>';
+            data.forEach(function(d){
+                var badge='badge-'+(d.status||'pending');
+                h+='<tr><td>'+esc(d.donor_name)+'</td><td>\u20B9'+(parseFloat(d.amount)||0).toLocaleString('en-IN')+'</td><td>'+esc(d.phone||'-')+'</td>';
+                h+='<td><select class="form-control-sm-custom" onchange="updateDonationStatus('+d.id+',this.value)">';
+                ['pending','completed','failed'].forEach(function(s){
+                    h+='<option value="'+s+'" '+(d.status===s?'selected':'')+'>'+s+'</option>';
                 });
-        }
+                h+='</select></td><td>'+fmtDate(d.created_at)+'</td></tr>';
+            });
+            h+='</tbody></table>';
+            $('#donationsTable').html(h);
+        });
+    }
+    function updateDonationStatus(id,status){
+        ajax(API+'/donations/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:status})}).done(function(){loadDonations();loadDashboard();});
+    }
+
+    /* =================== CONTACTS =================== */
+    function loadContacts(){
+        ajax(API+'/contacts').done(function(data){
+            if(!data||!data.length){$('#contactsTable').html('<div class="empty-state"><i class="fa fa-envelope"></i> No messages</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Topic</th><th>Message</th><th>Date</th></tr></thead><tbody>';
+            data.forEach(function(c){
+                h+='<tr><td>'+esc(c.name)+'</td><td>'+esc(c.phone||'-')+'</td><td>'+esc(c.email||'-')+'</td><td>'+esc(c.topic||'-')+'</td>';
+                h+='<td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+esc(c.message)+'">'+esc(c.message)+'</td>';
+                h+='<td>'+fmtDate(c.created_at)+'</td></tr>';
+            });
+            h+='</tbody></table>';
+            $('#contactsTable').html(h);
+        });
+    }
+
+    /* =================== GALLERY =================== */
+    function loadGallery(){
+        ajax(API+'/gallery').done(function(data){
+            if(!data||!data.length){$('#galleryGrid').html('<div class="empty-state"><i class="fa fa-image"></i> No images</div>');return;}
+            var h='';
+            data.forEach(function(g){
+                h+='<div class="gallery-item">';
+                h+='<button class="gallery-delete" onclick="deleteGallery('+g.id+')"><i class="fa fa-trash"></i></button>';
+                h+='<img src="'+esc(g.image)+'" alt="'+esc(g.title)+'">';
+                h+='<p>'+esc(g.title||'')+'</p></div>';
+            });
+            $('#galleryGrid').html(h);
+        });
+    }
+    function deleteGallery(id){
+        if(!confirm('Delete this image?'))return;
+        ajax(API+'/gallery/'+id,{method:'DELETE'}).done(function(){loadGallery();loadDashboard();});
+    }
+    $('#galleryForm').on('submit',function(e){
+        e.preventDefault();
+        var fd=new FormData();
+        fd.append('title',$('#galleryTitle').val());
+        var img=document.getElementById('galleryImage').files[0];
+        if(img) fd.append('image',img);
+        $.ajax({url:API+'/gallery',headers:authHeaders(),method:'POST',data:fd,processData:false,contentType:false})
+            .done(function(){$('#galleryForm')[0].reset();loadGallery();loadDashboard();});
+    });
+
+    /* =================== STAFF =================== */
+    function loadStaff(){
+        ajax(API+'/staff').done(function(data){
+            if(!data||!data.length){$('#staffTable').html('<div class="empty-state"><i class="fa fa-user-secret"></i> No staff</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>Photo</th><th>Name</th><th>Phone</th><th>Email</th><th>Designation</th><th>Address</th><th>Action</th></tr></thead><tbody>';
+            data.forEach(function(s){
+                var ph=s.photo?'<img src="'+s.photo+'" class="staff-photo">':'<i class="fa fa-user-circle" style="font-size:30px;color:#ccc;"></i>';
+                h+='<tr><td>'+ph+'</td><td>'+esc(s.name)+'</td><td>'+esc(s.phone)+'</td><td>'+esc(s.email||'-')+'</td><td>'+esc(s.designation||'-')+'</td>';
+                h+='<td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(s.address||'-')+'</td><td>';
+                h+='<button class="btn-sm-custom btn-edit" onclick="editStaff('+s.id+')"><i class="fa fa-pencil"></i></button> ';
+                h+='<button class="btn-sm-custom btn-del" onclick="deleteStaff('+s.id+')"><i class="fa fa-trash"></i></button>';
+                h+='</td></tr>';
+            });
+            h+='</tbody></table>';
+            $('#staffTable').html(h);
+        });
+    }
+    function editStaff(id){
+        ajax(API+'/staff').done(function(data){
+            var s=(data||[]).find(function(x){return x.id===id;});
+            if(!s)return;
+            $('#staffId').val(s.id);
+            $('#staffName').val(s.name);
+            $('#staffPhone').val(s.phone);
+            $('#staffEmail').val(s.email||'');
+            $('#staffDesignation').val(s.designation||'');
+            $('#staffAddress').val(s.address||'');
+            $('#staffFormTitle').html('<i class="fa fa-pencil"></i> Edit Staff');
+            $('html,body').animate({scrollTop:$('#page-staff').offset().top-80},300);
+        });
+    }
+    function deleteStaff(id){
+        if(!confirm('Delete this staff member?'))return;
+        ajax(API+'/staff/'+id,{method:'DELETE'}).done(function(){loadStaff();loadDashboard();});
+    }
+    function resetStaffForm(){
+        $('#staffForm')[0].reset();
+        $('#staffId').val('');
+        $('#staffFormTitle').html('<i class="fa fa-plus"></i> Add Staff');
+    }
+    $('#staffForm').on('submit',function(e){
+        e.preventDefault();
+        var fd=new FormData();
+        fd.append('name',$('#staffName').val());
+        fd.append('phone',$('#staffPhone').val());
+        fd.append('email',$('#staffEmail').val());
+        fd.append('designation',$('#staffDesignation').val());
+        fd.append('address',$('#staffAddress').val());
+        var img=document.getElementById('staffPhoto').files[0];
+        if(img) fd.append('photo',img);
+        var id=$('#staffId').val();
+        var method=id?'PUT':'POST';
+        var url=id?API+'/staff/'+id:API+'/staff';
+        $.ajax({url:url,headers:authHeaders(),method:method,data:fd,processData:false,contentType:false})
+            .done(function(){resetStaffForm();loadStaff();});
+    });
+
+    /* =================== USERS =================== */
+    function loadUsers(){
+        ajax(API+'/users').done(function(data){
+            if(!data||!data.length){$('#usersTable').html('<div class="empty-state"><i class="fa fa-user-circle"></i> No users</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Change Role</th><th>Action</th></tr></thead><tbody>';
+            data.forEach(function(u){
+                var badge='badge-'+(u.role||'staff');
+                h+='<tr><td>'+esc(u.name)+'</td><td>'+esc(u.email)+'</td><td><span class="'+badge+'">'+(u.role||'staff')+'</span></td><td>';
+                h+='<select class="form-control-sm-custom" onchange="updateUserRole('+u.id+',this.value)">';
+                ['admin','manager','coordinator','staff'].forEach(function(r){
+                    h+='<option value="'+r+'" '+(u.role===r?'selected':'')+'>'+r+'</option>';
+                });
+                h+='</select></td><td>';
+                if(u.email!=='admin@goshala.org'){
+                    h+='<button class="btn-sm-custom btn-del" onclick="deleteUser('+u.id+')"><i class="fa fa-trash"></i></button>';
+                } else {
+                    h+='<span style="color:#999;font-size:11px;">Primary</span>';
+                }
+                h+='</td></tr>';
+            });
+            h+='</tbody></table>';
+            $('#usersTable').html(h);
+        });
+    }
+    function updateUserRole(id,role){
+        ajax(API+'/users/'+id+'/role',{method:'PUT',contentType:'application/json',data:JSON.stringify({role:role})}).done(function(){loadUsers();});
+    }
+    function deleteUser(id){
+        if(!confirm('Delete this user?'))return;
+        ajax(API+'/users/'+id,{method:'DELETE'}).done(function(){loadUsers();});
+    }
+    $('#userForm').on('submit',function(e){
+        e.preventDefault();
+        ajax(API+'/auth/register',{method:'POST',contentType:'application/json',data:JSON.stringify({
+            name:$('#userName').val(),email:$('#userEmail').val(),password:$('#userPassword').val(),role:$('#userRole').val()
+        })}).done(function(){$('#userForm')[0].reset();loadUsers();}).fail(function(xhr){
+            alert(xhr.responseJSON?xhr.responseJSON.error:'Failed to create user');
+        });
+    });
+
+    /* =================== SETTINGS =================== */
+    function loadSettings(){
+        ajax(API+'/settings/all').done(function(data){
+            var map={};
+            (data||[]).forEach(function(s){map[s.key]=s.value;});
+            $('#settingsFields input, #settingsFields textarea').each(function(){
+                var key=$(this).data('key');
+                if(key && map[key]!==undefined) $(this).val(map[key]);
+            });
+        });
+    }
+    $('#settingsForm').on('submit',function(e){
+        e.preventDefault();
+        var settings=[];
+        $('#settingsFields input, #settingsFields textarea').each(function(){
+            var key=$(this).data('key');
+            if(key) settings.push({key:key,value:$(this).val()});
+        });
+        ajax(API+'/settings',{method:'PUT',contentType:'application/json',data:JSON.stringify({settings:settings})})
+            .done(function(){alert('Settings saved!');});
+    });
+
+    /* =================== UTILS =================== */
+    function esc(s){return s?(s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):'';}
+    function fmtDate(d){return d?new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'-';}
     </script>
 </body>
 </html>

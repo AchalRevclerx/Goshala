@@ -42,7 +42,7 @@
         .enquiry-btn:hover { background:var(--gold); color:#fff; text-decoration:none; }
         .hamburger-menu { display:none; background:none; border:none; font-size:26px; color:var(--background-color); cursor:pointer; padding:4px 8px; }
         .nav-bar { background:var(--background-color); margin-top:70px; position:sticky; top:0; z-index:9997; }
-        .nav-bar .navbar-nav .nav-item .nav-link { color:#fff !important; padding:12px 16px; font-size:14px; font-weight:600; transition:0.3s; text-transform:uppercase; }
+        .nav-bar .navbar-nav .nav-item .nav-link { color:#fff !important; padding:12px 16px; font-size:13px; font-weight:600; transition:0.3s; text-transform:uppercase; font-family:'Acme',sans-serif; letter-spacing:0.5px; }
         .nav-bar .navbar-nav .nav-item .nav-link:hover, .nav-bar .navbar-nav .nav-item .nav-link.active { background:var(--gold); color:#fff !important; }
         .nav-bar .navbar-nav .nav-item .nav-link i { margin-right:4px; }
         .nav-bar .dropdown-menu { background:var(--background-color); border:none; border-radius:0 0 8px 8px; padding:8px 0; min-width:200px; }
@@ -108,6 +108,27 @@
         .floating-buttons .fb-whatsapp { background:#25D366; }
         .floating-buttons .fb-donate { background:var(--green); }
         .floating-buttons .fb-problem { background:var(--gold); font-size:13px; width:auto; padding:0 18px; border-radius:25px; font-weight:600; }
+        .photo-upload-area { border:2px dashed #ccc; border-radius:10px; padding:20px; text-align:center; cursor:pointer; transition:0.3s; position:relative; }
+        .photo-upload-area:hover { border-color:var(--gold); background:rgba(212,160,23,0.05); }
+        .photo-upload-area.dragover { border-color:var(--green); background:rgba(46,139,87,0.05); }
+        .photo-upload-area input[type="file"] { position:absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer; }
+        .photo-upload-area .upload-icon { font-size:36px; color:var(--background-color); margin-bottom:8px; }
+        .photo-upload-area p { margin:0; color:#888; font-size:13px; }
+        .photo-upload-area .upload-hint { font-size:11px; color:#bbb; margin-top:4px; }
+        .photo-preview { display:none; text-align:center; margin-top:10px; }
+        .photo-preview img { max-width:150px; max-height:150px; border-radius:10px; border:2px solid var(--gold); object-fit:cover; }
+        .photo-preview .remove-photo { display:inline-block; margin-top:8px; color:red; cursor:pointer; font-size:13px; }
+        .photo-preview .remove-photo:hover { text-decoration:underline; }
+        .member-result-card { background:#fff; border-radius:12px; padding:40px; box-shadow:0 4px 20px rgba(0,0,0,0.08); text-align:center; }
+        .member-result-card .success-icon { width:80px; height:80px; background:var(--green); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:40px; color:#fff; }
+        .member-result-card h4 { color:var(--green); font-family:'Acme',sans-serif; margin-bottom:15px; }
+        .member-result-card .member-id-display { background:var(--light-bg); border:2px solid var(--gold); border-radius:10px; padding:20px; margin:20px 0; }
+        .member-result-card .member-id-display .label { font-size:14px; color:#888; margin-bottom:5px; }
+        .member-result-card .member-id-display .id-value { font-size:28px; font-weight:bold; color:var(--background-color); font-family:'Acme',sans-serif; }
+        .member-result-card .validity-info { color:#666; font-size:14px; margin-top:15px; line-height:1.8; }
+        .member-result-card .validity-info i { color:var(--gold); }
+        .member-result-card .btn-new-registration { background:var(--background-color); color:#fff; padding:10px 30px; border-radius:50px; text-decoration:none; font-size:14px; font-weight:600; transition:0.3s; display:inline-block; margin-top:15px; }
+        .member-result-card .btn-new-registration:hover { background:var(--gold); color:#fff; text-decoration:none; }
         @media only screen and (max-width:992px) { .hamburger-menu { display:block; } .header-top .header-right .social-icons { display:none; } .nav-bar .navbar-nav { display:none; } .page-hero h1 { font-size:36px; } }
         @media only screen and (max-width:768px) { .header-top .site-title { font-size:16px; } .header-top .site-title small { font-size:10px; } .page-hero { padding:60px 0 40px; } .page-hero h1 { font-size:28px; } .member-section .head_item3 span { font-size:18px; padding:10px 25px; } }
         @media only screen and (max-width:576px) { .header-top .logo-area img { height:36px; } .header-top .site-title { font-size:14px; } .page-hero h1 { font-size:24px; } }
@@ -162,6 +183,8 @@
                 <li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
                 <li class="nav-item"><a class="nav-link" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="find-staff.html"><i class="fa fa-users"></i> Find Staff</a></li>
+                <li class="nav-item"><a class="nav-link" href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="aboutus.html" id="aboutDropdown" data-toggle="dropdown">About Us</a>
                     <div class="dropdown-menu">
@@ -214,6 +237,8 @@
             <a href="donors.html"><i class="fa fa-list"></i> List of Donors</a>
             <a href="gallery.html"><i class="fa fa-image"></i> Gallery</a>
             <a href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a>
+            <a href="find-staff.html"><i class="fa fa-users"></i> Find Staff</a>
+            <a href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a>
             <div>
                 <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-info-circle"></i> About Us</span><i class="fa fa-chevron-down"></i></a>
                 <div class="sub-menu">
@@ -265,11 +290,11 @@
     <section class="member-section">
         <div class="container">
             <div class="head_item3" data-aos="fade-down"><span><i class="fa fa-user-plus"></i> Member Apply</span></div>
-            <div class="row">
+            <div class="row" id="memberFormRow">
                 <div class="col-lg-7 mb-4" data-aos="fade-right">
                     <div class="member-card">
                         <h4><i class="fa fa-pencil"></i> Application Form</h4>
-                        <form id="memberForm">
+                        <form id="memberForm" enctype="multipart/form-data">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label>Full Name <span class="required">*</span></label>
@@ -287,6 +312,19 @@
                             <div class="form-group">
                                 <label>Address <span style="color:#999;font-weight:normal;">(optional)</span></label>
                                 <textarea class="form-control" id="memberAddress" rows="3" placeholder="Enter your address"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Photo <span class="required">*</span></label>
+                                <div class="photo-upload-area" id="photoUploadArea">
+                                    <input type="file" id="memberPhoto" accept="image/*" required>
+                                    <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
+                                    <p>Click or drag photo here to upload</p>
+                                    <div class="upload-hint">JPG, PNG or GIF (Max 5MB)</div>
+                                </div>
+                                <div class="photo-preview" id="photoPreview">
+                                    <img id="previewImage" src="" alt="Photo Preview">
+                                    <div><span class="remove-photo" id="removePhoto"><i class="fa fa-trash"></i> Remove Photo</span></div>
+                                </div>
                             </div>
                             <button type="submit" class="submit-btn" id="memberSubmitBtn"><i class="fa fa-paper-plane"></i> Submit Application</button>
                         </form>
@@ -308,7 +346,7 @@
                                 <div class="benefits-card">
                                     <div class="ben-icon"><i class="fa fa-calendar"></i></div>
                                     <h5>Event Invitations</h5>
-                                    <p>Get exclusive invitations to goshala events and ceremonies.</p>
+                                    <p>Get exclusive invitations to gaushala events and ceremonies.</p>
                                 </div>
                             </div>
                             <div class="col-12 mb-3">
@@ -399,6 +437,9 @@
         function toggleMobileNav() { $('#mobileNav').toggleClass('active'); $('#mobileNavOverlay').toggleClass('active'); $('body').toggleClass('overflow-hidden'); }
         function toggleMobileSubMenu(el) { $(el).next('.sub-menu').toggleClass('show'); $(el).find('.fa-chevron-down').toggleClass('fa-chevron-up'); }
         $(function() {
+            if (!localStorage.getItem('admin_token')) { $('a[href="receipts.html"]').closest('.nav-item, a[href="receipts.html"]').hide(); }
+        });
+        $(function() {
             var path = window.location.pathname;
             var page = path.split('/').pop();
             $('.nav-bar .navbar-nav .nav-link, .mobile-nav-links a').each(function() {
@@ -406,23 +447,84 @@
                 if (href === page || (page === '' && href === 'index.html')) { $(this).addClass('active'); }
             });
         });
+        $(function() {
+            var $fileInput = $('#memberPhoto');
+            var $uploadArea = $('#photoUploadArea');
+            var $preview = $('#photoPreview');
+            var $previewImg = $('#previewImage');
+
+            $fileInput.on('change', function(e) {
+                var file = e.target.files[0];
+                if (file) { showPreview(file); }
+            });
+
+            $uploadArea.on('dragover', function(e) { e.preventDefault(); $(this).addClass('dragover'); });
+            $uploadArea.on('dragleave drop', function(e) { e.preventDefault(); $(this).removeClass('dragover'); });
+            $uploadArea.on('drop', function(e) {
+                var file = e.originalEvent.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    $fileInput[0].files = e.originalEvent.dataTransfer.files;
+                    showPreview(file);
+                }
+            });
+
+            $('#removePhoto').on('click', function() {
+                $fileInput.val('');
+                $previewImg.attr('src', '');
+                $preview.hide();
+                $uploadArea.show();
+            });
+
+            function showPreview(file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    $fileInput.val('');
+                    return;
+                }
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $previewImg.attr('src', e.target.result);
+                    $preview.show();
+                    $uploadArea.hide();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
         $('#memberForm').submit(function(e) {
             e.preventDefault();
             var btn = $('#memberSubmitBtn');
             btn.html('<i class="fa fa-spinner fa-spin"></i> Submitting...').prop('disabled', true);
+            var formData = new FormData();
+            formData.append('name', $('#memberName').val());
+            formData.append('phone', $('#memberPhone').val());
+            formData.append('email', $('#memberEmail').val());
+            formData.append('address', $('#memberAddress').val());
+            formData.append('photo', $('#memberPhoto')[0].files[0]);
             $.ajax({
                 url: '/api/member/apply',
                 method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    name: $('#memberName').val(),
-                    phone: $('#memberPhone').val(),
-                    email: $('#memberEmail').val(),
-                    address: $('#memberAddress').val()
-                }),
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function(res) {
-                    $('#memberResult').removeClass('alert alert-danger').addClass('alert alert-success').html('<i class="fa fa-check-circle"></i> ' + res.message).show();
-                    $('#memberForm')[0].reset();
+                    var memberId = res.member_id || res.memberId || res.id || 'N/A';
+                    var successHtml = '<div class="member-result-card">' +
+                        '<div class="success-icon"><i class="fa fa-check"></i></div>' +
+                        '<h4>Application Submitted Successfully!</h4>' +
+                        '<p style="color:#666;font-size:15px;">Thank you for applying for membership at श्री प्रेमानंद गोशाला.</p>' +
+                        '<div class="member-id-display">' +
+                        '<div class="label">Your Member ID</div>' +
+                        '<div class="id-value">' + memberId + '</div>' +
+                        '</div>' +
+                        '<div class="validity-info">' +
+                        '<p><i class="fa fa-info-circle"></i> Your membership will be <strong>valid for 6 months</strong> from the date of registration.</p>' +
+                        '<p><i class="fa fa-id-card"></i> You can download your Member ID Card from the <a href="id-card.html" style="color:var(--gold);font-weight:600;">ID Card Download</a> page.</p>' +
+                        '</div>' +
+                        '<a href="javascript:void(0)" class="btn-new-registration" onclick="resetForm()"><i class="fa fa-plus"></i> New Registration</a>' +
+                        '</div>';
+                    $('#memberFormRow').html(
+                        '<div class="col-12" data-aos="fade-up">' + successHtml + '</div>'
+                    );
                 },
                 error: function(xhr) {
                     var err = xhr.responseJSON ? xhr.responseJSON.error : 'Submission failed';
@@ -431,6 +533,7 @@
                 complete: function() { btn.html('<i class="fa fa-paper-plane"></i> Submit Application').prop('disabled', false); }
             });
         });
+        function resetForm() { location.reload(); }
     </script>
 </body>
 </html>

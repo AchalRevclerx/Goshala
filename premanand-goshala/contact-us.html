@@ -160,10 +160,12 @@
         .nav-bar .navbar-nav .nav-item .nav-link {
             color:#fff !important;
             padding:12px 16px;
-            font-size:14px;
+            font-size:13px;
             font-weight:600;
             transition:0.3s;
             text-transform:uppercase;
+            font-family:'Acme',sans-serif;
+            letter-spacing:0.5px;
         }
         .nav-bar .navbar-nav .nav-item .nav-link:hover,
         .nav-bar .navbar-nav .nav-item .nav-link.active {
@@ -568,10 +570,10 @@
 
     <!-- ===== Fixed Left Social Sidebar ===== -->
     <div class="social-sidebar">
-        <a href="https://wa.me/917000000000" target="_blank" class="whatsapp" title="WhatsApp"><i class="fa fa-whatsapp"></i></a>
-        <a href="https://facebook.com" target="_blank" class="facebook" title="Facebook"><i class="fa fa-facebook"></i></a>
-        <a href="https://instagram.com" target="_blank" class="instagram" title="Instagram"><i class="fa fa-instagram"></i></a>
-        <a href="https://youtube.com" target="_blank" class="youtube" title="YouTube"><i class="fa fa-youtube-play"></i></a>
+        <a href="#" target="_blank" class="whatsapp" title="WhatsApp"><i class="fa fa-whatsapp"></i></a>
+        <a href="#" target="_blank" class="facebook" title="Facebook"><i class="fa fa-facebook"></i></a>
+        <a href="#" target="_blank" class="instagram" title="Instagram"><i class="fa fa-instagram"></i></a>
+        <a href="#" target="_blank" class="youtube" title="YouTube"><i class="fa fa-youtube-play"></i></a>
     </div>
 
     <!-- ===== Top Bar ===== -->
@@ -579,14 +581,14 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6 text-center text-md-left">
-                    <i class="fa fa-phone" style="margin-right:5px;"></i> +91-7000000000 &nbsp;|&nbsp;
-                    <i class="fa fa-envelope" style="margin-right:5px;"></i> info@premanandgoshala.org
+                    <i class="fa fa-phone" style="margin-right:5px;"></i> <span id="s-topbar-phone">+91-7000000000</span> &nbsp;|&nbsp;
+                    <i class="fa fa-envelope" style="margin-right:5px;"></i> <span id="s-topbar-email">info@premanandgaushala.org</span>
                 </div>
                 <div class="col-md-6 text-center text-md-right social-icons">
-                    <a href="#"><i class="fa fa-facebook"></i></a>
-                    <a href="#"><i class="fa fa-twitter"></i></a>
-                    <a href="#"><i class="fa fa-instagram"></i></a>
-                    <a href="#"><i class="fa fa-youtube-play"></i></a>
+                    <a id="s-tb-fb" href="#"><i class="fa fa-facebook"></i></a>
+                    <a id="s-tb-tw" href="#"><i class="fa fa-twitter"></i></a>
+                    <a id="s-tb-ig" href="#"><i class="fa fa-instagram"></i></a>
+                    <a id="s-tb-yt" href="#"><i class="fa fa-youtube-play"></i></a>
                 </div>
             </div>
         </div>
@@ -609,10 +611,10 @@
             </div>
             <div class="header-right">
                 <div class="social-icons">
-                    <a href="#"><i class="fa fa-facebook-square"></i></a>
-                    <a href="#"><i class="fa fa-twitter-square"></i></a>
-                    <a href="#"><i class="fa fa-instagram"></i></a>
-                    <a href="#"><i class="fa fa-youtube-play"></i></a>
+                    <a id="s-hd-fb" href="#"><i class="fa fa-facebook-square"></i></a>
+                    <a id="s-hd-tw" href="#"><i class="fa fa-twitter-square"></i></a>
+                    <a id="s-hd-ig" href="#"><i class="fa fa-instagram"></i></a>
+                    <a id="s-hd-yt" href="#"><i class="fa fa-youtube-play"></i></a>
                 </div>
                 <a href="contact.html" class="enquiry-btn">
                     <i class="fa fa-phone"></i> Enquiry Now
@@ -633,6 +635,8 @@
                 <li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
                 <li class="nav-item"><a class="nav-link" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
                 <li class="nav-item"><a class="nav-link active" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a></li>
+                <li class="nav-item"><a class="nav-link" href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="aboutus.html" id="aboutDropdown" data-toggle="dropdown">About Us</a>
                     <div class="dropdown-menu">
@@ -687,6 +691,8 @@
             <a href="donors.html"><i class="fa fa-list"></i> List of Donors</a>
             <a href="gallery.html"><i class="fa fa-image"></i> Gallery</a>
             <a href="contact-us.html" class="active"><i class="fa fa-phone"></i> Contact Us</a>
+            <a href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a>
+            <a href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a>
             <div>
                 <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)">
                     <span><i class="fa fa-info-circle"></i> About Us</span>
@@ -762,28 +768,28 @@
                             <div class="info-icon"><i class="fa fa-map-marker"></i></div>
                             <div class="info-text">
                                 <h6>Our Address</h6>
-                                <p>Shri Premand Goshala, Vrindavan Road, Mathura, Uttar Pradesh - 281001</p>
+                                <p id="s-address">Shri Premand Gaushala, Vrindavan Road, Mathura, Uttar Pradesh - 281001</p>
                             </div>
                         </div>
                         <div class="info-item">
                             <div class="info-icon"><i class="fa fa-phone"></i></div>
                             <div class="info-text">
                                 <h6>Phone Number</h6>
-                                <p>+91 9876543210, +91 9876543211</p>
+                                <p id="s-phone">+91 9876543210, +91 9876543211</p>
                             </div>
                         </div>
                         <div class="info-item">
                             <div class="info-icon"><i class="fa fa-envelope"></i></div>
                             <div class="info-text">
                                 <h6>Email Address</h6>
-                                <p>info@premanandgoshala.org</p>
+                                <p id="s-email">info@premanandgaushala.org</p>
                             </div>
                         </div>
                         <div class="info-item">
                             <div class="info-icon"><i class="fa fa-clock-o"></i></div>
                             <div class="info-text">
                                 <h6>Working Hours</h6>
-                                <p>Mon - Sun: 6:00 AM - 8:00 PM</p>
+                                <p id="s-hours">Mon - Sun: 6:00 AM - 8:00 PM</p>
                             </div>
                         </div>
                     </div>
@@ -833,7 +839,7 @@
             </div>
 
             <div class="map-container" data-aos="zoom-in">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113200.52538001038!2d77.60682787278276!3d27.523688100000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397371e0b4d2ca53%3A0x7c1ec6c5d0f50d09!2sVrindavan%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1690000000000" allowfullscreen="" loading="lazy"></iframe>
+                <iframe id="s-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113200.52538001038!2d77.60682787278276!3d27.523688100000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397371e0b4d2ca53%3A0x7c1ec6c5d0f50d09!2sVrindavan%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1690000000000" allowfullscreen="" loading="lazy"></iframe>
             </div>
         </div>
     </section>
@@ -849,9 +855,9 @@
                         <p>गौ सेवा ही मानव सेवा के उद्देश्य के साथ समर्पित। हम बूढ़ी, बीमार और बेसहारा गायों की सेवा और संरक्षण के लिए प्रतिबद्ध हैं।</p>
                     </div>
                     <div class="footer-contact mt-3">
-                        <p><i class="fa fa-map-marker"></i> गौशाला रोड, वृंदावन, जिला मथुरा, उत्तर प्रदेश - 281121</p>
-                        <p><i class="fa fa-phone"></i> +91-7000000000, +91-7000000001</p>
-                        <p><i class="fa fa-envelope"></i> info@premanandgoshala.org</p>
+                        <p><i class="fa fa-map-marker"></i> <span id="s-ft-addr">गौशाला रोड, वृंदावन, जिला मथुरा, उत्तरप्रदेश - 281121</span></p>
+                        <p><i class="fa fa-phone"></i> <span id="s-ft-phone">+91-7000000000, +91-7000000001</span></p>
+                        <p><i class="fa fa-envelope"></i> <span id="s-ft-email">info@premanandgaushala.org</span></p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 mb-4">
@@ -873,11 +879,11 @@
                 <div class="col-lg-4 col-md-6 mb-4">
                     <h5>Follow Us</h5>
                     <div class="footer-social">
-                        <a href="#"><i class="fa fa-facebook"></i></a>
-                        <a href="#"><i class="fa fa-twitter"></i></a>
-                        <a href="#"><i class="fa fa-instagram"></i></a>
-                        <a href="#"><i class="fa fa-youtube-play"></i></a>
-                        <a href="#"><i class="fa fa-whatsapp"></i></a>
+                        <a id="s-ft-fb" href="#"><i class="fa fa-facebook"></i></a>
+                        <a id="s-ft-tw" href="#"><i class="fa fa-twitter"></i></a>
+                        <a id="s-ft-ig" href="#"><i class="fa fa-instagram"></i></a>
+                        <a id="s-ft-yt" href="#"><i class="fa fa-youtube-play"></i></a>
+                        <a id="s-ft-wa" href="#"><i class="fa fa-whatsapp"></i></a>
                     </div>
                     <div class="mt-4">
                         <h5>Donate Now</h5>
@@ -911,7 +917,7 @@
 
     <!-- ===== Floating Action Buttons ===== -->
     <div class="floating-buttons">
-        <a href="https://wa.me/917000000000" target="_blank" class="fb-whatsapp" title="WhatsApp">
+        <a id="s-fl-wa" href="#" target="_blank" class="fb-whatsapp" title="WhatsApp">
             <i class="fa fa-whatsapp"></i>
         </a>
         <a href="donation_form.html" class="fb-donate" title="Donate">
@@ -929,6 +935,11 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/app.js"></script>
     <script>
+        // Hide Receipts link for non-logged-in users
+        if (!localStorage.getItem('admin_token')) {
+            $('a[href="receipts.html"]').parent('.nav-item').hide();
+        }
+
         // Initialize AOS
         AOS.init({
             duration: 800,
@@ -978,6 +989,47 @@
                         btn.prop('disabled', false).html('<i class="fa fa-paper-plane"></i> Send Message');
                     });
             });
+        });
+
+        // Load dynamic settings from API
+        $.get('/api/settings', function(s) {
+            if (!s) return;
+            var phone = [s.phone, s.phone2].filter(Boolean).join(', ');
+            // Social sidebar
+            if (s.whatsapp) $('.social-sidebar .whatsapp').attr('href', s.whatsapp);
+            if (s.facebook) $('.social-sidebar .facebook').attr('href', s.facebook);
+            if (s.instagram) $('.social-sidebar .instagram').attr('href', s.instagram);
+            if (s.youtube) $('.social-sidebar .youtube').attr('href', s.youtube);
+            // Top bar
+            if (phone) $('#s-topbar-phone').text(phone);
+            if (s.email) $('#s-topbar-email').text(s.email);
+            if (s.facebook) $('#s-tb-fb').attr('href', s.facebook);
+            if (s.twitter) $('#s-tb-tw').attr('href', s.twitter);
+            if (s.instagram) $('#s-tb-ig').attr('href', s.instagram);
+            if (s.youtube) $('#s-tb-yt').attr('href', s.youtube);
+            // Header social
+            if (s.facebook) $('#s-hd-fb').attr('href', s.facebook);
+            if (s.twitter) $('#s-hd-tw').attr('href', s.twitter);
+            if (s.instagram) $('#s-hd-ig').attr('href', s.instagram);
+            if (s.youtube) $('#s-hd-yt').attr('href', s.youtube);
+            // Contact card
+            if (s.address) $('#s-address').text(s.address);
+            if (phone) $('#s-phone').text(phone);
+            if (s.email) $('#s-email').text(s.email);
+            if (s.working_hours) $('#s-hours').text(s.working_hours);
+            // Map
+            if (s.map_embed) $('#s-map').attr('src', s.map_embed);
+            // Footer
+            if (s.address) $('#s-ft-addr').text(s.address);
+            if (phone) $('#s-ft-phone').text(phone);
+            if (s.email) $('#s-ft-email').text(s.email);
+            if (s.facebook) $('#s-ft-fb').attr('href', s.facebook);
+            if (s.twitter) $('#s-ft-tw').attr('href', s.twitter);
+            if (s.instagram) $('#s-ft-ig').attr('href', s.instagram);
+            if (s.youtube) $('#s-ft-yt').attr('href', s.youtube);
+            if (s.whatsapp) $('#s-ft-wa').attr('href', s.whatsapp);
+            // Floating WhatsApp
+            if (s.whatsapp) $('#s-fl-wa').attr('href', s.whatsapp);
         });
     </script>
 </body>

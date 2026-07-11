@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>List of Donors - श्री प्रेमानंद गौशाला</title>
+    <title>My Donation Receipts - श्री प्रेमानंद गोशाला</title>
     <link rel="icon" type="image/png" href="icon/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -42,7 +42,7 @@
         .enquiry-btn:hover { background:var(--gold); color:#fff; text-decoration:none; }
         .hamburger-menu { display:none; background:none; border:none; font-size:26px; color:var(--background-color); cursor:pointer; padding:4px 8px; }
         .nav-bar { background:var(--background-color); margin-top:70px; position:sticky; top:0; z-index:9997; }
-        .nav-bar .navbar-nav .nav-item .nav-link { color:#fff !important; padding:12px 16px; font-size:13px; font-weight:600; transition:0.3s; text-transform:uppercase; font-family:'Acme',sans-serif; letter-spacing:0.5px; }
+        .nav-bar .navbar-nav .nav-item .nav-link { color:#fff !important; padding:12px 16px; font-size:14px; font-weight:600; transition:0.3s; text-transform:uppercase; }
         .nav-bar .navbar-nav .nav-item .nav-link:hover, .nav-bar .navbar-nav .nav-item .nav-link.active { background:var(--gold); color:#fff !important; }
         .nav-bar .navbar-nav .nav-item .nav-link i { margin-right:4px; }
         .nav-bar .dropdown-menu { background:var(--background-color); border:none; border-radius:0 0 8px 8px; padding:8px 0; min-width:200px; }
@@ -72,19 +72,23 @@
         .page-hero .breadcrumb-item a:hover { color:var(--gold); }
         .page-hero .breadcrumb-item.active { color:#fff; }
         .page-hero .breadcrumb-item+.breadcrumb-item::before { color:rgba(255,255,255,0.5); }
-        .donors-section { padding:60px 0; }
-        .donors-section .head_item3 { width:100%; text-align:center; margin:0 0 40px; display:flex; align-items:center; justify-content:center; }
-        .donors-section .head_item3 span { background:var(--green); color:#fff; padding:12px 40px; border-radius:8px; font-size:24px; font-weight:bold; display:inline-block; text-transform:uppercase; box-shadow:0 4px 15px rgba(46,139,87,0.3); }
-        .donor-card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 4px 20px rgba(0,0,0,0.08); margin-bottom:15px; transition:0.3s; display:flex; align-items:center; gap:15px; }
-        .donor-card:hover { transform:translateX(5px); box-shadow:0 8px 30px rgba(139,69,19,0.15); }
-        .donor-card .donor-avatar { width:50px; height:50px; border-radius:50%; background:var(--light-bg); display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--background-color); flex-shrink:0; }
-        .donor-card .donor-info { flex:1; }
-        .donor-card .donor-info h6 { color:var(--background-color); font-family:'Acme',sans-serif; margin-bottom:2px; }
-        .donor-card .donor-info small { color:#999; font-size:12px; }
-        .donor-card .donor-amount { background:var(--green); color:#fff; padding:8px 18px; border-radius:50px; font-weight:600; font-size:15px; white-space:nowrap; }
-        .no-donors { text-align:center; padding:60px 20px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
-        .no-donors i { font-size:60px; color:#ddd; margin-bottom:15px; }
-        .no-donors h4 { color:#999; }
+        .receipts-section { padding:60px 0; }
+        .receipts-section .head_item3 { width:100%; text-align:center; margin:0 0 40px; display:flex; align-items:center; justify-content:center; }
+        .receipts-section .head_item3 span { background:var(--green); color:#fff; padding:12px 40px; border-radius:8px; font-size:24px; font-weight:bold; display:inline-block; text-transform:uppercase; box-shadow:0 4px 15px rgba(46,139,87,0.3); }
+        .receipts-table-wrap { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+        .receipts-table-wrap table { margin:0; font-size:14px; }
+        .receipts-table-wrap th { background:var(--background-color); color:#fff; font-weight:600; border:none; padding:12px 15px; }
+        .receipts-table-wrap td { padding:12px 15px; vertical-align:middle; }
+        .receipts-table-wrap tr:hover { background:var(--light-bg); }
+        .badge-pending { background:#ffc107; color:#333; padding:4px 12px; border-radius:50px; font-size:12px; font-weight:600; }
+        .badge-completed { background:var(--green); color:#fff; padding:4px 12px; border-radius:50px; font-size:12px; font-weight:600; }
+        .badge-approved { background:var(--green); color:#fff; padding:4px 12px; border-radius:50px; font-size:12px; font-weight:600; }
+        .badge-rejected { background:#dc3545; color:#fff; padding:4px 12px; border-radius:50px; font-size:12px; font-weight:600; }
+        .btn-receipt { background:var(--gold); color:#fff; border:none; padding:6px 16px; border-radius:50px; font-size:13px; cursor:pointer; transition:0.3s; font-family:'Bree Serif',serif; }
+        .btn-receipt:hover { background:var(--background-color); color:#fff; transform:scale(1.05); }
+        .no-receipts { text-align:center; padding:60px 20px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+        .no-receipts i { font-size:60px; color:#ddd; margin-bottom:15px; }
+        .no-receipts h4 { color:#999; }
         .contact-footer { background:var(--background-color); color:#fff; padding:50px 0 0; }
         .contact-footer h5 { font-family:'Acme',sans-serif; color:var(--gold); margin-bottom:20px; position:relative; padding-bottom:10px; }
         .contact-footer h5::after { content:''; position:absolute; bottom:0; left:0; width:40px; height:2px; background:#fff; }
@@ -106,8 +110,39 @@
         .floating-buttons .fb-donate { background:var(--green); }
         .floating-buttons .fb-problem { background:var(--gold); font-size:13px; width:auto; padding:0 18px; border-radius:25px; font-weight:600; }
         @media only screen and (max-width:992px) { .hamburger-menu { display:block; } .header-top .header-right .social-icons { display:none; } .nav-bar .navbar-nav { display:none; } .page-hero h1 { font-size:36px; } }
-        @media only screen and (max-width:768px) { .header-top .site-title { font-size:16px; } .header-top .site-title small { font-size:10px; } .page-hero { padding:60px 0 40px; } .page-hero h1 { font-size:28px; } .donors-section .head_item3 span { font-size:18px; padding:10px 25px; } .donor-card { flex-wrap:wrap; } }
+        @media only screen and (max-width:768px) { .header-top .site-title { font-size:16px; } .header-top .site-title small { font-size:10px; } .page-hero { padding:60px 0 40px; } .page-hero h1 { font-size:28px; } .receipts-section .head_item3 span { font-size:18px; padding:10px 25px; } .receipts-table-wrap { overflow-x:auto; } }
         @media only screen and (max-width:576px) { .header-top .logo-area img { height:36px; } .header-top .site-title { font-size:14px; } .page-hero h1 { font-size:24px; } }
+
+        /* Receipt Print Styles */
+        .receipt-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:99999; align-items:center; justify-content:center; }
+        .receipt-overlay.active { display:flex; }
+        .receipt-paper { background:#fff; width:700px; max-width:95vw; max-height:90vh; overflow-y:auto; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.3); padding:0; position:relative; }
+        .receipt-paper .receipt-close { position:absolute; top:12px; right:16px; background:none; border:none; font-size:24px; color:#999; cursor:pointer; z-index:10; }
+        .receipt-paper .receipt-close:hover { color:red; }
+        .receipt-paper .receipt-actions { position:absolute; top:12px; right:50px; z-index:10; }
+        .receipt-paper .receipt-actions button { background:var(--green); color:#fff; border:none; padding:6px 18px; border-radius:50px; font-size:13px; cursor:pointer; transition:0.3s; font-family:'Bree Serif',serif; }
+        .receipt-paper .receipt-actions button:hover { background:var(--background-color); }
+        .receipt-content { padding:40px; }
+        .receipt-content .receipt-header { text-align:center; border-bottom:3px double var(--background-color); padding-bottom:20px; margin-bottom:20px; }
+        .receipt-content .receipt-header img { height:70px; margin-bottom:10px; }
+        .receipt-content .receipt-header h4 { font-family:'Acme',sans-serif; color:var(--background-color); margin-bottom:5px; }
+        .receipt-content .receipt-header p { font-size:13px; color:#666; margin:2px 0; }
+        .receipt-content .receipt-title { text-align:center; font-family:'Acme',sans-serif; font-size:22px; color:var(--green); margin:20px 0; text-transform:uppercase; border:2px solid var(--green); display:inline-block; padding:8px 30px; border-radius:8px; margin-left:auto; margin-right:auto; width:100%; }
+        .receipt-content .receipt-body { margin-top:20px; }
+        .receipt-content .receipt-body table { width:100%; font-size:14px; }
+        .receipt-content .receipt-body table td { padding:10px 12px; border-bottom:1px solid #eee; }
+        .receipt-content .receipt-body table td:first-child { font-weight:600; color:var(--background-color); width:200px; }
+        .receipt-content .receipt-thankyou { text-align:center; margin-top:30px; padding:20px; background:var(--light-bg); border-radius:8px; border-left:4px solid var(--gold); }
+        .receipt-content .receipt-thankyou p { font-size:15px; color:#555; line-height:1.8; }
+        .receipt-content .receipt-thankyou .thankyou-heading { font-family:'Acme',sans-serif; color:var(--background-color); font-size:18px; margin-bottom:10px; }
+        .receipt-content .receipt-footer { text-align:center; margin-top:25px; padding-top:15px; border-top:2px dashed #ddd; font-size:12px; color:#999; }
+
+        @media print {
+            body * { visibility:hidden; }
+            .receipt-paper, .receipt-paper * { visibility:visible; }
+            .receipt-paper { position:absolute; left:0; top:0; width:100%; max-width:100%; box-shadow:none; border-radius:0; }
+            .receipt-paper .receipt-close, .receipt-paper .receipt-actions { display:none !important; }
+        }
     </style>
 </head>
 <body>
@@ -120,7 +155,7 @@
     <div class="top-bar d-none d-md-block">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-left"><i class="fa fa-phone" style="margin-right:5px;"></i> +91-7000000000 &nbsp;|&nbsp; <i class="fa fa-envelope" style="margin-right:5px;"></i> info@premanandgoshala.org</div>
+                <div class="col-md-6 text-center text-md-left"><i class="fa fa-phone" style="margin-right:5px;"></i> +91-7000000000 &nbsp;|&nbsp; <i class="fa fa-envelope" style="margin-right:5px;"></i> info@premanandgaushala.org</div>
                 <div class="col-md-6 text-center text-md-right social-icons">
                     <a href="#"><i class="fa fa-facebook"></i></a>
                     <a href="#"><i class="fa fa-twitter"></i></a>
@@ -135,7 +170,7 @@
             <div class="logo-area">
                 <button class="hamburger-menu" onclick="toggleMobileNav()"><i class="fa fa-bars"></i></button>
                 <a href="index.html"><img src="images/logo.jpg" alt="Logo"></a>
-                <div class="site-title">श्री प्रेमानंद गौशाला <small>गौ सेवा ही मानव सेवा</small></div>
+                <div class="site-title">श्री प्रेमानंद गोशाला <small>गौ सेवा ही मानव सेवा</small></div>
             </div>
             <div class="header-right">
                 <div class="social-icons">
@@ -156,11 +191,9 @@
                 <li class="nav-item"><a class="nav-link" href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a></li>
                 <li class="nav-item"><a class="nav-link" href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a></li>
                 <li class="nav-item"><a class="nav-link" href="donation_form.html"><i class="fa fa-heart"></i> Donate</a></li>
-                <li class="nav-item"><a class="nav-link active" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
+                <li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
                 <li class="nav-item"><a class="nav-link" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>
-                <li class="nav-item"><a class="nav-link" href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a></li>
-                <li class="nav-item"><a class="nav-link" href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="aboutus.html" id="aboutDropdown" data-toggle="dropdown">About Us</a>
                     <div class="dropdown-menu">
@@ -201,7 +234,7 @@
     <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileNav()"></div>
     <div class="mobile-nav" id="mobileNav">
         <div class="mobile-nav-header">
-            <h5><i class="fa fa-cow"></i> श्री प्रेमानंद गौशाला</h5>
+            <h5><i class="fa fa-cow"></i> श्री प्रेमानंद गोशाला</h5>
             <button onclick="toggleMobileNav()"><i class="fa fa-times"></i></button>
         </div>
         <div class="mobile-nav-links">
@@ -210,11 +243,9 @@
             <a href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a>
             <a href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a>
             <a href="donation_form.html"><i class="fa fa-heart"></i> Donate</a>
-            <a href="donors.html" class="active"><i class="fa fa-list"></i> List of Donors</a>
+            <a href="donors.html"><i class="fa fa-list"></i> List of Donors</a>
             <a href="gallery.html"><i class="fa fa-image"></i> Gallery</a>
             <a href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a>
-            <a href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a>
-            <a href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a>
             <div>
                 <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-info-circle"></i> About Us</span><i class="fa fa-chevron-down"></i></a>
                 <div class="sub-menu">
@@ -253,37 +284,47 @@
     </div>
     <section class="page-hero">
         <div class="container">
-            <h1><i class="fa fa-list"></i> List of Donors</h1>
-            <p>Our generous supporters who help us serve गौ माता</p>
+            <h1><i class="fa fa-file-text-o"></i> My Donation Receipts</h1>
+            <p>View and download your donation receipts from श्री प्रेमानंद गोशाला</p>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">List of Donors</li>
+                    <li class="breadcrumb-item active" aria-current="page">Donation Receipts</li>
                 </ol>
             </nav>
         </div>
     </section>
-    <section class="donors-section">
+    <section class="receipts-section">
         <div class="container">
-            <div class="head_item3" data-aos="fade-down"><span><i class="fa fa-list"></i> Our Donors</span></div>
-            <div id="donorsContainer">
-                <div class="text-center py-5"><i class="fa fa-spinner fa-spin fa-3x" style="color:var(--gold);"></i><p class="mt-3">Loading donors...</p></div>
+            <div class="head_item3" data-aos="fade-down"><span><i class="fa fa-file-text-o"></i> My Donations</span></div>
+            <div id="receiptsContainer">
+                <div class="text-center py-5"><i class="fa fa-spinner fa-spin fa-3x" style="color:var(--gold);"></i><p class="mt-3">Loading your donations...</p></div>
             </div>
         </div>
     </section>
+
+    <!-- Receipt Print Overlay -->
+    <div class="receipt-overlay" id="receiptOverlay">
+        <div class="receipt-paper" id="receiptPaper">
+            <button class="receipt-close" onclick="closeReceipt()"><i class="fa fa-times"></i></button>
+            <div class="receipt-actions"><button onclick="printReceipt()"><i class="fa fa-print"></i> Print Receipt</button></div>
+            <div class="receipt-content" id="receiptContent"></div>
+        </div>
+    </div>
+
     <footer class="contact-footer">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="footer-logo">
                         <a href="index.html"><img src="images/logo.jpg" alt="Logo"></a>
-                        <h5>श्री प्रेमानंद गौशाला</h5>
+                        <h5>श्री प्रेमानंद गोशाला</h5>
                         <p>गौ सेवा ही मानव सेवा के उद्देश्य के साथ समर्पित। हम बूढ़ी, बीमार और बेसहारा गायों की सेवा और संरक्षण के लिए प्रतिबद्ध हैं।</p>
                     </div>
                     <div class="footer-contact mt-3">
                         <p><i class="fa fa-map-marker"></i> गौशाला रोड, वृंदावन, जिला मथुरा, उत्तर प्रदेश - 281121</p>
                         <p><i class="fa fa-phone"></i> +91-7000000000, +91-7000000001</p>
-                        <p><i class="fa fa-envelope"></i> info@premanandgoshala.org</p>
+                        <p><i class="fa fa-envelope"></i> info@premanandgaushala.org</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 mb-4">
@@ -322,7 +363,7 @@
         <div class="footer-bottom">
             <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-md-6 text-center text-md-left mb-2 mb-md-0">Copyright &copy; 2026, All Right Reserved <strong>श्री प्रेमानंद गौशाला</strong></div>
+                    <div class="col-md-6 text-center text-md-left mb-2 mb-md-0">Copyright &copy; 2026, All Right Reserved <strong>श्री प्रेमानंद गोशाला</strong></div>
                     <div class="col-md-6 text-center text-md-right">
                         <a href="#">Terms &amp; Condition</a> &nbsp;|&nbsp; <a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Disclaimer</a> &nbsp;|&nbsp; <a href="#">Refund Policy</a>
                     </div>
@@ -342,14 +383,16 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/app.js"></script>
     <script>
-        // Hide Receipts link for non-logged-in users
-        if (!localStorage.getItem('admin_token')) {
-            $('a[href="receipts.html"]').parent('.nav-item').hide();
-        }
-
         AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
         function toggleMobileNav() { $('#mobileNav').toggleClass('active'); $('#mobileNavOverlay').toggleClass('active'); $('body').toggleClass('overflow-hidden'); }
         function toggleMobileSubMenu(el) { $(el).next('.sub-menu').toggleClass('show'); $(el).find('.fa-chevron-down').toggleClass('fa-chevron-up'); }
+
+        function getToken() { return localStorage.getItem('admin_token'); }
+        function authHeaders() { return { 'Authorization': 'Bearer ' + getToken() }; }
+
+        var user = JSON.parse(localStorage.getItem('admin_user') || '{}');
+        if (!getToken()) { window.location.href = 'admin-login.html'; }
+
         $(function() {
             var path = window.location.pathname;
             var page = path.split('/').pop();
@@ -357,40 +400,102 @@
                 var href = $(this).attr('href');
                 if (href === page || (page === '' && href === 'index.html')) { $(this).addClass('active'); }
             });
-            loadDonors();
+            loadReceipts();
         });
-        function loadDonors() {
-            $.get('/api/donations/public', function(donations) {
-                var container = $('#donorsContainer');
-                container.empty();
-                if (!donations || donations.length === 0) {
-                    container.html('<div class="no-donors"><i class="fa fa-gift"></i><h4>No donations yet</h4><p style="color:#999;">Be the first to donate and support गौ सेवा!</p><a href="donation_form.html" class="btn mt-3" style="background:var(--gold);color:#fff;border-radius:50px;padding:10px 30px;"><i class="fa fa-heart"></i> Donate Now</a></div>');
-                    return;
-                }
-                var list = $('<div class="row"></div>');
-                donations.forEach(function(d) {
-                    var initial = d.donor_name ? d.donor_name.charAt(0).toUpperCase() : '?';
-                    var date = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN') : '';
-                    var amount = '₹' + (parseFloat(d.amount) || 0).toLocaleString('en-IN');
-                    var addr = d.address || '';
-                    var parts = addr.split(',').map(function(p){ return p.trim(); });
-                    var basicAddr = parts.length > 1 ? parts.slice(-2).join(', ') : addr;
-                    list.append('<div class="col-lg-6" data-aos="fade-up">' +
-                        '<div class="donor-card">' +
-                        '<div class="donor-avatar">' + initial + '</div>' +
-                        '<div class="donor-info">' +
-                        '<h6>' + d.donor_name + '</h6>' +
-                        '<small><i class="fa fa-map-marker"></i> ' + basicAddr + '</small><br>' +
-                        '<small><i class="fa fa-calendar"></i> ' + date + '</small>' +
-                        '</div>' +
-                        '<div class="donor-amount">' + amount + '</div>' +
-                        '</div></div>');
+
+        function loadReceipts() {
+            $.ajax({ url: '/api/donations/my', headers: authHeaders() })
+                .done(function(donations) {
+                    var container = $('#receiptsContainer');
+                    if (!donations || donations.length === 0) {
+                        container.html('<div class="no-receipts"><i class="fa fa-file-text-o"></i><h4>No donations found</h4><p style="color:#999;">You have not made any donations yet.</p><a href="donation_form.html" class="btn mt-3" style="background:var(--gold);color:#fff;border-radius:50px;padding:10px 30px;"><i class="fa fa-heart"></i> Donate Now</a></div>');
+                        return;
+                    }
+                    var html = '<div class="receipts-table-wrap" data-aos="fade-up"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>#</th><th>Donor Name</th><th>Amount</th><th>Payment Method</th><th>Status</th><th>Date</th><th>Receipt</th></tr></thead><tbody>';
+                    donations.forEach(function(d, i) {
+                        var dt = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN', { year:'numeric', month:'short', day:'numeric' }) : '-';
+                        var amount = '₹' + (parseFloat(d.amount) || 0).toLocaleString('en-IN');
+                        var status = d.status || 'pending';
+                        var badgeClass = 'badge-pending';
+                        if (status === 'completed' || status === 'approved') badgeClass = 'badge-completed';
+                        else if (status === 'rejected') badgeClass = 'badge-rejected';
+                        html += '<tr>';
+                        html += '<td>' + (i + 1) + '</td>';
+                        html += '<td><strong>' + (d.donor_name || '-') + '</strong></td>';
+                        html += '<td style="color:var(--green);font-weight:600;">' + amount + '</td>';
+                        html += '<td>' + (d.payment_method || '-') + '</td>';
+                        html += '<td><span class="' + badgeClass + '">' + status.charAt(0).toUpperCase() + status.slice(1) + '</span></td>';
+                        html += '<td>' + dt + '</td>';
+                        html += '<td><button class="btn-receipt" onclick="showReceipt(' + i + ')"><i class="fa fa-eye"></i> View Receipt</button></td>';
+                        html += '</tr>';
+                    });
+                    html += '</tbody></table></div></div>';
+                    container.html(html);
+                    window._myDonations = donations;
+                })
+                .fail(function() {
+                    $('#receiptsContainer').html('<div class="no-receipts"><i class="fa fa-exclamation-triangle" style="color:var(--gold);"></i><h4>Could not load donations</h4><p style="color:#999;">Please login again or try later.</p></div>');
                 });
-                container.append(list);
-            }).fail(function() {
-                $('#donorsContainer').html('<div class="no-donors"><i class="fa fa-exclamation-triangle" style="color:var(--gold);"></i><h4>Could not load donors</h4></div>');
-            });
         }
+
+        function showReceipt(index) {
+            var d = window._myDonations[index];
+            if (!d) return;
+            var dt = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN', { year:'numeric', month:'long', day:'numeric' }) : '-';
+            var amount = '₹' + (parseFloat(d.amount) || 0).toLocaleString('en-IN');
+            var receiptNo = 'REC-' + (d.id || (index + 1));
+            var photoHtml = d.photo ? '<tr><td>Photo</td><td><img src="/uploads/' + d.photo + '" style="max-width:80px;border-radius:6px;"></td></tr>' : '';
+            var html = '<div class="receipt-header">' +
+                '<img src="images/logo.jpg" alt="Logo">' +
+                '<h4>श्री प्रेमानंद गोशाला</h4>' +
+                '<p>गौशाला रोड, वृंदावन, जिला मथुरा, उत्तर प्रदेश - 281121</p>' +
+                '<p>CIN: U01620UP2020NPL123456</p>' +
+                '<p>Phone: +91-7000000000 | Email: info@premanandgaushala.org</p>' +
+                '</div>' +
+                '<div class="receipt-title"><i class="fa fa-file-text-o"></i> Donation Receipt</div>' +
+                '<div class="receipt-body"><table>' +
+                '<tr><td>Receipt No.</td><td><strong>' + receiptNo + '</strong></td></tr>' +
+                '<tr><td>Date</td><td>' + dt + '</td></tr>' +
+                '<tr><td>Donor Name</td><td>' + (d.donor_name || '-') + '</td></tr>' +
+                '<tr><td>Phone</td><td>' + (d.phone || '-') + '</td></tr>' +
+                '<tr><td>Email</td><td>' + (d.email || '-') + '</td></tr>' +
+                '<tr><td>PAN</td><td>' + (d.pan || '-') + '</td></tr>' +
+                '<tr><td>Address</td><td>' + (d.address || '-') + '</td></tr>' +
+                '<tr><td>Donation Amount</td><td style="color:var(--green);font-size:18px;font-weight:700;">' + amount + '</td></tr>' +
+                '<tr><td>Payment Method</td><td>' + (d.payment_method || '-') + '</td></tr>' +
+                '<tr><td>Transaction ID</td><td>' + (d.transaction_id || '-') + '</td></tr>' +
+                '<tr><td>Status</td><td>' + (d.status || 'Pending') + '</td></tr>' +
+                photoHtml +
+                '</table></div>' +
+                '<div class="receipt-thankyou">' +
+                '<p class="thankyou-heading"><i class="fa fa-heart" style="color:var(--gold);"></i> Thank You!</p>' +
+                '<p>Your generous donation to श्री प्रेमानंद गोशाला is greatly appreciated. Your contribution helps us provide shelter, food, and medical care to cows in need. This receipt can be used for tax exemption purposes under Section 80G of the Income Tax Act, 1961.</p>' +
+                '</div>' +
+                '<div class="receipt-footer">' +
+                '<p>This is a computer-generated receipt and does not require a signature.</p>' +
+                '<p>श्री प्रेमानंद गोशाला | गौ सेवा ही मानव सेवा</p>' +
+                '</div>';
+            $('#receiptContent').html(html);
+            $('#receiptOverlay').addClass('active');
+            $('body').css('overflow', 'hidden');
+        }
+
+        function closeReceipt() {
+            $('#receiptOverlay').removeClass('active');
+            $('body').css('overflow', '');
+        }
+
+        function printReceipt() {
+            window.print();
+        }
+
+        $('#receiptOverlay').on('click', function(e) {
+            if (e.target === this) closeReceipt();
+        });
+
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Escape') closeReceipt();
+        });
     </script>
 </body>
 </html>

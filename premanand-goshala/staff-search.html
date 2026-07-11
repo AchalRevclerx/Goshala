@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>List of Donors - श्री प्रेमानंद गौशाला</title>
+    <title>Search Staff - श्री प्रेमानंद गोशाला</title>
     <link rel="icon" type="image/png" href="icon/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -42,7 +42,7 @@
         .enquiry-btn:hover { background:var(--gold); color:#fff; text-decoration:none; }
         .hamburger-menu { display:none; background:none; border:none; font-size:26px; color:var(--background-color); cursor:pointer; padding:4px 8px; }
         .nav-bar { background:var(--background-color); margin-top:70px; position:sticky; top:0; z-index:9997; }
-        .nav-bar .navbar-nav .nav-item .nav-link { color:#fff !important; padding:12px 16px; font-size:13px; font-weight:600; transition:0.3s; text-transform:uppercase; font-family:'Acme',sans-serif; letter-spacing:0.5px; }
+        .nav-bar .navbar-nav .nav-item .nav-link { color:#fff !important; padding:12px 16px; font-size:14px; font-weight:600; transition:0.3s; text-transform:uppercase; }
         .nav-bar .navbar-nav .nav-item .nav-link:hover, .nav-bar .navbar-nav .nav-item .nav-link.active { background:var(--gold); color:#fff !important; }
         .nav-bar .navbar-nav .nav-item .nav-link i { margin-right:4px; }
         .nav-bar .dropdown-menu { background:var(--background-color); border:none; border-radius:0 0 8px 8px; padding:8px 0; min-width:200px; }
@@ -72,19 +72,39 @@
         .page-hero .breadcrumb-item a:hover { color:var(--gold); }
         .page-hero .breadcrumb-item.active { color:#fff; }
         .page-hero .breadcrumb-item+.breadcrumb-item::before { color:rgba(255,255,255,0.5); }
-        .donors-section { padding:60px 0; }
-        .donors-section .head_item3 { width:100%; text-align:center; margin:0 0 40px; display:flex; align-items:center; justify-content:center; }
-        .donors-section .head_item3 span { background:var(--green); color:#fff; padding:12px 40px; border-radius:8px; font-size:24px; font-weight:bold; display:inline-block; text-transform:uppercase; box-shadow:0 4px 15px rgba(46,139,87,0.3); }
-        .donor-card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 4px 20px rgba(0,0,0,0.08); margin-bottom:15px; transition:0.3s; display:flex; align-items:center; gap:15px; }
-        .donor-card:hover { transform:translateX(5px); box-shadow:0 8px 30px rgba(139,69,19,0.15); }
-        .donor-card .donor-avatar { width:50px; height:50px; border-radius:50%; background:var(--light-bg); display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--background-color); flex-shrink:0; }
-        .donor-card .donor-info { flex:1; }
-        .donor-card .donor-info h6 { color:var(--background-color); font-family:'Acme',sans-serif; margin-bottom:2px; }
-        .donor-card .donor-info small { color:#999; font-size:12px; }
-        .donor-card .donor-amount { background:var(--green); color:#fff; padding:8px 18px; border-radius:50px; font-weight:600; font-size:15px; white-space:nowrap; }
-        .no-donors { text-align:center; padding:60px 20px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
-        .no-donors i { font-size:60px; color:#ddd; margin-bottom:15px; }
-        .no-donors h4 { color:#999; }
+        .staff-section { padding:60px 0; }
+        .staff-section .head_item3 { width:100%; text-align:center; margin:0 0 40px; display:flex; align-items:center; justify-content:center; }
+        .staff-section .head_item3 span { background:var(--background-color); color:#fff; padding:12px 40px; border-radius:8px; font-size:24px; font-weight:bold; display:inline-block; text-transform:uppercase; box-shadow:0 4px 15px rgba(139,69,19,0.3); }
+        .search-card { background:#fff; border-radius:12px; padding:30px; box-shadow:0 4px 20px rgba(0,0,0,0.08); margin-bottom:30px; }
+        .search-card h4 { color:var(--background-color); font-family:'Acme',sans-serif; margin-bottom:20px; border-bottom:2px solid var(--gold); padding-bottom:10px; }
+        .search-modes { display:flex; gap:0; margin-bottom:20px; border:2px solid var(--background-color); border-radius:8px; overflow:hidden; }
+        .search-modes .mode-btn { flex:1; padding:10px; text-align:center; cursor:pointer; transition:0.3s; font-weight:600; font-size:14px; background:#fff; color:var(--background-color); border:none; font-family:'Bree Serif',serif; }
+        .search-modes .mode-btn:first-child { border-right:1px solid var(--background-color); }
+        .search-modes .mode-btn.active { background:var(--background-color); color:#fff; }
+        .search-modes .mode-btn:hover:not(.active) { background:var(--light-bg); }
+        .search-input-group { display:flex; gap:10px; }
+        .search-input-group .form-control { border-radius:8px; border:1px solid #ddd; padding:12px 15px; font-size:15px; font-family:'Bree Serif',serif; }
+        .search-input-group .form-control:focus { border-color:var(--gold); box-shadow:0 0 0 0.2rem rgba(212,160,23,0.25); }
+        .search-btn { background:var(--green); color:#fff; border:none; padding:12px 30px; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; transition:0.3s; font-family:'Bree Serif',serif; white-space:nowrap; }
+        .search-btn:hover { background:var(--background-color); }
+        .results-count { font-size:14px; color:#666; margin-bottom:20px; }
+        .results-count strong { color:var(--background-color); }
+        .staff-card { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.08); margin-bottom:20px; transition:0.3s; display:flex; align-items:center; padding:20px; gap:20px; }
+        .staff-card:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(139,69,19,0.15); }
+        .staff-avatar { width:80px; height:80px; border-radius:50%; overflow:hidden; flex-shrink:0; background:var(--light-bg); display:flex; align-items:center; justify-content:center; border:3px solid var(--gold); }
+        .staff-avatar img { width:100%; height:100%; object-fit:cover; }
+        .staff-avatar .initial { font-size:28px; font-family:'Acme',sans-serif; color:var(--background-color); }
+        .staff-info { flex:1; }
+        .staff-info h5 { color:var(--background-color); font-family:'Acme',sans-serif; margin-bottom:4px; font-size:17px; }
+        .staff-info .designation { color:var(--green); font-weight:600; font-size:13px; margin-bottom:8px; }
+        .staff-info .staff-details { font-size:13px; color:#666; }
+        .staff-info .staff-details span { display:inline-block; margin-right:15px; margin-bottom:4px; }
+        .staff-info .staff-details i { color:var(--gold); margin-right:5px; min-width:14px; }
+        .no-results { text-align:center; padding:60px 20px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+        .no-results i { font-size:60px; color:#ddd; margin-bottom:15px; }
+        .no-results h4 { color:#999; }
+        .initial-state { text-align:center; padding:60px 20px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+        .initial-state i { font-size:60px; color:var(--gold); margin-bottom:15px; opacity:0.5; }
         .contact-footer { background:var(--background-color); color:#fff; padding:50px 0 0; }
         .contact-footer h5 { font-family:'Acme',sans-serif; color:var(--gold); margin-bottom:20px; position:relative; padding-bottom:10px; }
         .contact-footer h5::after { content:''; position:absolute; bottom:0; left:0; width:40px; height:2px; background:#fff; }
@@ -106,8 +126,8 @@
         .floating-buttons .fb-donate { background:var(--green); }
         .floating-buttons .fb-problem { background:var(--gold); font-size:13px; width:auto; padding:0 18px; border-radius:25px; font-weight:600; }
         @media only screen and (max-width:992px) { .hamburger-menu { display:block; } .header-top .header-right .social-icons { display:none; } .nav-bar .navbar-nav { display:none; } .page-hero h1 { font-size:36px; } }
-        @media only screen and (max-width:768px) { .header-top .site-title { font-size:16px; } .header-top .site-title small { font-size:10px; } .page-hero { padding:60px 0 40px; } .page-hero h1 { font-size:28px; } .donors-section .head_item3 span { font-size:18px; padding:10px 25px; } .donor-card { flex-wrap:wrap; } }
-        @media only screen and (max-width:576px) { .header-top .logo-area img { height:36px; } .header-top .site-title { font-size:14px; } .page-hero h1 { font-size:24px; } }
+        @media only screen and (max-width:768px) { .header-top .site-title { font-size:16px; } .header-top .site-title small { font-size:10px; } .page-hero { padding:60px 0 40px; } .page-hero h1 { font-size:28px; } .staff-section .head_item3 span { font-size:18px; padding:10px 25px; } .search-input-group { flex-direction:column; } }
+        @media only screen and (max-width:576px) { .header-top .logo-area img { height:36px; } .header-top .site-title { font-size:14px; } .page-hero h1 { font-size:24px; } .staff-card { flex-direction:column; text-align:center; } .staff-info .staff-details span { display:block; } }
     </style>
 </head>
 <body>
@@ -120,7 +140,7 @@
     <div class="top-bar d-none d-md-block">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-left"><i class="fa fa-phone" style="margin-right:5px;"></i> +91-7000000000 &nbsp;|&nbsp; <i class="fa fa-envelope" style="margin-right:5px;"></i> info@premanandgoshala.org</div>
+                <div class="col-md-6 text-center text-md-left"><i class="fa fa-phone" style="margin-right:5px;"></i> +91-7000000000 &nbsp;|&nbsp; <i class="fa fa-envelope" style="margin-right:5px;"></i> info@premanandgaushala.org</div>
                 <div class="col-md-6 text-center text-md-right social-icons">
                     <a href="#"><i class="fa fa-facebook"></i></a>
                     <a href="#"><i class="fa fa-twitter"></i></a>
@@ -135,7 +155,7 @@
             <div class="logo-area">
                 <button class="hamburger-menu" onclick="toggleMobileNav()"><i class="fa fa-bars"></i></button>
                 <a href="index.html"><img src="images/logo.jpg" alt="Logo"></a>
-                <div class="site-title">श्री प्रेमानंद गौशाला <small>गौ सेवा ही मानव सेवा</small></div>
+                <div class="site-title">श्री प्रेमानंद गोशाला <small>गौ सेवा ही मानव सेवा</small></div>
             </div>
             <div class="header-right">
                 <div class="social-icons">
@@ -156,11 +176,9 @@
                 <li class="nav-item"><a class="nav-link" href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a></li>
                 <li class="nav-item"><a class="nav-link" href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a></li>
                 <li class="nav-item"><a class="nav-link" href="donation_form.html"><i class="fa fa-heart"></i> Donate</a></li>
-                <li class="nav-item"><a class="nav-link active" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
+                <li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>
                 <li class="nav-item"><a class="nav-link" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>
-                <li class="nav-item"><a class="nav-link" href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a></li>
-                <li class="nav-item"><a class="nav-link" href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="aboutus.html" id="aboutDropdown" data-toggle="dropdown">About Us</a>
                     <div class="dropdown-menu">
@@ -201,7 +219,7 @@
     <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileNav()"></div>
     <div class="mobile-nav" id="mobileNav">
         <div class="mobile-nav-header">
-            <h5><i class="fa fa-cow"></i> श्री प्रेमानंद गौशाला</h5>
+            <h5><i class="fa fa-cow"></i> श्री प्रेमानंद गोशाला</h5>
             <button onclick="toggleMobileNav()"><i class="fa fa-times"></i></button>
         </div>
         <div class="mobile-nav-links">
@@ -210,11 +228,9 @@
             <a href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a>
             <a href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a>
             <a href="donation_form.html"><i class="fa fa-heart"></i> Donate</a>
-            <a href="donors.html" class="active"><i class="fa fa-list"></i> List of Donors</a>
+            <a href="donors.html"><i class="fa fa-list"></i> List of Donors</a>
             <a href="gallery.html"><i class="fa fa-image"></i> Gallery</a>
             <a href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a>
-            <a href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a>
-            <a href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a>
             <div>
                 <a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-info-circle"></i> About Us</span><i class="fa fa-chevron-down"></i></a>
                 <div class="sub-menu">
@@ -253,37 +269,61 @@
     </div>
     <section class="page-hero">
         <div class="container">
-            <h1><i class="fa fa-list"></i> List of Donors</h1>
-            <p>Our generous supporters who help us serve गौ माता</p>
+            <h1><i class="fa fa-users"></i> Search Staff</h1>
+            <p>Find our working staff members at श्री प्रेमानंद गोशाला</p>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">List of Donors</li>
+                    <li class="breadcrumb-item active" aria-current="page">Search Staff</li>
                 </ol>
             </nav>
         </div>
     </section>
-    <section class="donors-section">
+    <section class="staff-section">
         <div class="container">
-            <div class="head_item3" data-aos="fade-down"><span><i class="fa fa-list"></i> Our Donors</span></div>
-            <div id="donorsContainer">
-                <div class="text-center py-5"><i class="fa fa-spinner fa-spin fa-3x" style="color:var(--gold);"></i><p class="mt-3">Loading donors...</p></div>
+            <div class="head_item3" data-aos="fade-down"><span><i class="fa fa-users"></i> Find Staff Members</span></div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8" data-aos="fade-up">
+                    <div class="search-card">
+                        <h4><i class="fa fa-search"></i> Search Staff</h4>
+                        <div class="search-modes">
+                            <button class="mode-btn active" data-mode="address" onclick="switchMode('address')"><i class="fa fa-map-marker"></i> Search by Address</button>
+                            <button class="mode-btn" data-mode="name" onclick="switchMode('name')"><i class="fa fa-user"></i> Search by Name</button>
+                        </div>
+                        <div class="search-input-group">
+                            <input type="text" class="form-control" id="searchInput" placeholder="Enter address to search staff...">
+                            <button class="search-btn" onclick="searchStaff()"><i class="fa fa-search"></i> Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resultsCount" class="results-count text-center" style="display:none;"></div>
+
+            <div id="resultsContainer">
+                <div class="initial-state" data-aos="fade-up">
+                    <i class="fa fa-search"></i>
+                    <h4>Search for Staff Members</h4>
+                    <p style="color:#999;">Enter an address or name to find our staff members.</p>
+                </div>
             </div>
         </div>
     </section>
+
     <footer class="contact-footer">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="footer-logo">
                         <a href="index.html"><img src="images/logo.jpg" alt="Logo"></a>
-                        <h5>श्री प्रेमानंद गौशाला</h5>
+                        <h5>श्री प्रेमानंद गोशाला</h5>
                         <p>गौ सेवा ही मानव सेवा के उद्देश्य के साथ समर्पित। हम बूढ़ी, बीमार और बेसहारा गायों की सेवा और संरक्षण के लिए प्रतिबद्ध हैं।</p>
                     </div>
                     <div class="footer-contact mt-3">
                         <p><i class="fa fa-map-marker"></i> गौशाला रोड, वृंदावन, जिला मथुरा, उत्तर प्रदेश - 281121</p>
                         <p><i class="fa fa-phone"></i> +91-7000000000, +91-7000000001</p>
-                        <p><i class="fa fa-envelope"></i> info@premanandgoshala.org</p>
+                        <p><i class="fa fa-envelope"></i> info@premanandgaushala.org</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 mb-4">
@@ -322,7 +362,7 @@
         <div class="footer-bottom">
             <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-md-6 text-center text-md-left mb-2 mb-md-0">Copyright &copy; 2026, All Right Reserved <strong>श्री प्रेमानंद गौशाला</strong></div>
+                    <div class="col-md-6 text-center text-md-left mb-2 mb-md-0">Copyright &copy; 2026, All Right Reserved <strong>श्री प्रेमानंद गोशाला</strong></div>
                     <div class="col-md-6 text-center text-md-right">
                         <a href="#">Terms &amp; Condition</a> &nbsp;|&nbsp; <a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Disclaimer</a> &nbsp;|&nbsp; <a href="#">Refund Policy</a>
                     </div>
@@ -342,14 +382,77 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/app.js"></script>
     <script>
-        // Hide Receipts link for non-logged-in users
-        if (!localStorage.getItem('admin_token')) {
-            $('a[href="receipts.html"]').parent('.nav-item').hide();
-        }
-
         AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
         function toggleMobileNav() { $('#mobileNav').toggleClass('active'); $('#mobileNavOverlay').toggleClass('active'); $('body').toggleClass('overflow-hidden'); }
         function toggleMobileSubMenu(el) { $(el).next('.sub-menu').toggleClass('show'); $(el).find('.fa-chevron-down').toggleClass('fa-chevron-up'); }
+
+        var currentMode = 'address';
+
+        function switchMode(mode) {
+            currentMode = mode;
+            $('.mode-btn').removeClass('active');
+            $('.mode-btn[data-mode="' + mode + '"]').addClass('active');
+            if (mode === 'address') {
+                $('#searchInput').attr('placeholder', 'Enter address to search staff...');
+            } else {
+                $('#searchInput').attr('placeholder', 'Enter name to search staff...');
+            }
+            $('#searchInput').focus();
+        }
+
+        function searchStaff() {
+            var query = $('#searchInput').val().trim();
+            if (!query) {
+                $('#resultsContainer').html('<div class="no-results"><i class="fa fa-exclamation-circle"></i><h4>Please enter a search term</h4><p style="color:#999;">Enter an address or name to search.</p></div>');
+                $('#resultsCount').hide();
+                return;
+            }
+
+            $('#resultsContainer').html('<div class="text-center py-5"><i class="fa fa-spinner fa-spin fa-3x" style="color:var(--gold);"></i><p class="mt-3">Searching staff...</p></div>');
+            $('#resultsCount').hide();
+
+            var param = currentMode === 'address' ? 'address' : 'name';
+            var url = '/api/staff/search?' + encodeURIComponent(param) + '=' + encodeURIComponent(query);
+
+            $.get(url, function(staff) {
+                if (!staff || staff.length === 0) {
+                    $('#resultsContainer').html('<div class="no-results"><i class="fa fa-user-times"></i><h4>No staff found</h4><p style="color:#999;">No staff members match your search for "<strong>' + query + '</strong>".</p></div>');
+                    $('#resultsCount').hide();
+                    return;
+                }
+
+                $('#resultsCount').html('Found <strong>' + staff.length + '</strong> staff member' + (staff.length > 1 ? 's' : '') + ' for "<strong>' + query + '</strong>"').show();
+
+                var html = '<div class="row">';
+                staff.forEach(function(s, i) {
+                    var avatarHtml;
+                    if (s.photo) {
+                        avatarHtml = '<img src="/uploads/' + s.photo + '" alt="' + (s.name || '') + '">';
+                    } else {
+                        var initial = s.name ? s.name.charAt(0).toUpperCase() : '?';
+                        avatarHtml = '<span class="initial">' + initial + '</span>';
+                    }
+                    html += '<div class="col-lg-6" data-aos="fade-up" data-aos-delay="' + (i * 50) + '">';
+                    html += '<div class="staff-card">';
+                    html += '<div class="staff-avatar">' + avatarHtml + '</div>';
+                    html += '<div class="staff-info">';
+                    html += '<h5>' + (s.name || 'Unknown') + '</h5>';
+                    html += '<div class="designation"><i class="fa fa-briefcase"></i> ' + (s.designation || 'Staff') + '</div>';
+                    html += '<div class="staff-details">';
+                    if (s.phone) html += '<span><i class="fa fa-phone"></i> ' + s.phone + '</span>';
+                    if (s.address) html += '<span><i class="fa fa-map-marker"></i> ' + s.address + '</span>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                });
+                html += '</div>';
+                $('#resultsContainer').html(html);
+            }).fail(function() {
+                $('#resultsContainer').html('<div class="no-results"><i class="fa fa-exclamation-triangle" style="color:var(--gold);"></i><h4>Search failed</h4><p style="color:#999;">Could not search staff. Please try again later.</p></div>');
+            });
+        }
+
         $(function() {
             var path = window.location.pathname;
             var page = path.split('/').pop();
@@ -357,40 +460,11 @@
                 var href = $(this).attr('href');
                 if (href === page || (page === '' && href === 'index.html')) { $(this).addClass('active'); }
             });
-            loadDonors();
-        });
-        function loadDonors() {
-            $.get('/api/donations/public', function(donations) {
-                var container = $('#donorsContainer');
-                container.empty();
-                if (!donations || donations.length === 0) {
-                    container.html('<div class="no-donors"><i class="fa fa-gift"></i><h4>No donations yet</h4><p style="color:#999;">Be the first to donate and support गौ सेवा!</p><a href="donation_form.html" class="btn mt-3" style="background:var(--gold);color:#fff;border-radius:50px;padding:10px 30px;"><i class="fa fa-heart"></i> Donate Now</a></div>');
-                    return;
-                }
-                var list = $('<div class="row"></div>');
-                donations.forEach(function(d) {
-                    var initial = d.donor_name ? d.donor_name.charAt(0).toUpperCase() : '?';
-                    var date = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN') : '';
-                    var amount = '₹' + (parseFloat(d.amount) || 0).toLocaleString('en-IN');
-                    var addr = d.address || '';
-                    var parts = addr.split(',').map(function(p){ return p.trim(); });
-                    var basicAddr = parts.length > 1 ? parts.slice(-2).join(', ') : addr;
-                    list.append('<div class="col-lg-6" data-aos="fade-up">' +
-                        '<div class="donor-card">' +
-                        '<div class="donor-avatar">' + initial + '</div>' +
-                        '<div class="donor-info">' +
-                        '<h6>' + d.donor_name + '</h6>' +
-                        '<small><i class="fa fa-map-marker"></i> ' + basicAddr + '</small><br>' +
-                        '<small><i class="fa fa-calendar"></i> ' + date + '</small>' +
-                        '</div>' +
-                        '<div class="donor-amount">' + amount + '</div>' +
-                        '</div></div>');
-                });
-                container.append(list);
-            }).fail(function() {
-                $('#donorsContainer').html('<div class="no-donors"><i class="fa fa-exclamation-triangle" style="color:var(--gold);"></i><h4>Could not load donors</h4></div>');
+
+            $('#searchInput').on('keypress', function(e) {
+                if (e.which === 13) searchStaff();
             });
-        }
+        });
     </script>
 </body>
 </html>
