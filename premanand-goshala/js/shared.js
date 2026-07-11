@@ -210,14 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
         body.insertAdjacentHTML('beforeend', footer + floatingButtons);
     }
 
-    /* ---- Hide Receipts for non-logged-in ---- */
-    if (!localStorage.getItem('admin_token')) {
-        var receiptLink = document.querySelector('a[href="receipts.html"]');
-        if (receiptLink) {
-            var parent = receiptLink.closest('.nav-item') || receiptLink.parentElement;
-            if (parent) parent.style.display = 'none';
-        }
-    }
+    /* ---- Receipts now public, no login required ---- */
 
     /* ---- AOS Init ---- */
     if (typeof AOS !== 'undefined') {

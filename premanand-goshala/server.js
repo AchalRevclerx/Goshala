@@ -373,6 +373,26 @@ app.get('/api/donations/my', authMiddleware, (req, res) => {
   res.json(donations);
 });
 
+// ===== Public Donation Search by Phone =====
+app.get('/api/donations/search', (req, res) => {
+  const { phone } = req.query;
+  if (!phone || !phone.trim()) {
+    return res.status(400).json({ error: 'Phone number is required' });
+  }
+  const cleanPhone = phone.trim();
+  const results = db.exec("SELECT * FROM donations WHERE phone = '" + cleanPhone.replace(/'/g, "''") + "' ORDER BY created_at DESC");
+  if (results.length === 0 || results[0].values.length === 0) {
+    return res.status(404).json({ error: 'No donations found for this phone number.' });
+  }
+  const cols = results[0].columns;
+  const donations = results[0].values.map(function(row) {
+    var obj = {};
+    cols.forEach(function(c, i) { obj[c] = row[i]; });
+    return obj;
+  });
+  res.json(donations);
+});
+
 // ===== Member API =====
 app.post('/api/member/apply', upload.single('photo'), (req, res) => {
   const { name, phone, email, address } = req.body;

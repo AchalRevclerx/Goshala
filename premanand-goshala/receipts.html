@@ -71,8 +71,24 @@
         <section class="receipts-section">
             <div class="container">
                 <div class="head_item3" data-aos="fade-down"><span><i class="fa fa-file-text-o"></i> My Donations</span></div>
+
+                <div class="idcard-search-box" data-aos="fade-up" style="background:#fff;border-radius:12px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,0.08);margin-bottom:40px;">
+                    <h4 style="color:var(--background-color);font-family:'Acme',serif;margin-bottom:20px;border-bottom:2px solid var(--gold);padding-bottom:10px;"><i class="fa fa-search"></i> Search Your Donations</h4>
+                    <form id="searchForm">
+                        <div class="form-row align-items-end">
+                            <div class="form-group col-md-8">
+                                <label style="font-size:14px;color:#555;font-weight:600;">Mobile Number</label>
+                                <input type="tel" id="searchPhone" class="form-control" placeholder="Enter your registered mobile number" required style="border-radius:8px;border:1px solid #ddd;padding:10px 15px;font-size:14px;">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <button type="submit" class="btn-receipt" style="width:100%;padding:10px 30px;font-size:14px;"><i class="fa fa-search"></i> Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
                 <div id="receiptsContainer">
-                    <div class="text-center py-5"><i class="fa fa-spinner fa-spin fa-3x" style="color:var(--gold);"></i><p class="mt-3">Loading your donations...</p></div>
+                    <div class="no-receipts"><i class="fa fa-search"></i><h4>Search by Phone Number</h4><p style="color:#999;">Enter your registered mobile number above to view and download your donation receipts.</p></div>
                 </div>
             </div>
         </section>
@@ -89,52 +105,57 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/app.js"></script>
     <script src="js/shared.js"></script>
     <script>
-        function getToken() { return localStorage.getItem('admin_token'); }
-        function authHeaders() { return { 'Authorization': 'Bearer ' + getToken() }; }
-        var user = JSON.parse(localStorage.getItem('admin_user') || '{}');
-        if (!getToken()) { window.location.href = 'admin-login.html'; }
+        var _myDonations = [];
 
-        $(function() { loadReceipts(); });
+        $(function() {
+            $('#searchForm').on('submit', function(e) {
+                e.preventDefault();
+                var phone = $('#searchPhone').val().trim();
+                if (!phone) return;
+                loadReceipts(phone);
+            });
+        });
 
-        function loadReceipts() {
-            $.ajax({ url: '/api/donations/my', headers: authHeaders() })
-                .done(function(donations) {
-                    var container = $('#receiptsContainer');
-                    if (!donations || donations.length === 0) {
-                        container.html('<div class="no-receipts"><i class="fa fa-file-text-o"></i><h4>No donations found</h4><p style="color:#999;">You have not made any donations yet.</p><a href="donation_form.html" class="btn mt-3" style="background:var(--gold);color:#fff;border-radius:50px;padding:10px 30px;"><i class="fa fa-heart"></i> Donate Now</a></div>');
-                        return;
-                    }
-                    var html = '<div class="receipts-table-wrap" data-aos="fade-up"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>#</th><th>Donor Name</th><th>Amount</th><th>Payment Method</th><th>Status</th><th>Date</th><th>Receipt</th></tr></thead><tbody>';
-                    donations.forEach(function(d, i) {
-                        var dt = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN', { year:'numeric', month:'short', day:'numeric' }) : '-';
-                        var amount = '\u20B9' + (parseFloat(d.amount) || 0).toLocaleString('en-IN');
-                        var status = d.status || 'pending';
-                        var badgeClass = 'badge-pending';
-                        if (status === 'completed' || status === 'approved') badgeClass = 'badge-completed';
-                        else if (status === 'rejected') badgeClass = 'badge-rejected';
-                        html += '<tr><td>' + (i + 1) + '</td><td><strong>' + (d.donor_name || '-') + '</strong></td>';
-                        html += '<td style="color:var(--green);font-weight:600;">' + amount + '</td>';
-                        html += '<td>' + (d.payment_method || '-') + '</td>';
-                        html += '<td><span class="' + badgeClass + '">' + status.charAt(0).toUpperCase() + status.slice(1) + '</span></td>';
-                        html += '<td>' + dt + '</td>';
-                        html += '<td><button class="btn-receipt" onclick="showReceipt(' + i + ')"><i class="fa fa-eye"></i> View Receipt</button></td></tr>';
-                    });
-                    html += '</tbody></table></div></div>';
-                    container.html(html);
-                    window._myDonations = donations;
-                })
-                .fail(function() {
-                    $('#receiptsContainer').html('<div class="no-receipts"><i class="fa fa-exclamation-triangle" style="color:var(--gold);"></i><h4>Could not load donations</h4></div>');
+        function loadReceipts(phone) {
+            $('#receiptsContainer').html('<div class="text-center py-5"><i class="fa fa-spinner fa-spin fa-3x" style="color:var(--gold);"></i><p class="mt-3">Searching your donations...</p></div>');
+            $.get('/api/donations/search?phone=' + encodeURIComponent(phone), function(donations) {
+                _myDonations = donations;
+                var container = $('#receiptsContainer');
+                if (!donations || donations.length === 0) {
+                    container.html('<div class="no-receipts"><i class="fa fa-file-text-o"></i><h4>No donations found</h4><p style="color:#999;">No donations found for this phone number.</p><a href="donation_form.html" class="btn mt-3" style="background:var(--gold);color:#fff;border-radius:50px;padding:10px 30px;"><i class="fa fa-heart"></i> Donate Now</a></div>');
+                    return;
+                }
+                var html = '<div class="receipts-table-wrap" data-aos="fade-up"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>#</th><th>Donor Name</th><th>Amount</th><th>Payment Method</th><th>Status</th><th>Date</th><th>Receipt</th></tr></thead><tbody>';
+                donations.forEach(function(d, i) {
+                    var dt = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN', { year:'numeric', month:'short', day:'numeric' }) : '-';
+                    var amount = '\u20B9' + (parseFloat(d.amount) || 0).toLocaleString('en-IN');
+                    var status = d.status || 'pending';
+                    var badgeClass = 'badge-pending';
+                    if (status === 'completed' || status === 'approved') badgeClass = 'badge-completed';
+                    else if (status === 'rejected') badgeClass = 'badge-rejected';
+                    html += '<tr><td>' + (i + 1) + '</td><td><strong>' + (d.donor_name || '-') + '</strong></td>';
+                    html += '<td style="color:var(--green);font-weight:600;">' + amount + '</td>';
+                    html += '<td>' + (d.payment_method || '-') + '</td>';
+                    html += '<td><span class="' + badgeClass + '">' + status.charAt(0).toUpperCase() + status.slice(1) + '</span></td>';
+                    html += '<td>' + dt + '</td>';
+                    html += '<td><button class="btn-receipt" onclick="showReceipt(' + i + ')"><i class="fa fa-eye"></i> View</button> <button class="btn-receipt" onclick="downloadReceipt(' + i + ')" style="background:var(--green);"><i class="fa fa-download"></i> Download</button></td></tr>';
                 });
+                html += '</tbody></table></div></div>';
+                container.html(html);
+            }).fail(function(xhr) {
+                var msg = (xhr.responseJSON && xhr.responseJSON.error) || 'Could not load donations.';
+                $('#receiptsContainer').html('<div class="no-receipts"><i class="fa fa-exclamation-triangle" style="color:var(--gold);"></i><h4>' + msg + '</h4><a href="donation_form.html" class="btn mt-3" style="background:var(--gold);color:#fff;border-radius:50px;padding:10px 30px;"><i class="fa fa-heart"></i> Donate Now</a></div>');
+            });
         }
 
         function showReceipt(index) {
-            var d = window._myDonations[index];
+            var d = _myDonations[index];
             if (!d) return;
             var dt = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN', { year:'numeric', month:'long', day:'numeric' }) : '-';
             var amount = '\u20B9' + (parseFloat(d.amount) || 0).toLocaleString('en-IN');
@@ -166,6 +187,21 @@
             $('#receiptOverlay').addClass('active');
             $('body').css('overflow', 'hidden');
         }
+
+        function downloadReceipt(index) {
+            showReceipt(index);
+            setTimeout(function() {
+                var paper = document.getElementById('receiptPaper');
+                html2canvas(paper, { scale: 2, useCORS: true }).then(function(canvas) {
+                    var link = document.createElement('a');
+                    link.download = 'donation-receipt-' + (index + 1) + '.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    closeReceipt();
+                });
+            }, 300);
+        }
+
         function closeReceipt() { $('#receiptOverlay').removeClass('active'); $('body').css('overflow', ''); }
         function printReceipt() { window.print(); }
         $('#receiptOverlay').on('click', function(e) { if (e.target === this) closeReceipt(); });
