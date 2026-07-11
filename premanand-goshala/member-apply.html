@@ -81,7 +81,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label>Mobile Number <span style="color:red">*</span></label>
-                                        <input type="tel" name="mobile" class="form-control" placeholder="Enter mobile number" required>
+                                        <input type="tel" name="phone" class="form-control" placeholder="Enter mobile number" required>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>Email Address</label>
@@ -198,13 +198,13 @@
                 btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Submitting...');
                 var formData = new FormData(this);
                 $.ajax({
-                    url: '/api/members/apply',
+                    url: '/api/member/apply',
                     type: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function(res) {
-                        $('#memberFormMsg').html('<div class="member-result-card"><h4><i class="fa fa-check-circle"></i> Application Submitted!</h4><p>Your application has been submitted successfully.</p><div class="member-id">Member ID: ' + res.memberId + '</div><p>Please save this ID for future reference. You will receive your ID card after approval.</p></div>');
+                        $('#memberFormMsg').html('<div class="member-result-card"><h4><i class="fa fa-check-circle"></i> Application Submitted!</h4><p>Your application has been submitted successfully.</p><div class="member-id">Member ID: ' + res.id_card_number + '</div><p>Please save this ID for future reference. You will receive your ID card after approval.</p></div>');
                         $('#memberForm')[0].reset();
                         $('#photoPreview').hide();
                         $('#photoUploadArea').show();
