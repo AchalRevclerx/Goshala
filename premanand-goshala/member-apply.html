@@ -17,7 +17,7 @@
         .member-section .head_item3 span{background:var(--background-color);color:#fff;padding:12px 40px;border-radius:8px;font-size:24px;font-weight:bold;display:inline-block;text-transform:uppercase;box-shadow:0 4px 15px rgba(139,69,19,0.3);}
         .member-card{background:#fff;border-radius:12px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,0.08);margin-bottom:30px;}
         .member-card h4{color:var(--background-color);font-family:'Acme',serif;margin-bottom:20px;border-bottom:2px solid var(--gold);padding-bottom:10px;}
-        .member-card .form-control{border-radius:8px;border:1px solid #ddd;padding:10px 15px;font-size:14px;font-family:'Bree Serif',serif;}
+        .member-card .form-control{border-radius:8px;border:1px solid #ddd;padding:5px 15px;font-size:14px;font-family:'Bree Serif',serif;}
         .member-card .form-control:focus{border-color:var(--gold);box-shadow:0 0 0 0.2rem rgba(212,160,23,0.25);}
         .member-card .form-group label{font-size:14px;color:#555;font-weight:600;}
         .submit-btn{background:var(--background-color);color:#fff;padding:12px 35px;border:none;border-radius:50px;font-size:16px;font-weight:600;cursor:pointer;transition:0.3s;font-family:'Bree Serif',serif;}
@@ -101,21 +101,11 @@
                                         <label>Gender <span style="color:red">*</span></label>
                                         <select name="gender" class="form-control" required>
                                             <option value="">Select</option>
-                                            <option>Male</option>
-                                            <option>Female</option>
-                                            <option>Other</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>ID Proof Type</label>
-                                    <select name="idProofType" class="form-control">
-                                        <option value="">Select ID Proof</option>
-                                        <option>Aadhaar Card</option>
-                                        <option>PAN Card</option>
-                                        <option>Voter ID</option>
-                                        <option>Passport</option>
-                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Upload Photo <span style="color:red">*</span></label>
@@ -180,7 +170,7 @@
     <script src="js/shared.js"></script>
     <script>
         $(function() {
-            $('#photoUploadArea').on('click', function() { $('#photoInput').click(); });
+            $('#photoUploadArea').on('click', function() { document.getElementById('photoInput').click(); });
             $('#photoInput').on('change', function(e) {
                 if (e.target.files && e.target.files[0]) {
                     var reader = new FileReader();
@@ -200,6 +190,10 @@
 
             $('#memberForm').on('submit', function(e) {
                 e.preventDefault();
+                if (!$('#photoInput')[0].files || !$('#photoInput')[0].files[0]) {
+                    $('#memberFormMsg').html('<div class="alert alert-danger">Please upload a photo.</div>');
+                    return;
+                }
                 var btn = $(this).find('button[type="submit"]');
                 btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Submitting...');
                 var formData = new FormData(this);
