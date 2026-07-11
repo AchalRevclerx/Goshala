@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Acme&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
         :root{--bg:#8B4513;--gold:#D4A017;--green:#2E8B57;--light:#FFF8F0;--sidebar:#5C2E0A;--sidebarHover:#7A3D1A;}
         *{padding:0;margin:0;box-sizing:border-box;}
@@ -47,7 +48,8 @@
         .btn-green{background:var(--green);}
         .btn-orange{background:#e67e22;}
         .btn-blue{background:#007bff;}
-        .form-section{background:#fff;border-radius:12px;padding:24px;box-shadow:0 4px 15px rgba(0,0,0,0.06);margin-bottom:22px;}
+        .form-section{background:#fff;border-radius:12px;padding:24px 24px 30px;box-shadow:0 4px 15px rgba(0,0,0,0.06);margin-bottom:22px;}
+        .form-section .form-control-sm{height:calc(2.0em + .5rem + 2px);}
         .form-section h6{font-family:'Acme',sans-serif;color:var(--bg);margin-bottom:15px;padding-bottom:6px;border-bottom:1px solid #eee;}
         .badge-pending{background:#ffc107;color:#333;padding:3px 10px;border-radius:50px;font-size:11px;}
         .badge-completed{background:var(--green);color:#fff;padding:3px 10px;border-radius:50px;font-size:11px;}
@@ -118,7 +120,7 @@
             </div>
             <div class="user-info">
                 <span class="role-badge" id="roleBadge">ADMIN</span>
-                <span id="adminName"><i class="fa fa-user-circle"></i> Admin</span>
+                <span id="adminName" style="display:none;"><i class="fa fa-user-circle"></i> Admin</span>
                 <button class="logout-btn" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
             </div>
         </div>
@@ -164,7 +166,7 @@
                         <div class="row mt-2">
                             <div class="col-md-4"><label>Location</label><input type="text" class="form-control form-control-sm" id="eventLocation"></div>
                             <div class="col-md-4"><label>Description</label><textarea class="form-control form-control-sm" id="eventDesc" rows="2"></textarea></div>
-                            <div class="col-md-4"><label>Image</label><input type="file" class="form-control form-control-sm" id="eventImage" accept="image/*"></div>
+                            <div class="col-md-4"><label>Image</label><input type="file" class="form-control form-control-sm" id="eventImage" accept="image/*" style="padding:6px;"></div>
                         </div>
                         <div class="mt-2">
                             <button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;">Save</button>
@@ -297,6 +299,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     var API = '/api';
     var _allMembers = [];
@@ -315,9 +318,13 @@
     });
 
     function logout(){
-        localStorage.removeItem('admin_token');
-        localStorage.removeItem('admin_user');
-        window.location.href='admin-login.html';
+        Swal.fire({title:'Are you sure?',text:'You will be logged out',icon:'question',showCancelButton:true,confirmButtonColor:'#8B4513',cancelButtonColor:'#dc3545',confirmButtonText:'Yes, logout'}).then(function(r){
+            if(r.isConfirmed){
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_user');
+                window.location.href='admin-login.html';
+            }
+        });
     }
 
     function initNav(){
@@ -466,12 +473,14 @@
         ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'approved'})}).done(function(){loadMembers();});
     }
     function rejectMember(id){
-        if(!confirm('Reject this member?'))return;
-        ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'rejected'})}).done(function(){loadMembers();});
+        Swal.fire({title:'Reject this member?',text:'This action cannot be undone',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',cancelButtonColor:'#888',confirmButtonText:'Yes, reject'}).then(function(r){
+            if(r.isConfirmed){ ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'rejected'})}).done(function(){loadMembers();}); }
+        });
     }
     function deleteMember(id){
-        if(!confirm('Delete this member permanently?'))return;
-        ajax(API+'/members/'+id,{method:'DELETE'}).done(function(){loadMembers();});
+        Swal.fire({title:'Delete this member?',text:'This will permanently remove the member',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',cancelButtonColor:'#888',confirmButtonText:'Yes, delete'}).then(function(r){
+            if(r.isConfirmed){ ajax(API+'/members/'+id,{method:'DELETE'}).done(function(){loadMembers();}); }
+        });
     }
     function closeMemberModal(){ $('#memberModal').removeClass('active'); }
 
@@ -527,8 +536,9 @@
         });
     }
     function deleteEvent(id){
-        if(!confirm('Delete this event?'))return;
-        ajax(API+'/events/'+id,{method:'DELETE'}).done(function(){loadEvents();});
+        Swal.fire({title:'Delete this event?',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',cancelButtonColor:'#888',confirmButtonText:'Yes, delete'}).then(function(r){
+            if(r.isConfirmed){ ajax(API+'/events/'+id,{method:'DELETE'}).done(function(){loadEvents();}); }
+        });
     }
     function resetEventForm(){
         $('#eventForm')[0].reset();
@@ -599,8 +609,9 @@
         });
     }
     function deleteGallery(id){
-        if(!confirm('Delete this image?'))return;
-        ajax(API+'/gallery/'+id,{method:'DELETE'}).done(function(){loadGallery();});
+        Swal.fire({title:'Delete this image?',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',cancelButtonColor:'#888',confirmButtonText:'Yes, delete'}).then(function(r){
+            if(r.isConfirmed){ ajax(API+'/gallery/'+id,{method:'DELETE'}).done(function(){loadGallery();}); }
+        });
     }
     $('#galleryForm').on('submit',function(e){
         e.preventDefault();
@@ -638,8 +649,9 @@
         ajax(API+'/users/'+id+'/role',{method:'PUT',contentType:'application/json',data:JSON.stringify({role:role})}).done(function(){loadUsers();});
     }
     function deleteUser(id){
-        if(!confirm('Delete this user?'))return;
-        ajax(API+'/users/'+id,{method:'DELETE'}).done(function(){loadUsers();});
+        Swal.fire({title:'Delete this user?',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',cancelButtonColor:'#888',confirmButtonText:'Yes, delete'}).then(function(r){
+            if(r.isConfirmed){ ajax(API+'/users/'+id,{method:'DELETE'}).done(function(){loadUsers();}); }
+        });
     }
     $('#userForm').on('submit',function(e){
         e.preventDefault();
