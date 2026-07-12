@@ -106,6 +106,7 @@
             <a href="#" data-page="contacts"><i class="fa fa-envelope"></i> Messages</a>
             <a href="#" data-page="gallery"><i class="fa fa-image"></i> Gallery</a>
             <a href="#" data-page="users"><i class="fa fa-user-circle"></i> Users & Roles</a>
+            <a href="#" data-page="member-roles"><i class="fa fa-id-badge"></i> Member Roles</a>
             <a href="#" data-page="contact-info"><i class="fa fa-address-book"></i> Contact Info</a>
             <a href="#" data-page="settings"><i class="fa fa-cog"></i> Settings</a>
             <a href="#" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</a>
@@ -207,11 +208,8 @@
                             <div class="col-md-3"><label>Email *</label><input type="email" class="form-control form-control-sm" id="userEmail" required></div>
                             <div class="col-md-3"><label>Password *</label><input type="password" class="form-control form-control-sm" id="userPassword" required></div>
                             <div class="col-md-3"><label>Role</label>
-                                <select class="form-control form-control-sm" id="userRole">
-                                    <option value="staff">Staff</option>
-                                    <option value="coordinator">Coordinator</option>
-                                    <option value="manager">Manager</option>
-                                    <option value="admin">Admin</option>
+                                <select class="form-control form-control-sm" id="userRole" required>
+                                    <option value="">-- Select Role --</option>
                                 </select>
                             </div>
                         </div>
@@ -219,6 +217,21 @@
                     </form>
                 </div>
                 <div class="table-wrap" id="usersTable"><div class="empty-state"><i class="fa fa-user-circle"></i> No users</div></div>
+            </div>
+
+            <!-- MEMBER ROLES -->
+            <div class="page" id="page-member-roles">
+                <div class="form-section">
+                    <h6><i class="fa fa-plus"></i> Add Member Role</h6>
+                    <form id="memberRoleForm">
+                        <div class="row">
+                            <div class="col-md-8"><label>Role Name *</label><input type="text" class="form-control form-control-sm" id="memberRoleName" placeholder="e.g. Coordinator, Manager..." required></div>
+                            <div class="col-md-4"><label>&nbsp;</label><button type="submit" class="btn btn-sm btn-block" style="background:var(--green);color:#fff;"><i class="fa fa-plus"></i> Add Role</button></div>
+                        </div>
+                    </form>
+                    <div id="memberRoleMsg" class="mt-2"></div>
+                </div>
+                <div class="table-wrap" id="memberRolesTable"><div class="empty-state"><i class="fa fa-id-badge"></i> No roles</div></div>
             </div>
 
             <!-- CONTACT INFO -->
@@ -342,6 +355,7 @@
             if(pg==='contacts') loadContacts();
             if(pg==='gallery') loadGallery();
             if(pg==='users') loadUsers();
+            if(pg==='member-roles') loadMemberRoles();
             if(pg==='settings') loadSettings();
             if(pg==='contact-info') loadContactInfo();
             $('#sidebar').removeClass('open');
@@ -432,29 +446,30 @@
     function editMember(id){
         var m=_allMembers.find(function(x){return x.id===id;});
         if(!m)return;
-        var allRoles = ['Coordinator','Manager','Seva Pramukh','Event Incharge','Donation Incharge','Accounts','Volunteer','Other'];
         var currentRoles = m.roles ? m.roles.split(',').map(function(r){return r.trim();}) : [];
 
-        var html = '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Assign Roles</label><div class="checkbox-group">';
-        allRoles.forEach(function(r){
-            var checked = currentRoles.indexOf(r)!==-1 ? 'checked' : '';
-            html += '<label><input type="checkbox" class="member-role-cb" value="'+r+'" '+checked+'> '+r+'</label>';
-        });
-        html += '</div></div>';
-        html += '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Working Valid Till</label>';
-        html += '<input type="date" class="form-control form-control-sm" id="editMemberValidTill" value="'+(m.working_valid_till||'')+'"></div>';
-        html += '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Status</label>';
-        html += '<select class="form-control form-control-sm" id="editMemberStatus">';
-        ['pending','approved','rejected'].forEach(function(s){
-            html += '<option value="'+s+'" '+(m.status===s?'selected':'')+'>'+s+'</option>';
-        });
-        html += '</select></div>';
-        html += '<button class="btn btn-sm" style="background:var(--green);color:#fff;" onclick="saveMemberEdit('+m.id+')"><i class="fa fa-save"></i> Save Changes</button>';
+        ajax(API+'/member-roles/all').done(function(allRoles){
+            var html = '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Assign Roles</label><div class="checkbox-group">';
+            allRoles.forEach(function(r){
+                var checked = currentRoles.indexOf(r)!==-1 ? 'checked' : '';
+                html += '<label><input type="checkbox" class="member-role-cb" value="'+r+'" '+checked+'> '+r+'</label>';
+            });
+            html += '</div></div>';
+            html += '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Working Valid Till</label>';
+            html += '<input type="date" class="form-control form-control-sm" id="editMemberValidTill" value="'+(m.working_valid_till||'')+'"></div>';
+            html += '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Status</label>';
+            html += '<select class="form-control form-control-sm" id="editMemberStatus">';
+            ['pending','approved','rejected'].forEach(function(s){
+                html += '<option value="'+s+'" '+(m.status===s?'selected':'')+'>'+s+'</option>';
+            });
+            html += '</select></div>';
+            html += '<button class="btn btn-sm" style="background:var(--green);color:#fff;" onclick="saveMemberEdit('+m.id+')"><i class="fa fa-save"></i> Save Changes</button>';
 
-        $('#memberModalTitle').text('Edit Member - ' + m.name);
-        $('#memberModalBody').html(html);
-        $('#memberModalActions').html('');
-        $('#memberModal').addClass('active');
+            $('#memberModalTitle').text('Edit Member - ' + m.name);
+            $('#memberModalBody').html(html);
+            $('#memberModalActions').html('');
+            $('#memberModal').addClass('active');
+        });
     }
 
     function saveMemberEdit(id){
@@ -625,14 +640,15 @@
 
     /* =================== USERS =================== */
     function loadUsers(){
-        ajax(API+'/users').done(function(data){
+        $.when(ajax(API+'/users'), ajax(API+'/member-roles/all')).done(function(uRes, rRes){
+            var data=uRes[0], allRoles=rRes[0]||[];
             if(!data||!data.length){$('#usersTable').html('<div class="empty-state"><i class="fa fa-user-circle"></i> No users</div>');return;}
             var h='<table class="table table-hover"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Change Role</th><th>Action</th></tr></thead><tbody>';
             data.forEach(function(u){
                 var badge='badge-'+(u.role||'staff');
                 h+='<tr><td>'+esc(u.name)+'</td><td>'+esc(u.email)+'</td><td><span class="'+badge+'">'+(u.role||'staff')+'</span></td><td>';
                 h+='<select class="form-control-sm-custom" onchange="updateUserRole('+u.id+',this.value)">';
-                ['admin','manager','coordinator','staff'].forEach(function(r){
+                allRoles.forEach(function(r){
                     h+='<option value="'+r+'" '+(u.role===r?'selected':'')+'>'+r+'</option>';
                 });
                 h+='</select></td><td>';
@@ -643,6 +659,9 @@
             });
             h+='</tbody></table>';
             $('#usersTable').html(h);
+            var opts='<option value="">-- Select Role --</option>';
+            allRoles.forEach(function(r){ opts+='<option value="'+r+'">'+r+'</option>'; });
+            $('#userRole').html(opts);
         });
     }
     function updateUserRole(id,role){
@@ -661,6 +680,44 @@
             alert(xhr.responseJSON?xhr.responseJSON.error:'Failed to create user');
         });
     });
+
+    /* =================== MEMBER ROLES =================== */
+    function loadMemberRoles(){
+        ajax(API+'/member-roles').done(function(data){
+            if(!data||!data.length){$('#memberRolesTable').html('<div class="empty-state"><i class="fa fa-id-badge"></i> No roles</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>#</th><th>Role Name</th><th>Action</th></tr></thead><tbody>';
+            data.forEach(function(r,i){
+                h+='<tr><td>'+(i+1)+'</td><td><span class="badge-role">'+esc(r.name)+'</span></td><td>';
+                h+='<button class="btn-sm-custom btn-edit" onclick="editMemberRole('+r.id+','+JSON.stringify(r.name).replace(/"/g,'&quot;')+')"><i class="fa fa-pencil"></i></button> ';
+                h+='<button class="btn-sm-custom btn-del" onclick="deleteMemberRole('+r.id+','+JSON.stringify(r.name).replace(/"/g,'&quot;')+')"><i class="fa fa-trash"></i></button>';
+                h+='</td></tr>';
+            });
+            h+='</tbody></table>';
+            $('#memberRolesTable').html(h);
+        });
+    }
+    $('#memberRoleForm').on('submit',function(e){
+        e.preventDefault();
+        var name=$('#memberRoleName').val().trim();
+        if(!name) return;
+        ajax(API+'/member-roles',{method:'POST',contentType:'application/json',data:JSON.stringify({name:name})})
+            .done(function(){$('#memberRoleForm')[0].reset();loadMemberRoles();})
+            .fail(function(xhr){var msg=(xhr.responseJSON&&xhr.responseJSON.error)||'Failed to add role';$('#memberRoleMsg').html('<div class="alert alert-danger" style="padding:8px 14px;font-size:13px;border-radius:6px;">'+msg+'</div>');setTimeout(function(){$('#memberRoleMsg').html('');},3000);});
+    });
+    function editMemberRole(id,name){
+        Swal.fire({title:'Edit Role',input:'text',inputLabel:'Role Name',inputValue:name,showCancelButton:true,confirmButtonColor:'#8B4513',confirmButtonText:'Save'}).then(function(result){
+            if(result.isConfirmed && result.value){
+                ajax(API+'/member-roles/'+id,{method:'PUT',contentType:'application/json',data:JSON.stringify({name:result.value.trim()})})
+                    .done(function(){loadMemberRoles();loadMembers();})
+                    .fail(function(xhr){Swal.fire('Error',(xhr.responseJSON&&xhr.responseJSON.error)||'Failed to update role','error');});
+            }
+        });
+    }
+    function deleteMemberRole(id,name){
+        Swal.fire({title:'Delete role "'+name+'"?',text:'This will remove the role but not affect assigned members.',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',cancelButtonColor:'#888',confirmButtonText:'Yes, delete'}).then(function(r){
+            if(r.isConfirmed){ ajax(API+'/member-roles/'+id,{method:'DELETE'}).done(function(){loadMemberRoles();}); }
+        });
+    }
 
     /* =================== SETTINGS =================== */
     function loadSettings(){

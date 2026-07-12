@@ -194,6 +194,20 @@ async function initDB() {
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
+  db.run(`CREATE TABLE IF NOT EXISTS member_roles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    created_at DATETIME DEFAULT (datetime('now'))
+  )`);
+
+  const rolesExist = queryOne('SELECT COUNT(*) as count FROM member_roles');
+  if (rolesExist.count === 0) {
+    ['Coordinator','Manager','Seva Pramukh','Event Incharge','Donation Incharge','Accounts','Volunteer','Other'].forEach(function(r){
+      runSQL('INSERT INTO member_roles (name) VALUES (?)', [r]);
+    });
+    console.log('Default member roles created');
+  }
+
   const existing = queryOne('SELECT COUNT(*) as count FROM users');
   if (existing.count === 0) {
     const hash = bcrypt.hashSync('admin123', 10);
@@ -324,10 +338,10 @@ app.get('/api/users', authMiddleware, adminMiddleware, (req, res) => {
 
 app.put('/api/users/:id/role', authMiddleware, adminMiddleware, (req, res) => {
   const { role } = req.body;
-  if (!['admin', 'staff', 'coordinator', 'manager'].includes(role)) {
-    return res.status(400).json({ error: 'Invalid role' });
+  if (!role || !role.trim()) {
+    return res.status(400).json({ error: 'Role required' });
   }
-  runSQL('UPDATE users SET role = ? WHERE id = ?', [role, req.params.id]);
+  runSQL('UPDATE users SET role = ? WHERE id = ?', [role.trim(), req.params.id]);
   res.json({ success: true });
 });
 
@@ -653,6 +667,57 @@ app.delete('/api/staff/:id', authMiddleware, adminMiddleware, (req, res) => {
     const imgPath = path.join(UPLOADS_DIR, existing.photo);
     if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
   }
+  res.json({ success: true });
+});
+
+// ===== Member Roles API =====
+app.get('/api/member-roles', authMiddleware, (req, res) => {
+  const roles = queryAll('SELECT * FROM member_roles ORDER BY name ASC');
+  res.json(roles);
+});
+
+app.get('/api/member-roles/all', (req, res) => {
+  const roles = queryAll('SELECT name FROM member_roles ORDER BY name ASC');
+  res.json(roles.map(function(r){ return r.name; }));
+});
+
+app.post('/api/member-roles', authMiddleware, adminMiddleware, (req, res) => {
+  const { name } = req.body;
+  if (!name || !name.trim()) {
+    return res.status(400).json({ error: 'Role name required' });
+  }
+  const trimmed = name.trim();
+  const existing = queryOne('SELECT id FROM member_roles WHERE name = ?', [trimmed]);
+  if (existing) {
+    return res.status(409).json({ error: 'Role already exists' });
+  }
+  runInsert('INSERT INTO member_roles (name) VALUES (?)', [trimmed]);
+  res.status(201).json({ success: true, name: trimmed });
+});
+
+app.put('/api/member-roles/:id', authMiddleware, adminMiddleware, (req, res) => {
+  const { name } = req.body;
+  if (!name || !name.trim()) {
+    return res.status(400).json({ error: 'Role name required' });
+  }
+  const trimmed = name.trim();
+  const role = queryOne('SELECT * FROM member_roles WHERE id = ?', [req.params.id]);
+  if (!role) return res.status(404).json({ error: 'Role not found' });
+  const dup = queryOne('SELECT id FROM member_roles WHERE name = ? AND id != ?', [trimmed, req.params.id]);
+  if (dup) return res.status(409).json({ error: 'Role name already exists' });
+  runSQL('UPDATE member_roles SET name = ? WHERE id = ?', [trimmed, req.params.id]);
+  const allMembers = queryAll('SELECT id, roles FROM members WHERE roles LIKE ?', ['%' + role.name + '%']);
+  allMembers.forEach(function(m) {
+    var updatedRoles = m.roles.split(',').map(function(r){ return r.trim() === role.name ? trimmed : r.trim(); }).join(', ');
+    runSQL('UPDATE members SET roles = ? WHERE id = ?', [updatedRoles, m.id]);
+  });
+  res.json({ success: true });
+});
+
+app.delete('/api/member-roles/:id', authMiddleware, adminMiddleware, (req, res) => {
+  const role = queryOne('SELECT * FROM member_roles WHERE id = ?', [req.params.id]);
+  if (!role) return res.status(404).json({ error: 'Role not found' });
+  runSQL('DELETE FROM member_roles WHERE id = ?', [req.params.id]);
   res.json({ success: true });
 });
 
