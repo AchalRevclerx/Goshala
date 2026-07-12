@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Staff - श्री प्रेमानंद गोशाला</title>
+    <title>Search Member - श्री प्रेमानंद गोशाला</title>
     <link rel="icon" type="image/png" href="icon/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -16,6 +16,11 @@
         .staff-section { padding:60px 0; }
         .staff-section .head_item3 { width:100%; text-align:center; margin:0 0 40px; display:flex; align-items:center; justify-content:center; }
         .staff-section .head_item3 span { background:var(--background-color); color:#fff; padding:12px 40px; border-radius:8px; font-size:24px; font-weight:bold; display:inline-block; text-transform:uppercase; box-shadow:0 4px 15px rgba(139,69,19,0.3); }
+        .member-status { display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600; margin-bottom:6px; }
+        .member-status.approved { background:#d4edda; color:#155724; }
+        .member-status.pending { background:#fff3cd; color:#856404; }
+        .member-status.rejected { background:#f8d7da; color:#721c24; }
+        .validity-text { font-size:12px; color:#999; }
         .search-card { background:#fff; border-radius:12px; padding:30px; box-shadow:0 4px 20px rgba(0,0,0,0.08); margin-bottom:30px; }
         .search-card h4 { color:var(--background-color); font-family:'Acme',sans-serif; margin-bottom:20px; border-bottom:2px solid var(--gold); padding-bottom:10px; }
         .search-modes { display:flex; gap:0; margin-bottom:20px; border:2px solid var(--background-color); border-radius:8px; overflow:hidden; }
@@ -54,30 +59,30 @@
     <div id="main-content">
         <section class="page-hero">
             <div class="container">
-                <h1><i class="fa fa-users"></i> Search Staff</h1>
-                <p>Find our working staff members at श्री प्रेमानंद गोशाला</p>
+                <h1><i class="fa fa-users"></i> Search Member</h1>
+                <p>Find our gaushala members at श्री प्रेमानंद गोशाला</p>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Search Staff</li>
+                        <li class="breadcrumb-item active" aria-current="page">Search Member</li>
                     </ol>
                 </nav>
             </div>
         </section>
         <section class="staff-section">
             <div class="container">
-                <div class="head_item3" data-aos="fade-down"><span><i class="fa fa-users"></i> Find Staff Members</span></div>
+                <div class="head_item3" data-aos="fade-down"><span><i class="fa fa-users"></i> Find Members</span></div>
                 <div class="row justify-content-center">
                     <div class="col-lg-8" data-aos="fade-up">
                         <div class="search-card">
-                            <h4><i class="fa fa-search"></i> Search Staff</h4>
+                            <h4><i class="fa fa-search"></i> Search Member</h4>
                             <div class="search-modes">
-                                <button class="mode-btn active" data-mode="address" onclick="switchMode('address')"><i class="fa fa-map-marker"></i> Search by Address</button>
-                                <button class="mode-btn" data-mode="name" onclick="switchMode('name')"><i class="fa fa-user"></i> Search by Name</button>
+                                <button class="mode-btn active" data-mode="name" onclick="switchMode('name')"><i class="fa fa-user"></i> Search by Name</button>
+                                <button class="mode-btn" data-mode="address" onclick="switchMode('address')"><i class="fa fa-map-marker"></i> Search by Address</button>
                             </div>
                             <div class="search-input-group">
-                                <input type="text" class="form-control" id="searchInput" placeholder="Enter address to search staff...">
-                                <button class="search-btn" onclick="searchStaff()"><i class="fa fa-search"></i> Search</button>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Enter name to search members...">
+                                <button class="search-btn" onclick="searchMembers()"><i class="fa fa-search"></i> Search</button>
                             </div>
                         </div>
                     </div>
@@ -86,8 +91,8 @@
                 <div id="resultsContainer">
                     <div class="initial-state" data-aos="fade-up">
                         <i class="fa fa-search"></i>
-                        <h4>Search for Staff Members</h4>
-                        <p style="color:#999;">Enter an address or name to find our staff members.</p>
+                        <h4>Search for Members</h4>
+                        <p style="color:#999;">Enter a name or address to find our gaushala members.</p>
                     </div>
                 </div>
             </div>
@@ -101,51 +106,62 @@
     <script src="js/app.js"></script>
     <script src="js/shared.js"></script>
     <script>
-        var currentMode = 'address';
+        var currentMode = 'name';
         function switchMode(mode) {
             currentMode = mode;
             $('.mode-btn').removeClass('active');
             $('.mode-btn[data-mode="' + mode + '"]').addClass('active');
-            $('#searchInput').attr('placeholder', mode === 'address' ? 'Enter address to search staff...' : 'Enter name to search staff...');
+            $('#searchInput').attr('placeholder', mode === 'name' ? 'Enter name to search members...' : 'Enter address to search members...');
             $('#searchInput').focus();
         }
-        function searchStaff() {
+        function searchMembers() {
             var query = $('#searchInput').val().trim();
             if (!query) {
                 $('#resultsContainer').html('<div class="no-results"><i class="fa fa-exclamation-circle"></i><h4>Please enter a search term</h4></div>');
                 $('#resultsCount').hide();
                 return;
             }
-            $('#resultsContainer').html('<div class="text-center py-5"><i class="fa fa-spinner fa-spin fa-3x" style="color:var(--gold);"></i><p class="mt-3">Searching staff...</p></div>');
+            $('#resultsContainer').html('<div class="text-center py-5"><i class="fa fa-spinner fa-spin fa-3x" style="color:var(--gold);"></i><p class="mt-3">Searching members...</p></div>');
             $('#resultsCount').hide();
-            var param = currentMode === 'address' ? 'address' : 'name';
-            var url = '/api/staff/search?' + encodeURIComponent(param) + '=' + encodeURIComponent(query);
-            $.get(url, function(staff) {
-                if (!staff || staff.length === 0) {
-                    $('#resultsContainer').html('<div class="no-results"><i class="fa fa-user-times"></i><h4>No staff found</h4><p style="color:#999;">No staff members match your search for "<strong>' + query + '</strong>".</p></div>');
+            var param = currentMode === 'name' ? 'name' : 'address';
+            var url = '/api/members/search?' + encodeURIComponent(param) + '=' + encodeURIComponent(query);
+            $.get(url, function(members) {
+                if (!members || members.length === 0) {
+                    $('#resultsContainer').html('<div class="no-results"><i class="fa fa-user-times"></i><h4>No members found</h4><p style="color:#999;">No members match your search for "<strong>' + query + '</strong>".</p></div>');
                     $('#resultsCount').hide();
                     return;
                 }
-                $('#resultsCount').html('Found <strong>' + staff.length + '</strong> staff member' + (staff.length > 1 ? 's' : '') + ' for "<strong>' + query + '</strong>"').show();
+                $('#resultsCount').html('Found <strong>' + members.length + '</strong> member' + (members.length > 1 ? 's' : '') + ' for "<strong>' + query + '</strong>"').show();
                 var html = '<div class="row">';
-                staff.forEach(function(s, i) {
-                    var avatarHtml = s.photo ? '<img src="/uploads/' + s.photo + '" alt="' + (s.name || '') + '">' : '<span class="initial">' + (s.name ? s.name.charAt(0).toUpperCase() : '?') + '</span>';
-                    html += '<div class="col-lg-6" data-aos="fade-up" data-aos-delay="' + (i * 50) + '">';
+                members.forEach(function(m, i) {
+                    var avatarHtml = m.photo ? '<img src="/uploads/' + m.photo + '" alt="' + (m.name || '') + '">' : '<span class="initial">' + (m.name ? m.name.charAt(0).toUpperCase() : '?') + '</span>';
+                    var statusClass = (m.status || 'approved').toLowerCase();
+                    var statusLabel = statusClass.charAt(0).toUpperCase() + statusClass.slice(1);
+                    html += '<div class="col-lg-6">';
                     html += '<div class="staff-card"><div class="staff-avatar">' + avatarHtml + '</div>';
-                    html += '<div class="staff-info"><h5>' + (s.name || 'Unknown') + '</h5>';
-                    html += '<div class="designation"><i class="fa fa-briefcase"></i> ' + (s.designation || 'Staff') + '</div>';
+                    html += '<div class="staff-info"><h5>' + (m.name || 'Unknown') + '</h5>';
+                    html += '<div class="member-status ' + statusClass + '">' + statusLabel + '</div>';
+                    if (m.id_card_number) html += '<div class="designation"><i class="fa fa-id-card"></i> ID: ' + m.id_card_number + '</div>';
                     html += '<div class="staff-details">';
-                    if (s.phone) html += '<span><i class="fa fa-phone"></i> ' + s.phone + '</span>';
-                    if (s.address) html += '<span><i class="fa fa-map-marker"></i> ' + s.address + '</span>';
-                    html += '</div></div></div></div>';
+                    if (m.phone) html += '<span><i class="fa fa-phone"></i> ' + m.phone + '</span>';
+                    if (m.email) html += '<span><i class="fa fa-envelope"></i> ' + m.email + '</span>';
+                    if (m.address) html += '<span><i class="fa fa-map-marker"></i> ' + m.address + '</span>';
+                    html += '</div>';
+                    if (m.valid_from) {
+                        html += '<div class="validity-text"><i class="fa fa-calendar"></i> Joined: ' + m.valid_from;
+                        if (m.valid_till) html += ' | Valid till: ' + m.valid_till;
+                        html += '</div>';
+                    }
+                    html += '</div></div></div>';
                 });
                 html += '</div>';
                 $('#resultsContainer').html(html);
+                AOS.refresh();
             }).fail(function() {
                 $('#resultsContainer').html('<div class="no-results"><i class="fa fa-exclamation-triangle" style="color:var(--gold);"></i><h4>Search failed</h4></div>');
             });
         }
-        $('#searchInput').on('keypress', function(e) { if (e.which === 13) searchStaff(); });
+        $('#searchInput').on('keypress', function(e) { if (e.which === 13) searchMembers(); });
     </script>
 </body>
 </html>

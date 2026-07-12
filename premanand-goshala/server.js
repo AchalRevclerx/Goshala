@@ -578,6 +578,24 @@ app.get('/api/member/search', (req, res) => {
   });
 });
 
+// ===== Member Search by name/address (public) =====
+app.get('/api/members/search', (req, res) => {
+  const { name, address } = req.query;
+  let sql = 'SELECT id_card_number, name, phone, email, address, photo, status, valid_from, valid_till FROM members WHERE 1=1';
+  const params = [];
+  if (address) {
+    sql += ' AND address LIKE ?';
+    params.push('%' + address + '%');
+  }
+  if (name) {
+    sql += ' AND name LIKE ?';
+    params.push('%' + name + '%');
+  }
+  sql += ' ORDER BY name ASC';
+  const members = queryAll(sql, params);
+  res.json(members);
+});
+
 // ===== Staff API =====
 app.get('/api/staff', (req, res) => {
   const staff = queryAll('SELECT id, name, phone, address, designation, photo FROM staff ORDER BY created_at DESC');
