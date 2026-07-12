@@ -435,7 +435,7 @@ app.post('/api/member/apply', upload.single('photo'), (req, res) => {
   const validFrom = new Date().toISOString();
   const validTill = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString();
   runSQL('INSERT INTO members (name, phone, email, address, photo, id_card_number, status, valid_from, valid_till) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
-    name, phone, email || null, address || null, photoPath, idCard, 'approved', validFrom, validTill
+    name, phone, email || null, address || null, photoPath, idCard, 'pending', validFrom, validTill
   ]);
   res.status(201).json({ success: true, id_card_number: idCard, message: 'Application submitted. Your ID: ' + idCard });
 });

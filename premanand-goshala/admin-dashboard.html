@@ -100,7 +100,7 @@
             <small>Admin Panel</small>
         </div>
         <nav>
-            <a href="#" class="active" data-page="members"><i class="fa fa-users"></i> Members</a>
+            <a href="#" class="active" data-page="members"><i class="fa fa-users"></i> Members <span class="pending-badge" id="pendingBadge" style="display:none;background:#ffc107;color:#333;padding:2px 8px;border-radius:50px;font-size:11px;margin-left:6px;font-weight:bold;"></span></a>
             <a href="#" data-page="donations"><i class="fa fa-inr"></i> Donations</a>
             <a href="#" data-page="events"><i class="fa fa-calendar"></i> Events</a>
             <a href="#" data-page="contacts"><i class="fa fa-envelope"></i> Messages</a>
@@ -372,6 +372,17 @@
         ajax(API+'/members').done(function(data){
             _allMembers = data || [];
             renderMembers(_allMembers);
+            updatePendingBadge();
+        });
+    }
+
+    function updatePendingBadge(){
+        ajax(API+'/stats').done(function(stats){
+            if(stats.pendingMembers > 0){
+                $('#pendingBadge').text(stats.pendingMembers).show();
+            } else {
+                $('#pendingBadge').hide();
+            }
         });
     }
 
@@ -485,11 +496,11 @@
     }
 
     function approveMember(id){
-        ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'approved'})}).done(function(){loadMembers();});
+        ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'approved'})}).done(function(){loadMembers();updatePendingBadge();});
     }
     function rejectMember(id){
         Swal.fire({title:'Reject this member?',text:'This action cannot be undone',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',cancelButtonColor:'#888',confirmButtonText:'Yes, reject'}).then(function(r){
-            if(r.isConfirmed){ ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'rejected'})}).done(function(){loadMembers();}); }
+            if(r.isConfirmed){ ajax(API+'/members/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:'rejected'})}).done(function(){loadMembers();updatePendingBadge();}); }
         });
     }
     function deleteMember(id){

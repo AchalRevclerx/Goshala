@@ -204,7 +204,7 @@
                     processData: false,
                     contentType: false,
                     success: function(res) {
-                        $('#memberFormMsg').html('<div class="member-result-card"><h4><i class="fa fa-check-circle"></i> Application Submitted!</h4><p>Your application has been submitted successfully.</p><div class="member-id">Member ID: ' + res.id_card_number + '</div><p>Please save this ID for future reference. You will receive your ID card after approval.</p></div>');
+                        $('#memberFormMsg').html('<div class="member-result-card"><h4><i class="fa fa-check-circle"></i> Application Submitted!</h4><p>Your application has been submitted successfully. It is now <strong>pending admin approval</strong>.</p><div class="member-id">Member ID: ' + res.id_card_number + '</div><p>Please save this ID for future reference. You can check your status on the <a href="/id-card">ID Card page</a>. You will receive your ID card after admin approval.</p></div>');
                         $('#memberForm')[0].reset();
                         $('#photoPreview').hide();
                         $('#photoUploadArea').show();
