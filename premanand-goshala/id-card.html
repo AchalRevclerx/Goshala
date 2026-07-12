@@ -22,31 +22,44 @@
         .idcard-search-box .search-btn{background:var(--background-color);color:#fff;padding:10px 30px;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;transition:0.3s;font-family:'Bree Serif',serif;}
         .idcard-search-box .search-btn:hover{background:var(--gold);}
 
-        .idcard-preview{display:flex;justify-content:center;margin-top:30px;}
-        .idcard{width:340px;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.2);font-family:'Bree Serif',serif;}
-        .idcard-top{background:linear-gradient(135deg,var(--background-color),#5a3e1b);padding:20px;text-align:center;color:#fff;}
-        .idcard-top img{width:70px;height:70px;border-radius:50%;border:3px solid var(--gold);margin-bottom:8px;}
-        .idcard-top h5{margin:0;font-size:16px;font-family:'Acme',serif;}
-        .idcard-top p{margin:2px 0 0;font-size:11px;opacity:0.85;}
-        .idcard-middle{padding:15px 20px;background:#fff;}
-        .idcard-middle .detail-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:13px;}
-        .idcard-middle .detail-row:last-child{border-bottom:none;}
-        .idcard-middle .detail-row .label{color:#888;font-weight:600;}
-        .idcard-middle .detail-row .value{color:var(--background-color);font-weight:700;}
-        .idcard-validity{padding:8px 20px;background:var(--light-bg);text-align:center;font-size:11px;color:#666;}
-        .idcard-footer-bar{background:linear-gradient(135deg,var(--background-color),#5a3e1b);padding:10px;text-align:center;color:#fff;font-size:11px;}
-        .member-status{text-align:center;margin-top:20px;font-size:14px;}
-        .member-status .badge{padding:8px 20px;border-radius:20px;font-size:13px;}
-        .btn-download{background:var(--background-color);color:#fff;padding:10px 30px;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;transition:0.3s;margin-top:15px;font-family:'Bree Serif',serif;}
+        .idcard-preview{display:flex;flex-direction:column;align-items:center;margin-top:30px;}
+        .idcard{width:380px;border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,0.25);font-family:'Bree Serif',serif;background:#fff;}
+
+        .idcard-header{background:linear-gradient(135deg,var(--background-color),#5a3e1b);padding:18px 22px;display:flex;align-items:center;gap:18px;}
+        .idcard-header img.logo{width:65px;height:65px;border-radius:50%;border:2.5px solid var(--gold);object-fit:cover;flex-shrink:0;background:#fff;}
+        .idcard-header .header-text{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:right;padding-left:4px;}
+        .idcard-header .header-text .org-name{font-size:20px;font-family:'Acme',serif;color:#fff;font-weight:700;line-height:1.25;}
+        .idcard-header .header-text .org-tagline{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;font-style:italic;}
+
+        .idcard-body{padding:28px 24px 20px;text-align:center;}
+        .idcard-body .photo-frame{width:90px;height:90px;border-radius:50%;margin:0 auto 14px;border:3px solid var(--gold);overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.12);background:#f9f5f0;}
+        .idcard-body .photo-frame img{width:100%;height:100%;object-fit:cover;}
+        .idcard-body .photo-frame .placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--background-color);}
+        .idcard-body .member-name{font-size:18px;font-family:'Acme',serif;color:var(--background-color);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:4px;}
+        .idcard-body .member-id{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:2px;margin-bottom:18px;}
+
+        .idcard-body .info-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;text-align:left;font-size:12.5px;}
+        .idcard-body .info-grid .label{color:#888;font-weight:600;white-space:nowrap;}
+        .idcard-body .info-grid .value{color:var(--background-color);font-weight:700;word-break:break-word;}
+
+        .idcard-footer{background:linear-gradient(135deg,var(--gold),#c49a10);padding:10px 20px;text-align:center;}
+        .idcard-footer span{font-size:11px;font-weight:700;color:var(--background-color);letter-spacing:2px;text-transform:uppercase;}
+
+        .btn-download{background:var(--background-color);color:#fff;padding:10px 30px;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;transition:0.3s;margin-top:18px;font-family:'Bree Serif',serif;}
         .btn-download:hover{background:var(--gold);}
         .no-member{text-align:center;padding:40px;color:#888;}
         .no-member i{font-size:60px;color:var(--gold);margin-bottom:15px;}
         .not-approved{text-align:center;padding:30px;background:#fff3cd;border-radius:12px;border:1px solid #ffc107;}
         .not-approved i{font-size:40px;color:#856404;margin-bottom:10px;}
         .not-approved h5{color:#856404;font-family:'Acme',serif;}
+
         @media only screen and (max-width:768px){
             .idcard-section .head_item3 span{font-size:18px;padding:10px 25px;}
-            .idcard{width:300px;}
+            .idcard{width:100%;max-width:380px;}
+            .idcard-header{padding:14px 16px;gap:14px;}
+            .idcard-header img.logo{width:50px;height:50px;}
+            .idcard-header .header-text .org-name{font-size:16px;}
+            .idcard-header .header-text .org-tagline{font-size:10px;}
         }
     </style>
 </head>
@@ -104,26 +117,41 @@
     <script src="js/shared.js"></script>
     <script>
         function showCard(data) {
-            var photoSrc = data.photo ? '/uploads/' + data.photo : 'icon/favicon.png';
-            var d = new Date(data.validTill);
-            var validity = 'Valid till ' + d.toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'});
+            var photoSrc = data.photo ? '/uploads/' + data.photo : '';
+            var photoHtml = photoSrc
+                ? '<img src="' + photoSrc + '" alt="Photo">'
+                : '<div class="placeholder"><i class="fa fa-user"></i></div>';
+            var joinDate = new Date(data.joinDate).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+            var validTill = new Date(data.validTill).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+
             var cardHtml = '<div class="idcard-preview">' +
                 '<div class="idcard" id="idCard">' +
-                '<div class="idcard-top">' +
-                '<img src="' + photoSrc + '" alt="Photo">' +
-                '<h5>श्री प्रेमानंद गोशाला</h5>' +
-                '<p>Shri Premand Gaushala, Mathura</p>' +
+
+                '<div class="idcard-header">' +
+                '<img class="logo" src="images/logo.jpg" alt="Logo">' +
+                '<div class="header-text">' +
+                '<span class="org-name">श्री प्रेमानंद गौशाला</span>' +
+                '<span class="org-tagline">गौ सेवा ही मानव सेवा</span>' +
                 '</div>' +
-                '<div class="idcard-middle">' +
-                '<div class="detail-row"><span class="label">Name</span><span class="value">' + data.name + '</span></div>' +
-                '<div class="detail-row"><span class="label">Mobile</span><span class="value">' + data.mobile + '</span></div>' +
-                '<div class="detail-row"><span class="label">Member ID</span><span class="value">' + data.memberId + '</span></div>' +
-                '<div class="detail-row"><span class="label">Join Date</span><span class="value">' + new Date(data.joinDate).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) + '</span></div>' +
                 '</div>' +
-                '<div class="idcard-validity">' + validity + '</div>' +
-                '<div class="idcard-footer-bar">Jai Gaumata!</div>' +
-                '</div></div>' +
-                '<div class="text-center"><button class="btn-download" onclick="downloadIDCard()"><i class="fa fa-download"></i> Download ID Card</button></div>';
+
+                '<div class="idcard-body">' +
+                '<div class="photo-frame">' + photoHtml + '</div>' +
+                '<div class="member-name">' + data.name + '</div>' +
+                '<div class="member-id">ID: ' + data.memberId + '</div>' +
+                '<div class="info-grid">' +
+                '<span class="label">Member ID</span><span class="value">' + data.memberId + '</span>' +
+                '<span class="label">Phone</span><span class="value">' + data.mobile + '</span>' +
+                '<span class="label">Email</span><span class="value">' + (data.email || '-') + '</span>' +
+                '<span class="label">Address</span><span class="value">' + (data.address || '-') + '</span>' +
+                '<span class="label">Valid Till</span><span class="value">' + validTill + '</span>' +
+                '</div>' +
+                '</div>' +
+
+                '<div class="idcard-footer"><span>Member Identity Card</span></div>' +
+                '</div>' +
+                '<button class="btn-download" onclick="downloadIDCard()"><i class="fa fa-download"></i> Download ID Card</button>' +
+                '</div>';
             $('#cardResult').html(cardHtml);
         }
 
