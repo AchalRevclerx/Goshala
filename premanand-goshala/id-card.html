@@ -116,6 +116,12 @@
     <script src="js/app.js"></script>
     <script src="js/shared.js"></script>
     <script>
+        var _cinNumber = '';
+
+        $.get('/api/settings', function(s) {
+            _cinNumber = s.cin_number || '';
+        });
+
         function showCard(data) {
             var photoSrc = data.photo ? '/uploads/' + data.photo : '';
             var photoHtml = photoSrc
@@ -144,7 +150,9 @@
                 '<span class="label">Phone</span><span class="value">' + data.mobile + '</span>' +
                 '<span class="label">Email</span><span class="value">' + (data.email || '-') + '</span>' +
                 '<span class="label">Address</span><span class="value">' + (data.address || '-') + '</span>' +
+                '<span class="label">Join Date</span><span class="value">' + joinDate + '</span>' +
                 '<span class="label">Valid Till</span><span class="value">' + validTill + '</span>' +
+                (_cinNumber ? '<span class="label">CIN No.</span><span class="value">' + _cinNumber + '</span>' : '') +
                 '</div>' +
                 '</div>' +
 
