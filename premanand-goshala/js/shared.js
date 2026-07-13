@@ -30,7 +30,7 @@ var header = '<header class="header-top">' +
     '<div class="logo-area">' +
     '<button class="hamburger-menu" onclick="toggleMobileNav()"><i class="fa fa-bars"></i></button>' +
     '<a href="index.html"><img src="images/logo.jpg" alt="Logo"></a>' +
-    '<div class="site-title">श्री प्रेमानंद गोशाला<small>गौ सेवा ही मानव सेवा</small></div>' +
+    '<div class="site-title">श्री प्रेमानंद गौशाला<small>गौ सेवा ही मानव सेवा</small></div>' +
     '</div>' +
     '<div class="header-right">' +
     '<div class="social-icons">' +
