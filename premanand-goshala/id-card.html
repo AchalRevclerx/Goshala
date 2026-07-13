@@ -89,13 +89,9 @@
                     <h4><i class="fa fa-search"></i> Search Your ID Card</h4>
                     <form id="searchForm">
                         <div class="form-row align-items-end">
-                            <div class="form-group col-md-5">
-                                <label>Mobile Number</label>
-                                <input type="tel" id="searchMobile" class="form-control" placeholder="Enter registered mobile number">
-                            </div>
-                            <div class="form-group col-md-5">
-                                <label>Or Member ID</label>
-                                <input type="text" id="searchMemberId" class="form-control" placeholder="Enter your member ID (e.g. GOS...)">
+                            <div class="form-group col-md-10">
+                                <label>Mobile Number or Member ID</label>
+                                <input type="text" id="searchInput" class="form-control" placeholder="Enter mobile number or member ID (e.g. GOS...)">
                             </div>
                             <div class="form-group col-md-2">
                                 <button type="submit" class="search-btn" style="width:100%;"><i class="fa fa-search"></i> Search</button>
@@ -176,14 +172,19 @@
         }
 
         function searchMember() {
-            var mobile = $('#searchMobile').val().trim();
-            var memberId = $('#searchMemberId').val().trim();
-            if (!mobile && !memberId) {
+            var val = $('#searchInput').val().trim();
+            if (!val) {
                 $('#cardResult').html('<div class="no-member"><i class="fa fa-info-circle"></i><h5>Please Enter Details</h5><p>Enter your mobile number or member ID to search.</p></div>');
                 return;
             }
             $('#cardResult').html('<div class="text-center"><i class="fa fa-spinner fa-spin" style="font-size:40px;color:var(--gold);"></i><p class="mt-2">Searching...</p></div>');
-            var url = '/api/member/search?phone=' + encodeURIComponent(mobile) + '&mobile=' + encodeURIComponent(mobile) + '&member_id=' + encodeURIComponent(memberId);
+            var isMemberId = /^[A-Za-z]/.test(val);
+            var url;
+            if (isMemberId) {
+                url = '/api/member/search?member_id=' + encodeURIComponent(val);
+            } else {
+                url = '/api/member/search?phone=' + encodeURIComponent(val) + '&mobile=' + encodeURIComponent(val);
+            }
             $.get(url, function(data) {
                 handleSearchResult(data);
             }).fail(function(xhr) {
