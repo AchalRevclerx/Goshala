@@ -160,14 +160,24 @@
                     <form id="eventForm" enctype="multipart/form-data">
                         <input type="hidden" id="eventId">
                         <div class="row">
-                            <div class="col-md-4"><label>Title *</label><input type="text" class="form-control form-control-sm" id="eventTitle" required></div>
-                            <div class="col-md-4"><label>Date *</label><input type="date" class="form-control form-control-sm" id="eventDate" required></div>
-                            <div class="col-md-4"><label>Time</label><input type="time" class="form-control form-control-sm" id="eventTime"></div>
+                            <div class="col-md-3"><label>Title *</label><input type="text" class="form-control form-control-sm" id="eventTitle" required></div>
+                            <div class="col-md-3"><label>Date *</label><input type="date" class="form-control form-control-sm" id="eventDate" required></div>
+                            <div class="col-md-3"><label>Time</label><input type="time" class="form-control form-control-sm" id="eventTime"></div>
+                            <div class="col-md-3"><label>Location</label><input type="text" class="form-control form-control-sm" id="eventLocation" maxlength="100"></div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-md-4"><label>Location</label><input type="text" class="form-control form-control-sm" id="eventLocation"></div>
-                            <div class="col-md-4"><label>Description</label><textarea class="form-control form-control-sm" id="eventDesc" rows="2"></textarea></div>
-                            <div class="col-md-4"><label>Image</label><input type="file" class="form-control form-control-sm" id="eventImage" accept="image/*" style="padding:6px;"></div>
+                            <div class="col-md-3"><label>Organizer Name</label><input type="text" class="form-control form-control-sm" id="eventOrganizer" placeholder="Organizer name"></div>
+                            <div class="col-md-3"><label>Organizer Phone</label><input type="tel" class="form-control form-control-sm" id="eventOrganizerPhone" placeholder="Organizer phone"></div>
+                            <div class="col-md-3"><label>Organizer Email</label><input type="email" class="form-control form-control-sm" id="eventOrganizerEmail" placeholder="Organizer email"></div>
+                            <div class="col-md-3"><label>Description</label><textarea class="form-control form-control-sm" id="eventDesc" rows="2"></textarea></div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12"><label>Image</label><input type="file" class="form-control form-control-sm" id="eventImage" accept="image/*" style="padding:6px;max-width:300px;">
+                                <div id="eventImagePreview" style="margin-top:6px;display:none;position:relative;display:inline-block;max-width:120px;">
+                                    <img src="" style="width:100%;max-height:80px;border-radius:6px;object-fit:cover;display:block;">
+                                    <button type="button" class="btn btn-sm btn-danger" id="removeEventImage" style="display:none;position:absolute;top:4px;right:4px;padding:2px 6px;font-size:10px;border-radius:50%;"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>
                         </div>
                         <div class="mt-2">
                             <button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;">Save</button>
@@ -536,9 +546,9 @@
     function loadEvents(){
         ajax(API+'/events').done(function(data){
             if(!data||!data.length){$('#eventsTable').html('<div class="empty-state"><i class="fa fa-calendar"></i> No events</div>');return;}
-            var h='<table class="table table-hover"><thead><tr><th>Title</th><th>Date</th><th>Time</th><th>Location</th><th>Action</th></tr></thead><tbody>';
+            var h='<table class="table table-hover"><thead><tr><th>Title</th><th>Date</th><th>Time</th><th>Location</th><th>Organizer</th><th>Action</th></tr></thead><tbody>';
             data.forEach(function(e){
-                h+='<tr><td>'+esc(e.title)+'</td><td>'+esc(e.date)+'</td><td>'+esc(e.time||'-')+'</td><td>'+esc(e.location||'-')+'</td><td>';
+                h+='<tr><td>'+esc(e.title)+'</td><td>'+esc(e.date)+'</td><td>'+esc(e.time||'-')+'</td><td>'+esc(e.location||'-')+'</td><td>'+esc(e.organizer||'-')+'</td><td>';
                 h+='<button class="btn-sm-custom btn-edit" onclick="editEvent('+e.id+')"><i class="fa fa-pencil"></i></button> ';
                 h+='<button class="btn-sm-custom btn-del" onclick="deleteEvent('+e.id+')"><i class="fa fa-trash"></i></button>';
                 h+='</td></tr>';
@@ -556,7 +566,21 @@
             $('#eventDate').val(e.date);
             $('#eventTime').val(e.time||'');
             $('#eventLocation').val(e.location||'');
+            $('#eventOrganizer').val(e.organizer||'');
+            $('#eventOrganizerPhone').val(e.organizer_phone||'');
+            $('#eventOrganizerEmail').val(e.organizer_email||'');
             $('#eventDesc').val(e.description||'');
+            if(e.image){
+                $('#eventImagePreview').show().find('img').attr('src','/uploads/'+e.image);
+                $('#removeEventImage').show();
+                $('#eventImagePreview').data('image',e.image);
+                $('#eventImagePreview').data('remove','');
+            }else{
+                $('#eventImagePreview').hide().find('img').attr('src','');
+                $('#removeEventImage').hide();
+                $('#eventImagePreview').data('image','');
+                $('#eventImagePreview').data('remove','');
+            }
             $('#eventFormTitle').html('<i class="fa fa-pencil"></i> Edit Event');
             $('html,body').animate({scrollTop:$('#page-events').offset().top-80},300);
         });
@@ -570,7 +594,29 @@
         $('#eventForm')[0].reset();
         $('#eventId').val('');
         $('#eventFormTitle').html('<i class="fa fa-plus"></i> Add Event');
+        $('#eventImagePreview').hide().find('img').attr('src','');
+        $('#removeEventImage').hide();
+        $('#eventImagePreview').data('image','');
+        $('#eventImagePreview').data('remove','');
     }
+    $('#removeEventImage').on('click',function(){
+        $('#eventImagePreview').hide().find('img').attr('src','');
+        $('#removeEventImage').hide();
+        $('#eventImagePreview').data('remove','true');
+        $('#eventImage').val('');
+    });
+    $('#eventImage').on('change',function(){
+        var file=this.files[0];
+        if(file){
+            var reader=new FileReader();
+            reader.onload=function(e){
+                $('#eventImagePreview').show().find('img').attr('src',e.target.result);
+                $('#removeEventImage').show();
+                $('#eventImagePreview').data('remove','');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
     $('#eventForm').on('submit',function(e){
         e.preventDefault();
         var fd=new FormData();
@@ -578,14 +624,22 @@
         fd.append('date',$('#eventDate').val());
         fd.append('time',$('#eventTime').val());
         fd.append('location',$('#eventLocation').val());
+        fd.append('organizer',$('#eventOrganizer').val());
+        fd.append('organizer_phone',$('#eventOrganizerPhone').val());
+        fd.append('organizer_email',$('#eventOrganizerEmail').val());
         fd.append('description',$('#eventDesc').val());
         var img=document.getElementById('eventImage').files[0];
-        if(img) fd.append('image',img);
+        if(img){
+            fd.append('image',img);
+        }else if($('#eventImagePreview').data('remove')==='true'){
+            fd.append('removeImage','true');
+        }
         var id=$('#eventId').val();
         var method=id?'PUT':'POST';
         var url=id?API+'/events/'+id:API+'/events';
         $.ajax({url:url,headers:authHeaders(),method:method,data:fd,processData:false,contentType:false})
-            .done(function(){resetEventForm();loadEvents();});
+            .done(function(){resetEventForm();loadEvents();})
+            .fail(function(xhr){alert('Error saving event: '+(xhr.responseJSON&&xhr.responseJSON.error||xhr.statusText));});
     });
 
     /* =================== CONTACTS =================== */

@@ -148,9 +148,16 @@ async function initDB() {
     date TEXT,
     time TEXT,
     location TEXT,
+    organizer TEXT,
+    organizer_phone TEXT,
+    organizer_email TEXT,
     image TEXT,
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
+
+  try { db.run("ALTER TABLE events ADD COLUMN organizer TEXT"); } catch(e) {}
+  try { db.run("ALTER TABLE events ADD COLUMN organizer_phone TEXT"); } catch(e) {}
+  try { db.run("ALTER TABLE events ADD COLUMN organizer_email TEXT"); } catch(e) {}
 
   db.run(`CREATE TABLE IF NOT EXISTS contacts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -447,11 +454,11 @@ app.get('/api/events', (req, res) => {
 });
 
 app.post('/api/events', authMiddleware, upload.single('image'), (req, res) => {
-  const { title, description, date, time, location } = req.body;
+  const { title, description, date, time, location, organizer, organizer_phone, organizer_email } = req.body;
   if (!title) return res.status(400).json({ error: 'Title required' });
   const image = req.file ? req.file.filename : null;
-  runSQL('INSERT INTO events (title, description, date, time, location, image) VALUES (?, ?, ?, ?, ?, ?)', [
-    title, description || null, date || null, time || null, location || null, image
+  runSQL('INSERT INTO events (title, description, date, time, location, organizer, organizer_phone, organizer_email, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+    title, description || null, date || null, time || null, location || null, organizer || null, organizer_phone || null, organizer_email || null, image
   ]);
   res.status(201).json({ success: true });
 });
@@ -459,13 +466,22 @@ app.post('/api/events', authMiddleware, upload.single('image'), (req, res) => {
 app.put('/api/events/:id', authMiddleware, upload.single('image'), (req, res) => {
   const existing = queryOne('SELECT * FROM events WHERE id = ?', [req.params.id]);
   if (!existing) return res.status(404).json({ error: 'Event not found' });
-  const { title, description, date, time, location } = req.body;
-  const image = req.file ? req.file.filename : existing.image;
-  runSQL('UPDATE events SET title = ?, description = ?, date = ?, time = ?, location = ?, image = ? WHERE id = ?', [
+  const { title, description, date, time, location, organizer, organizer_phone, organizer_email, removeImage } = req.body;
+  let image;
+  if (req.file) {
+    image = req.file.filename;
+  } else if (removeImage === 'true') {
+    image = null;
+  } else {
+    image = existing.image;
+  }
+  runSQL('UPDATE events SET title = ?, description = ?, date = ?, time = ?, location = ?, organizer = ?, organizer_phone = ?, organizer_email = ?, image = ? WHERE id = ?', [
     title || existing.title, description ?? existing.description, date ?? existing.date,
-    time ?? existing.time, location ?? existing.location, image, req.params.id
+    time ?? existing.time, location ?? existing.location, organizer ?? existing.organizer,
+    organizer_phone ?? existing.organizer_phone, organizer_email ?? existing.organizer_email,
+    image, req.params.id
   ]);
-  if (req.file && existing.image) {
+  if (existing.image && image !== existing.image) {
     const oldPath = path.join(UPLOADS_DIR, existing.image);
     if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
   }
@@ -737,7 +753,12 @@ app.get('/api/stats', authMiddleware, (req, res) => {
 app.use('/uploads', express.static(UPLOADS_DIR));
 app.use(express.static(PUBLIC_DIR, {
   extensions: ['html'],
-  index: 'index.html'
+  index: 'index.html',
+  setHeaders: function(res) {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+  }
 }));
 
 app.get('*', (req, res) => {
