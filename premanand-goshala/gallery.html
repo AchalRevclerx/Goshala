@@ -80,7 +80,7 @@
 
         function loadGallery() {
             $.get('/api/gallery', function(data) {
-                galleryImages = data.images || [];
+                galleryImages = data || [];
                 var grid = $('#galleryGridPage');
                 grid.empty();
                 if (galleryImages.length === 0) {
@@ -89,7 +89,7 @@
                 }
                 galleryImages.forEach(function(img, i) {
                     var item = '<div class="gallery-item-page" data-index="' + i + '" data-aos="fade-up" data-aos-delay="' + (i % 4) * 100 + '">' +
-                        '<img src="' + img.url + '" alt="' + (img.title || 'Gallery Image') + '">' +
+                        '<img src="/uploads/' + img.image + '" alt="' + (img.title || 'Gallery Image') + '">' +
                         '<div class="gallery-overlay"><i class="fa fa-expand"></i></div>' +
                         '</div>';
                     grid.append(item);
@@ -101,7 +101,7 @@
 
         function openLightbox(index) {
             currentLightboxIndex = index;
-            $('#lightboxImg').attr('src', galleryImages[index].url);
+            $('#lightboxImg').attr('src', '/uploads/' + galleryImages[index].image);
             $('#lightbox').addClass('active');
             $('body').css('overflow', 'hidden');
         }
@@ -113,7 +113,7 @@
 
         function navigateLightbox(dir) {
             currentLightboxIndex = (currentLightboxIndex + dir + galleryImages.length) % galleryImages.length;
-            $('#lightboxImg').attr('src', galleryImages[currentLightboxIndex].url);
+            $('#lightboxImg').attr('src', '/uploads/' + galleryImages[currentLightboxIndex].image);
         }
 
         $(document).on('click', '.gallery-item-page', function() {

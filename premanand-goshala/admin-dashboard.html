@@ -628,7 +628,7 @@
             data.forEach(function(g){
                 h+='<div class="gallery-item">';
                 h+='<button class="gallery-delete" onclick="deleteGallery('+g.id+')"><i class="fa fa-trash"></i></button>';
-                h+='<img src="'+esc(g.image)+'" alt="'+esc(g.title)+'">';
+                h+='<img src="/uploads/'+esc(g.image)+'" alt="'+esc(g.title)+'">';
                 h+='<p>'+esc(g.title||'')+'</p></div>';
             });
             $('#galleryGrid').html(h);
