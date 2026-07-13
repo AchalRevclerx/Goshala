@@ -134,12 +134,17 @@ async function initDB() {
     pan TEXT,
     address TEXT,
     amount REAL NOT NULL,
+    purpose TEXT,
     payment_method TEXT DEFAULT 'offline',
     transaction_id TEXT,
     photo TEXT,
     status TEXT DEFAULT 'pending',
+    created_by TEXT DEFAULT 'user',
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
+
+  try { db.run("ALTER TABLE donations ADD COLUMN purpose TEXT"); } catch(e) {}
+  try { db.run("ALTER TABLE donations ADD COLUMN created_by TEXT DEFAULT 'user'"); } catch(e) {}
 
   db.run(`CREATE TABLE IF NOT EXISTS events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -375,15 +380,15 @@ app.post('/api/contact', (req, res) => {
 app.post('/api/donate', upload.fields([
   { name: 'photo', maxCount: 5 }
 ]), (req, res) => {
-  const { donor_name, phone, email, pan, address, amount, payment_method, transaction_id } = req.body;
+  const { donor_name, phone, email, pan, address, amount, purpose, payment_method, transaction_id } = req.body;
   if (!donor_name || !phone || !amount) {
     return res.status(400).json({ error: 'Name, phone, and amount required' });
   }
   const photoPaths = req.files?.photo ? req.files.photo.map(f => f.filename) : [];
   runSQL(
-    'INSERT INTO donations (donor_name, phone, email, pan, address, amount, payment_method, transaction_id, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    'INSERT INTO donations (donor_name, phone, email, pan, address, amount, purpose, payment_method, transaction_id, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [donor_name, phone, email || null, pan || null, address || null,
-    parseFloat(amount), payment_method || 'offline', transaction_id || null,
+    parseFloat(amount), purpose || null, payment_method || 'offline', transaction_id || null,
     photoPaths.join(',')]
   );
   res.status(201).json({ success: true, message: 'Donation recorded successfully' });
@@ -525,6 +530,42 @@ app.delete('/api/gallery/:id', authMiddleware, (req, res) => {
 app.get('/api/donations', authMiddleware, (req, res) => {
   const donations = queryAll('SELECT * FROM donations ORDER BY created_at DESC');
   res.json(donations);
+});
+
+app.post('/api/donations', authMiddleware, adminMiddleware, upload.fields([
+  { name: 'photo', maxCount: 5 }
+]), (req, res) => {
+  const { donor_name, phone, email, pan, address, amount, purpose, payment_method, transaction_id, status } = req.body;
+  if (!donor_name || !phone || !amount) {
+    return res.status(400).json({ error: 'Name, phone, and amount required' });
+  }
+  const photoPaths = req.files?.photo ? req.files.photo.map(f => f.filename) : [];
+  runSQL(
+    'INSERT INTO donations (donor_name, phone, email, pan, address, amount, purpose, payment_method, transaction_id, photo, status, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [donor_name, phone, email || null, pan || null, address || null,
+    parseFloat(amount), purpose || null, payment_method || 'offline', transaction_id || null,
+    photoPaths.join(','), status || 'completed', 'admin']
+  );
+  res.status(201).json({ success: true, message: 'Donation recorded successfully' });
+});
+
+app.get('/api/donations/:id', authMiddleware, (req, res) => {
+  const donation = queryOne('SELECT * FROM donations WHERE id = ?', [req.params.id]);
+  if (!donation) return res.status(404).json({ error: 'Donation not found' });
+  res.json(donation);
+});
+
+app.delete('/api/donations/:id', authMiddleware, adminMiddleware, (req, res) => {
+  const existing = queryOne('SELECT * FROM donations WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Donation not found' });
+  if (existing.photo) {
+    existing.photo.split(',').forEach(function(f) {
+      const imgPath = path.join(UPLOADS_DIR, f.trim());
+      if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+    });
+  }
+  runSQL('DELETE FROM donations WHERE id = ?', [req.params.id]);
+  res.json({ success: true });
 });
 
 app.put('/api/donations/:id/status', authMiddleware, (req, res) => {

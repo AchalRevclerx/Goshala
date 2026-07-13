@@ -60,35 +60,39 @@
     <script src="js/app.js"></script>
     <script src="js/shared.js"></script>
     <script>
-        $(function() { loadDonors(); });
+        document.addEventListener('DOMContentLoaded', function() { loadDonors(); });
         function loadDonors() {
-            $.get('/api/donations/public', function(donations) {
-                var container = $('#donorsContainer');
-                container.empty();
-                if (!donations || donations.length === 0) {
-                    container.html('<div class="no-donors"><i class="fa fa-gift"></i><h4>No donations yet</h4><p style="color:#999;">Be the first to donate and support गौ सेवा!</p><a href="donation_form.html" class="btn mt-3" style="background:var(--gold);color:#fff;border-radius:50px;padding:10px 30px;"><i class="fa fa-heart"></i> Donate Now</a></div>');
-                    return;
-                }
-                var list = $('<div class="row"></div>');
-                donations.forEach(function(d) {
-                    var initial = d.donor_name ? d.donor_name.charAt(0).toUpperCase() : '?';
-                    var date = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN') : '';
-                    var amount = '\u20B9' + (parseFloat(d.amount) || 0).toLocaleString('en-IN');
-                    var addr = d.address || '';
-                    var parts = addr.split(',').map(function(p){ return p.trim(); });
-                    var basicAddr = parts.length > 1 ? parts.slice(-2).join(', ') : addr;
-                    list.append('<div class="col-lg-6" data-aos="fade-up">' +
-                        '<div class="donor-card">' +
-                        '<div class="donor-avatar">' + initial + '</div>' +
-                        '<div class="donor-info"><h6>' + d.donor_name + '</h6>' +
-                        '<small><i class="fa fa-map-marker"></i> ' + basicAddr + '</small><br>' +
-                        '<small><i class="fa fa-calendar"></i> ' + date + '</small></div>' +
-                        '<div class="donor-amount">' + amount + '</div></div></div>');
+            var container = document.getElementById('donorsContainer');
+            fetch('/api/donations/public')
+                .then(function(res) { return res.json(); })
+                .then(function(donations) {
+                    container.innerHTML = '';
+                    if (!donations || donations.length === 0) {
+                        container.innerHTML = '<div class="no-donors"><i class="fa fa-gift"></i><h4>No donations yet</h4><p style="color:#999;">Be the first to donate and support गौ सेवा!</p><a href="donation_form.html" class="btn mt-3" style="background:var(--gold);color:#fff;border-radius:50px;padding:10px 30px;"><i class="fa fa-heart"></i> Donate Now</a></div>';
+                        return;
+                    }
+                    var html = '<div class="row">';
+                    donations.forEach(function(d) {
+                        var initial = d.donor_name ? d.donor_name.charAt(0).toUpperCase() : '?';
+                        var date = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN') : '';
+                        var amount = '\u20B9' + (parseFloat(d.amount) || 0).toLocaleString('en-IN');
+                        var addr = d.address || '';
+                        var parts = addr.split(',').map(function(p){ return p.trim(); });
+                        var basicAddr = parts.length > 1 ? parts.slice(-2).join(', ') : addr;
+                        html += '<div class="col-lg-6">' +
+                            '<div class="donor-card">' +
+                            '<div class="donor-avatar">' + initial + '</div>' +
+                            '<div class="donor-info"><h6>' + d.donor_name + '</h6>' +
+                            '<small><i class="fa fa-map-marker"></i> ' + basicAddr + '</small><br>' +
+                            '<small><i class="fa fa-calendar"></i> ' + date + '</small></div>' +
+                            '<div class="donor-amount">' + amount + '</div></div></div>';
+                    });
+                    html += '</div>';
+                    container.innerHTML = html;
+                })
+                .catch(function(err) {
+                    container.innerHTML = '<div class="no-donors"><i class="fa fa-exclamation-triangle" style="color:var(--gold);"></i><h4>Could not load donors</h4><p>' + err.message + '</p></div>';
                 });
-                container.append(list);
-            }).fail(function() {
-                $('#donorsContainer').html('<div class="no-donors"><i class="fa fa-exclamation-triangle" style="color:var(--gold);"></i><h4>Could not load donors</h4></div>');
-            });
         }
     </script>
 </body>

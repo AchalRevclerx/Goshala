@@ -150,7 +150,69 @@
 
             <!-- DONATIONS -->
             <div class="page" id="page-donations">
+                <div class="form-section">
+                    <h6 id="donationFormTitle"><i class="fa fa-plus"></i> Add Offline Donation</h6>
+                    <form id="donationForm" enctype="multipart/form-data">
+                        <input type="hidden" id="donationId">
+                        <div class="row">
+                            <div class="col-md-3"><label>Donor Name *</label><input type="text" class="form-control form-control-sm" id="donorName" required></div>
+                            <div class="col-md-3"><label>Phone *</label><input type="tel" class="form-control form-control-sm" id="donorPhone" required></div>
+                            <div class="col-md-3"><label>Email</label><input type="email" class="form-control form-control-sm" id="donorEmail"></div>
+                            <div class="col-md-3"><label>PAN</label><input type="text" class="form-control form-control-sm" id="donorPan" maxlength="10" placeholder="For 80G"></div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-2"><label>Amount (\u20B9) *</label><input type="number" class="form-control form-control-sm" id="donorAmount" required min="1"></div>
+                            <div class="col-md-2"><label>Payment Method</label>
+                                <select class="form-control form-control-sm" id="donorPayMethod">
+                                    <option value="cash">Cash</option>
+                                    <option value="bank_transfer">Bank Transfer</option>
+                                    <option value="cheque">Cheque</option>
+                                    <option value="upi">UPI</option>
+                                    <option value="online">Online</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2"><label>Transaction ID</label><input type="text" class="form-control form-control-sm" id="donorTxnId" placeholder="Ref/UTR No."></div>
+                            <div class="col-md-3"><label>Purpose</label>
+                                <select class="form-control form-control-sm" id="donorPurpose">
+                                    <option value="">-- Select --</option>
+                                    <option value="General Donation">General Donation</option>
+                                    <option value="Cow Feed">Cow Feed</option>
+                                    <option value="Medical Treatment">Medical Treatment</option>
+                                    <option value="Shelter Maintenance">Shelter Maintenance</option>
+                                    <option value="Gaushala Development">Gaushala Development</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3"><label>Status</label>
+                                <select class="form-control form-control-sm" id="donorStatus">
+                                    <option value="completed">Completed</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="failed">Failed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6"><label>Address</label><textarea class="form-control form-control-sm" id="donorAddress" rows="1"></textarea></div>
+                            <div class="col-md-6"><label>Upload Proof (Receipt/Screenshot)</label>
+                                <input type="file" class="form-control form-control-sm" id="donorProof" accept="image/*" multiple style="padding:6px;">
+                                <div id="proofPreview" style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;"></div>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;"><i class="fa fa-save"></i> Save Donation</button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="resetDonationForm()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
                 <div class="table-wrap" id="donationsTable"><div class="empty-state"><i class="fa fa-inr"></i> No donations</div></div>
+            </div>
+
+            <!-- Donation Detail Modal -->
+            <div id="donationModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;overflow-y:auto;">
+                <div style="max-width:600px;margin:60px auto;background:#fff;border-radius:12px;padding:30px;position:relative;">
+                    <button onclick="closeDonationModal()" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;">&times;</button>
+                    <h5 style="color:var(--background-color);margin-bottom:15px;"><i class="fa fa-inr"></i> Donation Details</h5>
+                    <div id="donationModalBody"></div>
+                </div>
             </div>
 
             <!-- EVENTS -->
@@ -524,15 +586,18 @@
     function loadDonations(){
         ajax(API+'/donations').done(function(data){
             if(!data||!data.length){$('#donationsTable').html('<div class="empty-state"><i class="fa fa-inr"></i> No donations</div>');return;}
-            var h='<table class="table table-hover"><thead><tr><th>Donor</th><th>Amount</th><th>Phone</th><th>Status</th><th>Date</th></tr></thead><tbody>';
+            var h='<table class="table table-hover"><thead><tr><th>Donor</th><th>Amount</th><th>Phone</th><th>Method</th><th>Purpose</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody>';
             data.forEach(function(d){
-                var badge='badge-'+(d.status||'pending');
                 h+='<tr><td>'+esc(d.donor_name)+'</td><td>\u20B9'+(parseFloat(d.amount)||0).toLocaleString('en-IN')+'</td><td>'+esc(d.phone||'-')+'</td>';
+                h+='<td>'+esc((d.payment_method||'offline').replace('_',' '))+'</td><td>'+esc(d.purpose||'-')+'</td>';
                 h+='<td><select class="form-control-sm-custom" onchange="updateDonationStatus('+d.id+',this.value)">';
                 ['pending','completed','failed'].forEach(function(s){
                     h+='<option value="'+s+'" '+(d.status===s?'selected':'')+'>'+s+'</option>';
                 });
-                h+='</select></td><td>'+fmtDate(d.created_at)+'</td></tr>';
+                h+='</select></td><td>'+fmtDate(d.created_at)+'</td><td>';
+                h+='<button class="btn-sm-custom btn-blue" onclick="viewDonation('+d.id+')" title="View"><i class="fa fa-eye"></i></button> ';
+                h+='<button class="btn-sm-custom btn-del" onclick="deleteDonation('+d.id+')" title="Delete"><i class="fa fa-trash"></i></button>';
+                h+='</td></tr>';
             });
             h+='</tbody></table>';
             $('#donationsTable').html(h);
@@ -541,6 +606,81 @@
     function updateDonationStatus(id,status){
         ajax(API+'/donations/'+id+'/status',{method:'PUT',contentType:'application/json',data:JSON.stringify({status:status})}).done(function(){loadDonations();});
     }
+    function viewDonation(id){
+        ajax(API+'/donations/'+id).done(function(d){
+            if(!d)return;
+            var html='<table style="width:100%;border-collapse:collapse;">';
+            var fields=[
+                ['Donor Name',d.donor_name],['Phone',d.phone],['Email',d.email],['PAN',d.pan],
+                ['Address',d.address],['Amount','\u20B9'+(parseFloat(d.amount)||0).toLocaleString('en-IN')],
+                ['Purpose',d.purpose],['Payment Method',(d.payment_method||'offline').replace('_',' ')],
+                ['Transaction ID',d.transaction_id],['Status',d.status],['Created By',d.created_by||'user'],
+                ['Date',d.created_at]
+            ];
+            fields.forEach(function(f){
+                if(f[1]) html+='<tr><td style="padding:6px 10px;font-weight:600;color:#888;width:140px;">'+f[0]+'</td><td style="padding:6px 10px;">'+f[1]+'</td></tr>';
+            });
+            if(d.photo){
+                var photos=d.photo.split(',');
+                html+='<tr><td style="padding:6px 10px;font-weight:600;color:#888;">Proof</td><td style="padding:6px 10px;display:flex;gap:6px;flex-wrap:wrap;">';
+                photos.forEach(function(p){
+                    p=p.trim();
+                    if(p) html+='<a href="/uploads/'+p+'" target="_blank"><img src="/uploads/'+p+'" style="max-width:100px;max-height:80px;border-radius:6px;object-fit:cover;border:1px solid #ddd;"></a>';
+                });
+                html+='</td></tr>';
+            }
+            html+='</table>';
+            $('#donationModalBody').html(html);
+            $('#donationModal').show();
+        });
+    }
+    function closeDonationModal(){ $('#donationModal').hide(); }
+    function deleteDonation(id){
+        Swal.fire({title:'Delete this donation?',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',cancelButtonColor:'#888',confirmButtonText:'Yes, delete'}).then(function(r){
+            if(r.isConfirmed){ ajax(API+'/donations/'+id,{method:'DELETE'}).done(function(){loadDonations();}); }
+        });
+    }
+    function resetDonationForm(){
+        $('#donationForm')[0].reset();
+        $('#donationId').val('');
+        $('#donationFormTitle').html('<i class="fa fa-plus"></i> Add Offline Donation');
+        $('#proofPreview').empty();
+    }
+    $('#donorProof').on('change',function(){
+        var files=this.files;
+        $('#proofPreview').empty();
+        for(var i=0;i<files.length;i++){
+            (function(file){
+                var reader=new FileReader();
+                reader.onload=function(e){
+                    var wrap=$('<div style="position:relative;display:inline-block;">').append(
+                        $('<img>').attr('src',e.target.result).css({maxWidth:'80px',maxHeight:'60px',borderRadius:'6px',objectFit:'cover'})
+                    );
+                    $('#proofPreview').append(wrap);
+                };
+                reader.readAsDataURL(file);
+            })(files[i]);
+        }
+    });
+    $('#donationForm').on('submit',function(e){
+        e.preventDefault();
+        var fd=new FormData();
+        fd.append('donor_name',$('#donorName').val());
+        fd.append('phone',$('#donorPhone').val());
+        fd.append('email',$('#donorEmail').val());
+        fd.append('pan',$('#donorPan').val());
+        fd.append('address',$('#donorAddress').val());
+        fd.append('amount',$('#donorAmount').val());
+        fd.append('purpose',$('#donorPurpose').val());
+        fd.append('payment_method',$('#donorPayMethod').val());
+        fd.append('transaction_id',$('#donorTxnId').val());
+        fd.append('status',$('#donorStatus').val());
+        var files=document.getElementById('donorProof').files;
+        for(var i=0;i<files.length;i++){fd.append('photo',files[i]);}
+        $.ajax({url:API+'/donations',headers:authHeaders(),method:'POST',data:fd,processData:false,contentType:false})
+            .done(function(){resetDonationForm();loadDonations();})
+            .fail(function(xhr){alert('Error: '+(xhr.responseJSON&&xhr.responseJSON.error||xhr.statusText));});
+    });
 
     /* =================== EVENTS =================== */
     function loadEvents(){
