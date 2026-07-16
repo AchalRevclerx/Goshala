@@ -51,8 +51,20 @@
         .no-results h4 { color:#999; }
         .initial-state { text-align:center; padding:60px 20px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
         .initial-state i { font-size:60px; color:var(--gold); margin-bottom:15px; opacity:0.5; }
-        @media only screen and (max-width:768px) { .staff-section .head_item3 span { font-size:18px; padding:10px 25px; } .search-input-group { flex-direction:column; } }
-        @media only screen and (max-width:576px) { .staff-card { flex-direction:column; text-align:center; } .staff-info .staff-details span { display:block; } }
+        @media only screen and (max-width:768px) {
+            .staff-section .head_item3 span { font-size:18px; padding:10px 25px; }
+            .staff-section{padding:30px 0;}
+            .search-card{padding:20px;}
+            .search-input-group { flex-direction:column; }
+            .search-modes .mode-btn{font-size:13px;padding:8px;}
+        }
+        @media only screen and (max-width:576px) {
+            .staff-section .head_item3 span { font-size:15px; padding:8px 18px; }
+            .staff-card { flex-direction:column; text-align:center; padding:15px; }
+            .staff-info .staff-details span { display:block; margin-right:0; }
+            .staff-info h5{font-size:16px;}
+            .search-modes .mode-btn{font-size:12px;padding:8px 6px;}
+        }
     </style>
 </head>
 <body>

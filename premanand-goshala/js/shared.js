@@ -48,14 +48,14 @@ var desktopNav = '<nav class="nav-bar">' +
     '<ul class="nav navbar-nav flex-row justify-content-center">' +
     '<li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-home"></i> Home</a></li>' +
     '<li class="nav-item"><a class="nav-link" href="member-apply.html"><i class="fa fa-user-plus"></i> Member Apply</a></li>' +
-    '<li class="nav-item"><a class="nav-link" href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a></li>' +
-    '<li class="nav-item"><a class="nav-link" href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a></li>' +
+    '<li class="nav-item"><a class="nav-link" href="id-card.html"><i class="fa fa-id-card"></i> ID Card</a></li>' +
+    '<li class="nav-item"><a class="nav-link" href="events.html"><i class="fa fa-calendar"></i> Events</a></li>' +
     '<li class="nav-item"><a class="nav-link" href="donation_form.html"><i class="fa fa-heart"></i> Donate</a></li>' +
-    '<li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> List of Donors</a></li>' +
+    '<li class="nav-item"><a class="nav-link" href="donors.html"><i class="fa fa-list"></i> Donors</a></li>' +
     '<li class="nav-item"><a class="nav-link" href="gallery.html"><i class="fa fa-image"></i> Gallery</a></li>' +
-    '<li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a></li>' +
-    '<li class="nav-item"><a class="nav-link" href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a></li>' +
-    '<li class="nav-item"><a class="nav-link" href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a></li>' +
+    '<li class="nav-item"><a class="nav-link" href="contact-us.html"><i class="fa fa-phone"></i> Contact</a></li>' +
+    '<li class="nav-item"><a class="nav-link" href="staff-search.html"><i class="fa fa-search"></i> Find Member</a></li>' +
+    '<li class="nav-item"><a class="nav-link" href="receipts.html"><i class="fa fa-receipt"></i> Receipts</a></li>' +
     '<li class="nav-item dropdown">' +
     '<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">About Us</a>' +
     '<div class="dropdown-menu">' +
@@ -65,19 +65,19 @@ var desktopNav = '<nav class="nav-bar">' +
     '<a class="dropdown-item" href="#">Our Team</a>' +
     '<a class="dropdown-item" href="#">Achievements</a>' +
     '<a class="dropdown-item" href="#">Certifications</a>' +
-    '<a class="dropdown-item" href="#">Annual Report 3 Year</a>' +
-    '<a class="dropdown-item" href="#">Audit Report 3 Year</a>' +
-    '<a class="dropdown-item" href="#">ITR 3 Year</a>' +
+    '<a class="dropdown-item" href="#">Annual Report</a>' +
+    '<a class="dropdown-item" href="#">Audit Report</a>' +
+    '<a class="dropdown-item" href="#">ITR</a>' +
     '<a class="dropdown-item" href="#">Memorandum</a>' +
     '</div></li>' +
     '<li class="nav-item dropdown">' +
-    '<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Important Links</a>' +
+    '<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Links</a>' +
     '<div class="dropdown-menu dropdown-menu-right">' +
     '<a class="dropdown-item" href="#">Crowdfunding</a>' +
     '<a class="dropdown-item" href="#">Our Solutions</a>' +
     '<a class="dropdown-item" href="#">Your Problems</a>' +
     '<a class="dropdown-item" href="#">Our Project</a>' +
-    '<a class="dropdown-item" href="#">Geographical Location of Work</a>' +
+    '<a class="dropdown-item" href="#">Geographical Location</a>' +
     '<a class="dropdown-item" href="#">Projects Funding</a>' +
     '<a class="dropdown-item" href="#">Programs & Activities</a>' +
     '</div></li>' +
@@ -99,26 +99,26 @@ var mobileNav = '<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="
     '<div class="mobile-nav-links">' +
     '<a href="index.html"><i class="fa fa-home"></i> Home</a>' +
     '<a href="member-apply.html"><i class="fa fa-user-plus"></i> Member Apply</a>' +
-    '<a href="id-card.html"><i class="fa fa-id-card"></i> ID Card Download</a>' +
-    '<a href="events.html"><i class="fa fa-calendar"></i> Upcoming Event</a>' +
+    '<a href="id-card.html"><i class="fa fa-id-card"></i> ID Card</a>' +
+    '<a href="events.html"><i class="fa fa-calendar"></i> Events</a>' +
     '<a href="donation_form.html"><i class="fa fa-heart"></i> Donate</a>' +
-    '<a href="donors.html"><i class="fa fa-list"></i> List of Donors</a>' +
+    '<a href="donors.html"><i class="fa fa-list"></i> Donors</a>' +
     '<a href="gallery.html"><i class="fa fa-image"></i> Gallery</a>' +
-    '<a href="contact-us.html"><i class="fa fa-phone"></i> Contact Us</a>' +
-    '<a href="staff-search.html"><i class="fa fa-search"></i> Find Staff</a>' +
-    '<a href="receipts.html"><i class="fa fa-receipt"></i> My Receipts</a>' +
+    '<a href="contact-us.html"><i class="fa fa-phone"></i> Contact</a>' +
+    '<a href="staff-search.html"><i class="fa fa-search"></i> Find Member</a>' +
+    '<a href="receipts.html"><i class="fa fa-receipt"></i> Receipts</a>' +
     '<div><a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-info-circle"></i> About Us</span><i class="fa fa-chevron-down"></i></a>' +
     '<div class="sub-menu">' +
     '<a href="aboutus.html">About Us</a>' +
     '<a href="#">Management Team</a><a href="#">Working Staff</a><a href="#">Our Team</a>' +
     '<a href="#">Achievements</a><a href="#">Certifications</a>' +
-    '<a href="#">Annual Report 3 Year</a><a href="#">Audit Report 3 Year</a>' +
-    '<a href="#">ITR 3 Year</a><a href="#">Memorandum</a>' +
+    '<a href="#">Annual Report</a><a href="#">Audit Report</a>' +
+    '<a href="#">ITR</a><a href="#">Memorandum</a>' +
     '</div></div>' +
     '<div><a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-link"></i> Important Links</span><i class="fa fa-chevron-down"></i></a>' +
     '<div class="sub-menu">' +
     '<a href="#">Crowdfunding</a><a href="#">Our Solutions</a><a href="#">Your Problems</a>' +
-    '<a href="#">Our Project</a><a href="#">Geographical Location of Work</a>' +
+    '<a href="#">Our Project</a><a href="#">Geographical Location</a>' +
     '<a href="#">Projects Funding</a><a href="#">Programs & Activities</a>' +
     '</div></div>' +
     '<div><a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-sign-in"></i> Login</span><i class="fa fa-chevron-down"></i></a>' +

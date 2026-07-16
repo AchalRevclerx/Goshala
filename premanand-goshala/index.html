@@ -95,23 +95,43 @@
         @media only screen and (max-width:1200px) { .gallery-grid { grid-template-columns:repeat(3,1fr); } }
         @media only screen and (max-width:992px) {
             .grid_container { grid-template-columns:1fr; }
-            .buttons { grid-template-columns:1fr 1fr; }
+            .grid_left_div { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+            .grid_left_div .marquee_parent { grid-column:1/-1; }
+            .buttons { grid-template-columns:1fr 1fr 1fr; gap:10px; }
             .message-card { flex-direction:column; align-items:center; text-align:center; }
             .message-card img { width:140px; height:140px; }
             .gallery-grid { grid-template-columns:repeat(2,1fr); }
             .about-section .row .col-lg-6:first-child { margin-bottom:30px; }
+            .about-section { padding:30px 0; }
+            .message-section { padding:30px 0; }
+            .gallery-section { padding:30px 0; }
         }
         @media only screen and (max-width:768px) {
+            .grid_left_div { grid-template-columns:1fr; }
             .buttons { grid-template-columns:1fr 1fr; }
             .gallery-grid { grid-template-columns:repeat(2,1fr); }
+            .main_slider .carousel-inner img { height:300px; }
+            .slider_btn_div { bottom:60px; gap:12px; }
+            .slider_btn_div a { padding:10px 24px; font-size:15px; }
+            .message-card { padding:20px; }
+            .message-card .message-content h4 { font-size:18px; }
+            .about-section .head_item3 span { font-size:18px; padding:10px 25px; }
         }
         @media only screen and (max-width:576px) {
-            .buttons { grid-template-columns:1fr; }
-            .main_slider .carousel-inner img { height:250px; }
-            .slider_btn_div { bottom:40px; gap:10px; }
-            .slider_btn_div a { padding:8px 20px; font-size:14px; }
-            .gallery-grid { grid-template-columns:1fr; }
-            .gallery-grid .gallery-item img { height:180px; }
+            .buttons { grid-template-columns:1fr 1fr; gap:8px; }
+            .buttons button { padding:12px 6px; font-size:12px; gap:4px; }
+            .buttons button i { font-size:16px; }
+            .main_slider .carousel-inner img { height:220px; }
+            .slider_btn_div { bottom:30px; gap:8px; }
+            .slider_btn_div a { padding:8px 16px; font-size:13px; }
+            .gallery-grid { grid-template-columns:1fr 1fr; }
+            .gallery-grid .gallery-item img { height:140px; }
+            .content { height:150px; }
+            .about-section .head_item3 span { font-size:15px; padding:8px 18px; }
+            .message-card .message-content h4 { font-size:16px; }
+            .message-card .message-content p { font-size:13px; }
+            .marquee_parent h5 { font-size:15px; }
+            .slider-section-title { font-size:15px; flex-direction:column; gap:4px; align-items:flex-start; }
         }
     </style>
 </head>

@@ -54,6 +54,22 @@
         @media print { body * { visibility:hidden; } .receipt-paper, .receipt-paper * { visibility:visible; } .receipt-paper { position:absolute; left:0; top:0; width:100%; max-width:100%; box-shadow:none; border-radius:0; } .receipt-paper .receipt-close, .receipt-paper .receipt-actions { display:none !important; } }
         .receipt-seal-area { display:flex; justify-content:flex-end; margin-top:15px; padding-top:10px; }
         .receipt-seal-area svg { filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
+        @media only screen and (max-width:768px){
+            .receipts-section{padding:30px 0;}
+            .receipts-section .head_item3 span{font-size:18px;padding:10px 25px;}
+            .receipts-table-wrap{font-size:13px;}
+            .receipts-table-wrap th{padding:10px 8px;font-size:12px;}
+            .receipts-table-wrap td{padding:10px 8px;font-size:12px;}
+            .btn-receipt{padding:5px 12px;font-size:11px;}
+        }
+        @media only screen and (max-width:576px){
+            .receipts-section .head_item3 span{font-size:15px;padding:8px 18px;}
+            .receipt-content{padding:20px;}
+            .receipt-content .receipt-body table td{font-size:12px;padding:8px;}
+            .receipt-content .receipt-body table td:first-child{width:auto;}
+            .receipt-content .receipt-title{font-size:16px;padding:6px 15px;}
+            .receipt-paper .receipt-actions button{font-size:11px;padding:4px 12px;}
+        }
     </style>
 </head>
 <body>
