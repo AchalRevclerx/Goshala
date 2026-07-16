@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     /* ---- Load Dynamic Settings ---- */
-    $.get('/api/settings', function(s) {
+    $.get('/api/settings?' + Date.now(), function(s) {
         if (!s) return;
         var phone = [s.phone, s.phone2].filter(Boolean).join(', ');
         if (s.whatsapp) $('.social-sidebar .whatsapp').attr('href', s.whatsapp);

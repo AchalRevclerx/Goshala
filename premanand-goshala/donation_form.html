@@ -134,35 +134,35 @@
                                 <div class="detail-icon"><i class="fa fa-bank"></i></div>
                                 <div class="detail-text">
                                     <h6>Bank Name</h6>
-                                    <p>State Bank of India</p>
+                                    <p id="donate-bank-name">-</p>
                                 </div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-icon"><i class="fa fa-user"></i></div>
                                 <div class="detail-text">
                                     <h6>Account Name</h6>
-                                    <p>Shri Premand Gaushala Trust</p>
+                                    <p id="donate-bank-holder">-</p>
                                 </div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-icon"><i class="fa fa-hashtag"></i></div>
                                 <div class="detail-text">
                                     <h6>Account Number</h6>
-                                    <p>12345678901234</p>
+                                    <p id="donate-bank-account">-</p>
                                 </div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-icon"><i class="fa fa-code"></i></div>
                                 <div class="detail-text">
                                     <h6>IFSC Code</h6>
-                                    <p>SBIN0001234</p>
+                                    <p id="donate-bank-ifsc">-</p>
                                 </div>
                             </div>
                             <div class="detail-item">
-                                <div class="detail-icon"><i class="fa fa-exchange"></i></div>
+                                <div class="detail-icon"><i class="fa fa-map-marker"></i></div>
                                 <div class="detail-text">
-                                    <h6>Account Type</h6>
-                                    <p>Savings Account</p>
+                                    <h6>Branch</h6>
+                                    <p id="donate-bank-branch">-</p>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +170,7 @@
                         <div class="upi-section">
                             <h6><i class="fa fa-qrcode"></i> UPI Payment</h6>
                             <p style="font-size:13px;color:#666;">Scan the QR code or use UPI ID</p>
-                            <p style="font-size:15px;font-weight:bold;color:var(--background-color);">premandgoshala@upi</p>
+                            <p style="font-size:15px;font-weight:bold;color:var(--background-color);" id="donate-upi-id">-</p>
                         </div>
                     </div>
                 </div>
@@ -185,6 +185,16 @@
     <script src="js/shared.js"></script>
     <script>
         $(function() {
+            $.get('/api/settings?' + Date.now(), function(s) {
+                if (!s) return;
+                if (s.bank_name) $('#donate-bank-name').text(s.bank_name);
+                if (s.bank_holder) $('#donate-bank-holder').text(s.bank_holder);
+                if (s.bank_account) $('#donate-bank-account').text(s.bank_account);
+                if (s.bank_ifsc) $('#donate-bank-ifsc').text(s.bank_ifsc);
+                if (s.bank_branch) $('#donate-bank-branch').text(s.bank_branch);
+                if (s.upi_id) $('#donate-upi-id').text(s.upi_id);
+            });
+
             $('.amount-btn').on('click', function() {
                 $('.amount-btn').removeClass('active');
                 $(this).addClass('active');

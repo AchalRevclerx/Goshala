@@ -254,13 +254,28 @@ async function initDB() {
       ['youtube', 'https://youtube.com'],
       ['twitter', 'https://twitter.com'],
       ['map_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113200.52538001038!2d77.60682787278276!3d27.523688100000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397371e0b4d2ca53%3A0x7c1ec6c5d0f50d09!2sVrindavan%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1690000000000'],
-      ['working_hours', 'Mon - Sun: 6:00 AM - 8:00 PM']
+      ['working_hours', 'Mon - Sun: 6:00 AM - 8:00 PM'],
+      ['seal_org_name', 'श्री प्रेमानंद गौशाला'],
+      ['seal_reg_number', 'REG/2024/000001'],
+      ['seal_location', 'वृंदावन, मथुरा'],
+      ['seal_color', '#D32F2F']
     ];
     defaultSettings.forEach(([key, value]) => {
       runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
     });
     console.log('Default settings created');
   }
+
+  const sealDefaults = [
+    ['seal_org_name', 'श्री प्रेमानंद गौशाला'],
+    ['seal_reg_number', 'REG/2024/000001'],
+    ['seal_location', 'वृंदावन, मथुरा'],
+    ['seal_color', '#D32F2F']
+  ];
+  sealDefaults.forEach(([key, value]) => {
+    const exists = queryOne('SELECT id FROM settings WHERE key = ?', [key]);
+    if (!exists) runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
+  });
 
   saveDB();
   console.log('Database initialized');
@@ -285,8 +300,15 @@ function adminMiddleware(req, res, next) {
   next();
 }
 
+function noCacheMiddleware(req, res, next) {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  next();
+}
+
 // ===== Settings API =====
-app.get('/api/settings', (req, res) => {
+app.get('/api/settings', noCacheMiddleware, (req, res) => {
   const settings = queryAll('SELECT key, value FROM settings');
   const obj = {};
   settings.forEach(s => { obj[s.key] = s.value; });
@@ -394,7 +416,7 @@ app.post('/api/donate', upload.fields([
   res.status(201).json({ success: true, message: 'Donation recorded successfully' });
 });
 
-app.get('/api/donations/public', (req, res) => {
+app.get('/api/donations/public', noCacheMiddleware, (req, res) => {
   const donations = queryAll('SELECT donor_name, address, amount, created_at FROM donations ORDER BY created_at DESC');
   res.json(donations);
 });
@@ -405,7 +427,7 @@ app.get('/api/donations/my', authMiddleware, (req, res) => {
 });
 
 // ===== Public Donation Search by Phone =====
-app.get('/api/donations/search', (req, res) => {
+app.get('/api/donations/search', noCacheMiddleware, (req, res) => {
   const { phone } = req.query;
   if (!phone || !phone.trim()) {
     return res.status(400).json({ error: 'Phone number is required' });
@@ -453,7 +475,7 @@ app.post('/api/member/apply', upload.single('photo'), (req, res) => {
 });
 
 // ===== Events API =====
-app.get('/api/events', (req, res) => {
+app.get('/api/events', noCacheMiddleware, (req, res) => {
   const events = queryAll('SELECT * FROM events ORDER BY date DESC');
   res.json(events);
 });
@@ -505,7 +527,7 @@ app.delete('/api/events/:id', authMiddleware, (req, res) => {
 });
 
 // ===== Gallery API =====
-app.get('/api/gallery', (req, res) => {
+app.get('/api/gallery', noCacheMiddleware, (req, res) => {
   const images = queryAll('SELECT * FROM gallery ORDER BY created_at DESC');
   res.json(images);
 });
@@ -617,13 +639,13 @@ app.get('/api/contacts', authMiddleware, (req, res) => {
 });
 
 // ===== Activities API =====
-app.get('/api/activities', (req, res) => {
+app.get('/api/activities', noCacheMiddleware, (req, res) => {
   const activities = queryAll('SELECT * FROM activities ORDER BY created_at DESC LIMIT 10');
   res.json(activities);
 });
 
 // ===== Member Search (public) =====
-app.get('/api/member/search', (req, res) => {
+app.get('/api/member/search', noCacheMiddleware, (req, res) => {
   const { member_id, phone, mobile } = req.query;
   const phoneVal = phone || mobile;
   let member;
@@ -650,7 +672,7 @@ app.get('/api/member/search', (req, res) => {
 });
 
 // ===== Member Search by name/address (public) =====
-app.get('/api/members/search', (req, res) => {
+app.get('/api/members/search', noCacheMiddleware, (req, res) => {
   const { name, address } = req.query;
   let sql = 'SELECT id_card_number, name, phone, email, address, photo, status, valid_from, valid_till FROM members WHERE 1=1';
   const params = [];
@@ -668,12 +690,12 @@ app.get('/api/members/search', (req, res) => {
 });
 
 // ===== Staff API =====
-app.get('/api/staff', (req, res) => {
+app.get('/api/staff', noCacheMiddleware, (req, res) => {
   const staff = queryAll('SELECT id, name, phone, address, designation, photo FROM staff ORDER BY created_at DESC');
   res.json(staff);
 });
 
-app.get('/api/staff/search', (req, res) => {
+app.get('/api/staff/search', noCacheMiddleware, (req, res) => {
   const { address, name } = req.query;
   let sql = 'SELECT id, name, phone, address, designation, photo FROM staff WHERE 1=1';
   const params = [];
@@ -733,7 +755,7 @@ app.get('/api/member-roles', authMiddleware, (req, res) => {
   res.json(roles);
 });
 
-app.get('/api/member-roles/all', (req, res) => {
+app.get('/api/member-roles/all', noCacheMiddleware, (req, res) => {
   const roles = queryAll('SELECT name FROM member_roles ORDER BY name ASC');
   res.json(roles.map(function(r){ return r.name; }));
 });

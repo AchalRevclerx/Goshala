@@ -114,7 +114,7 @@
     <script>
         var _cinNumber = '';
 
-        $.get('/api/settings', function(s) {
+        $.get('/api/settings?' + Date.now(), function(s) {
             _cinNumber = s.cin_number || '';
         });
 

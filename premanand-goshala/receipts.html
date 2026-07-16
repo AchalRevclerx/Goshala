@@ -52,6 +52,8 @@
         .receipt-content .receipt-thankyou .thankyou-heading { font-family:'Acme',sans-serif; color:var(--background-color); font-size:18px; margin-bottom:10px; }
         .receipt-content .receipt-footer { text-align:center; margin-top:25px; padding-top:15px; border-top:2px dashed #ddd; font-size:12px; color:#999; }
         @media print { body * { visibility:hidden; } .receipt-paper, .receipt-paper * { visibility:visible; } .receipt-paper { position:absolute; left:0; top:0; width:100%; max-width:100%; box-shadow:none; border-radius:0; } .receipt-paper .receipt-close, .receipt-paper .receipt-actions { display:none !important; } }
+        .receipt-seal-area { display:flex; justify-content:flex-end; margin-top:15px; padding-top:10px; }
+        .receipt-seal-area svg { filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
     </style>
 </head>
 <body>
@@ -112,6 +114,44 @@
     <script src="js/shared.js"></script>
     <script>
         var _myDonations = [];
+        var _sealSettings = null;
+
+        function buildSealSVG(orgName, regNo, location, color, label) {
+            var c = color || '#D32F2F';
+            var topText = orgName || 'श्री प्रेमानंद गौशाला';
+            var bottomText = location || 'वृंदावन, मथुरा';
+            var centerLabel = label || 'Donation';
+            var reg = regNo || 'REG/2024/000001';
+            return '<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 200 200">' +
+                '<circle cx="100" cy="100" r="95" stroke="' + c + '" stroke-width="4" fill="none"/>' +
+                '<circle cx="100" cy="100" r="85" stroke="' + c + '" stroke-width="1.5" fill="none"/>' +
+                '<path id="rt_' + label + '" d="M 25,100 A 75,75 0 0,1 175,100" fill="none"/>' +
+                '<text fill="' + c + '" font-size="14" font-family="serif" font-weight="bold"><textPath href="#rt_' + label + '" startOffset="50%" text-anchor="middle">' + topText + '</textPath></text>' +
+                '<line x1="35" y1="108" x2="165" y2="108" stroke="' + c + '" stroke-width="1.5"/>' +
+                '<text x="100" y="105" text-anchor="middle" fill="' + c + '" font-size="18">★</text>' +
+                '<text x="100" y="128" text-anchor="middle" fill="' + c + '" font-size="12" font-family="serif" font-weight="bold">' + centerLabel + '</text>' +
+                '<text x="100" y="145" text-anchor="middle" fill="' + c + '" font-size="10" font-family="serif">' + reg + '</text>' +
+                '<path id="rb_' + label + '" d="M 30,115 A 70,70 0 0,0 170,115" fill="none"/>' +
+                '<text fill="' + c + '" font-size="11" font-family="serif"><textPath href="#rb_' + label + '" startOffset="50%" text-anchor="middle">' + bottomText + '</textPath></text>' +
+                '</svg>';
+        }
+
+        function getSealType(paymentMethod) {
+            var pm = (paymentMethod || '').toLowerCase();
+            if (pm === 'upi' || pm === 'online' || pm === 'net banking' || pm === 'netbanking') return 'online';
+            return 'offline';
+        }
+
+        function loadSealSettings(callback) {
+            if (_sealSettings) { callback(_sealSettings); return; }
+            $.get('/api/settings?' + Date.now(), function(s) {
+                _sealSettings = s || {};
+                callback(_sealSettings);
+            }).fail(function() {
+                _sealSettings = {};
+                callback(_sealSettings);
+            });
+        }
 
         $(function() {
             $('#searchForm').on('submit', function(e) {
@@ -182,8 +222,21 @@
                 photoHtml + '</table></div>' +
                 '<div class="receipt-thankyou"><p class="thankyou-heading"><i class="fa fa-heart" style="color:var(--gold);"></i> Thank You!</p>' +
                 '<p>Your generous donation to \u0936\u094D\u0930\u0940 \u092A\u094D\u0930\u0947\u092E\u093E\u0928\u0902\u0926 \u0917\u094B\u0936\u093E\u0932\u093E is greatly appreciated. This receipt can be used for tax exemption purposes under Section 80G of the Income Tax Act, 1961.</p></div>' +
+                '<div id="receiptSealArea" class="receipt-seal-area"></div>' +
                 '<div class="receipt-footer"><p>This is a computer-generated receipt and does not require a signature.</p><p>\u0936\u094D\u0930\u0940 \u092A\u094D\u0930\u0947\u092E\u093E\u0928\u0902\u0926 \u0917\u094B\u0936\u093E\u0932\u093E | \u0917\u094C \u0938\u0947\u0935\u093E \u0939\u0940 \u092E\u093E\u0928\u0935 \u0938\u0947\u0935\u093E</p></div>';
             $('#receiptContent').html(html);
+            loadSealSettings(function(seal) {
+                var sealType = getSealType(d.payment_method);
+                var label = sealType === 'online' ? 'Online Donation' : 'Offline Donation';
+                var svg = buildSealSVG(
+                    seal.seal_org_name || 'श्री प्रेमानंद गौशाला',
+                    seal.seal_reg_number || 'REG/2024/000001',
+                    seal.seal_location || 'वृंदावन, मथुरा',
+                    seal.seal_color || '#D32F2F',
+                    sealType
+                );
+                $('#receiptSealArea').html(svg);
+            });
             $('#receiptOverlay').addClass('active');
             $('body').css('overflow', 'hidden');
         }
