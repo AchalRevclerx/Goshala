@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - श्री प्रेमानंद गोशाला</title>
-    <link rel="icon" type="image/png" href="icon/favicon.png">
+    <link rel="icon" type="image/png" href="images/logo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Acme&display=swap">
@@ -89,6 +89,31 @@
             .hamburger{display:block;}
             .stats-grid{grid-template-columns:repeat(2,1fr);}
             .gallery-grid{grid-template-columns:repeat(2,1fr);}
+            .topbar h5{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+            .topbar .user-info .role-badge{font-size:10px;padding:2px 8px;}
+            .topbar .user-info .logout-btn{font-size:11px;padding:4px 12px;}
+            .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+            .table-wrap table{min-width:500px;}
+            .form-section .form-row .col-md-3,
+            .form-section .form-row .col-md-2,
+            .form-section .form-row .col-md-6,
+            .form-section .form-row .col-md-8{flex:0 0 100%;max-width:100%;}
+            .form-section .form-row .col-md-3+.col-md-3,
+            .form-section .form-row .col-md-3+.col-md-2,
+            .form-section .form-row .col-md-2+.col-md-3,
+            .form-section .form-row .col-md-3+.col-md-3{margin-top:8px;}
+            .content{padding:15px;}
+            .modal-box{padding:15px;max-width:98vw;}
+            .modal-box .detail-row{flex-direction:column;gap:4px;}
+            .modal-box .detail-row .dl{width:auto;}
+        }
+        @media(max-width:480px){
+            .stats-grid{grid-template-columns:1fr 1fr;gap:8px;}
+            .stat-card h3{font-size:22px;}
+            .gallery-grid{grid-template-columns:1fr 1fr;gap:8px;}
+            .topbar{padding:8px 12px;flex-wrap:wrap;gap:6px;}
+            .topbar .user-info{gap:8px;}
+            .form-section{padding:12px;}
         }
     </style>
 </head>
@@ -105,6 +130,8 @@
             <a href="#" data-page="events"><i class="fa fa-calendar"></i> Events</a>
             <a href="#" data-page="contacts"><i class="fa fa-envelope"></i> Messages</a>
             <a href="#" data-page="gallery"><i class="fa fa-image"></i> Gallery</a>
+            <a href="#" data-page="sliders"><i class="fa fa-picture-o"></i> Home Slider</a>
+            <a href="#" data-page="about"><i class="fa fa-info-circle"></i> About Us</a>
             <a href="#" data-page="users"><i class="fa fa-user-circle"></i> Users & Roles</a>
             <a href="#" data-page="member-roles"><i class="fa fa-id-badge"></i> Member Roles</a>
             <a href="#" data-page="contact-info"><i class="fa fa-address-book"></i> Contact Info</a>
@@ -161,7 +188,7 @@
                             <div class="col-md-3"><label>PAN</label><input type="text" class="form-control form-control-sm" id="donorPan" maxlength="10" placeholder="For 80G"></div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-md-2"><label>Amount (\u20B9) *</label><input type="number" class="form-control form-control-sm" id="donorAmount" required min="1"></div>
+                            <div class="col-md-2"><label>Amount (₹) *</label><input type="number" class="form-control form-control-sm" id="donorAmount" required min="1"></div>
                             <div class="col-md-2"><label>Payment Method</label>
                                 <select class="form-control form-control-sm" id="donorPayMethod">
                                     <option value="cash">Cash</option>
@@ -268,6 +295,48 @@
                     </form>
                 </div>
                 <div class="gallery-grid" id="galleryGrid"><div class="empty-state"><i class="fa fa-image"></i> No images</div></div>
+            </div>
+
+            <!-- HOME SLIDER -->
+            <div class="page" id="page-sliders">
+                <div class="form-section">
+                    <h6><i class="fa fa-picture-o"></i> Add Slider Image</h6>
+                    <form id="sliderForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-4"><label>Caption / Title</label><input type="text" class="form-control form-control-sm" id="sliderTitle" placeholder="e.g. Welcome to Gaushala"></div>
+                            <div class="col-md-4"><label>Sort Order</label><input type="number" class="form-control form-control-sm" id="sliderOrder" value="0" placeholder="0 = first"></div>
+                            <div class="col-md-4"><label>Image *</label><input type="file" class="form-control form-control-sm" id="sliderImage" accept="image/*" required></div>
+                        </div>
+                        <div class="mt-2"><button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;"><i class="fa fa-upload"></i> Upload Slider</button></div>
+                    </form>
+                    <small class="text-muted">These images appear in the rotating banner on the home page.</small>
+                </div>
+                <div class="gallery-grid" id="sliderGrid"><div class="empty-state"><i class="fa fa-picture-o"></i> No slider images</div></div>
+            </div>
+
+            <!-- ABOUT US -->
+            <div class="page" id="page-about">
+                <div class="form-section">
+                    <h6><i class="fa fa-info-circle"></i> About Us Content</h6>
+                    <form id="aboutForm">
+                        <div class="row">
+                            <div class="col-md-6"><label>Heading</label><input type="text" class="form-control form-control-sm" id="aboutHeading"></div>
+                            <div class="col-md-6"><label>About Image (optional)</label>
+                                <select class="form-control form-control-sm" id="aboutImageSelect"><option value="">-- Select uploaded image --</option></select>
+                                <small class="text-muted">Pick an image already uploaded in the Gallery.</small>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12"><label>About Text</label><textarea class="form-control form-control-sm" id="aboutText" rows="5"></textarea></div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6"><label>Mission</label><textarea class="form-control form-control-sm" id="aboutMission" rows="3"></textarea></div>
+                            <div class="col-md-6"><label>Vision</label><textarea class="form-control form-control-sm" id="aboutVision" rows="3"></textarea></div>
+                        </div>
+                        <div class="mt-3"><button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;"><i class="fa fa-save"></i> Save</button></div>
+                        <div id="aboutMsg" class="mt-2"></div>
+                    </form>
+                </div>
             </div>
 
             <!-- USERS & ROLES -->
@@ -406,7 +475,20 @@
     var user = JSON.parse(localStorage.getItem('admin_user')||'{}');
     if(!getToken()) window.location.href='admin-login.html';
 
+    function validateToken(){
+        if(!getToken()){ window.location.href='admin-login.html'; return; }
+        ajax(API+'/settings/all')
+            .fail(function(xhr){
+                if(xhr.status===401 || xhr.status===403){
+                    localStorage.removeItem('admin_token');
+                    localStorage.removeItem('admin_user');
+                    window.location.href='admin-login.html';
+                }
+            });
+    }
+
     $(function(){
+        validateToken();
         $('#adminName').html('<i class="fa fa-user-circle"></i> '+(user.name||'Admin'));
         $('#roleBadge').text(user.role||'ADMIN');
         initNav();
@@ -437,6 +519,8 @@
             if(pg==='events') loadEvents();
             if(pg==='contacts') loadContacts();
             if(pg==='gallery') loadGallery();
+            if(pg==='sliders') loadSliders();
+            if(pg==='about') loadAbout();
             if(pg==='users') loadUsers();
             if(pg==='member-roles') loadMemberRoles();
             if(pg==='settings') loadSettings();
@@ -851,7 +935,70 @@
         var img=document.getElementById('galleryImage').files[0];
         if(img) fd.append('image',img);
         $.ajax({url:API+'/gallery',headers:authHeaders(),method:'POST',data:fd,processData:false,contentType:false})
-            .done(function(){$('#galleryForm')[0].reset();loadGallery();});
+            .done(function(){$('#galleryForm')[0].reset();loadGallery();loadAbout();});
+    });
+
+    /* =================== SLIDERS =================== */
+    function loadSliders(){
+        ajax(API+'/sliders').done(function(data){
+            if(!data||!data.length){$('#sliderGrid').html('<div class="empty-state"><i class="fa fa-picture-o"></i> No slider images</div>');return;}
+            var h='';
+            data.forEach(function(s){
+                h+='<div class="gallery-item">';
+                h+='<button class="gallery-delete" onclick="deleteSlider('+s.id+')"><i class="fa fa-trash"></i></button>';
+                h+='<img src="/uploads/'+esc(s.image)+'" alt="'+esc(s.title)+'">';
+                h+='<p>'+esc(s.title||'')+'</p></div>';
+            });
+            $('#sliderGrid').html(h);
+        });
+    }
+    function deleteSlider(id){
+        Swal.fire({title:'Delete this slider image?',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',cancelButtonColor:'#888',confirmButtonText:'Yes, delete'}).then(function(r){
+            if(r.isConfirmed){ ajax(API+'/sliders/'+id,{method:'DELETE'}).done(function(){loadSliders();}); }
+        });
+    }
+    $('#sliderForm').on('submit',function(e){
+        e.preventDefault();
+        var fd=new FormData();
+        fd.append('title',$('#sliderTitle').val());
+        fd.append('sort_order',$('#sliderOrder').val());
+        var img=document.getElementById('sliderImage').files[0];
+        if(!img){alert('Please choose a slider image.');return;}
+        fd.append('image',img);
+        $.ajax({url:API+'/sliders',headers:authHeaders(),method:'POST',data:fd,processData:false,contentType:false})
+            .done(function(){$('#sliderForm')[0].reset();$('#sliderOrder').val('0');loadSliders();})
+            .fail(function(xhr){alert('Error: '+(xhr.responseJSON&&xhr.responseJSON.error||xhr.statusText));});
+    });
+
+    /* =================== ABOUT US =================== */
+    function loadAbout(){
+        ajax(API+'/settings/all').done(function(data){
+            var map={};
+            (data||[]).forEach(function(s){map[s.key]=s.value;});
+            $('#aboutHeading').val(map.about_heading||'About Us');
+            $('#aboutText').val(map.about_text||'');
+            $('#aboutMission').val(map.about_mission||'');
+            $('#aboutVision').val(map.about_vision||'');
+            $('#aboutImageSelect').val(map.about_image||'');
+            ajax(API+'/gallery').done(function(g){
+                var opts='<option value="">-- Select uploaded image --</option>';
+                (g||[]).forEach(function(im){opts+='<option value="'+esc(im.image)+'">'+esc(im.title||im.image)+'</option>';});
+                $('#aboutImageSelect').html(opts);
+                $('#aboutImageSelect').val(map.about_image||'');
+            });
+        });
+    }
+    $('#aboutForm').on('submit',function(e){
+        e.preventDefault();
+        var settings=[
+            {key:'about_heading',value:$('#aboutHeading').val()},
+            {key:'about_text',value:$('#aboutText').val()},
+            {key:'about_mission',value:$('#aboutMission').val()},
+            {key:'about_vision',value:$('#aboutVision').val()},
+            {key:'about_image',value:$('#aboutImageSelect').val()}
+        ];
+        ajax(API+'/settings',{method:'PUT',contentType:'application/json',data:JSON.stringify({settings:settings})})
+            .done(function(){$('#aboutMsg').html('<div class="alert alert-success" style="padding:8px 14px;font-size:13px;border-radius:6px;">Saved!</div>');setTimeout(function(){$('#aboutMsg').html('');},3000);});
     });
 
     /* =================== USERS =================== */

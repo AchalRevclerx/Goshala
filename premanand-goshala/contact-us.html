@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - श्री प्रेमानंद गोशाला</title>
-    <link rel="icon" type="image/png" href="icon/favicon.png">
+    <link rel="icon" type="image/png" href="images/logo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Acme&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/shared.css?v=2">
     <style>
         .page-hero {
             background:linear-gradient(rgba(139,69,19,0.85),rgba(139,69,19,0.85)),url('images/IMG-20260708-WA0002.jpg');
@@ -152,9 +152,11 @@
             .map-container iframe { height:280px; }
         }
         @media only screen and (max-width:576px) {
-            .contact-section .head_item3 span { font-size:15px; padding:8px 18px; }
+            .contact-section .head_item3 span { font-size:14px; padding:8px 14px; }
             .map-container iframe { height:220px; }
-            .submit-btn { width:100%; }
+            .submit-btn { width:100%; justify-content:center; }
+            .contact-info-card .info-item .info-text p { font-size:13px; word-break:break-word; }
+            .form-row .col-md-6 { flex:0 0 100%; max-width:100%; }
         }
     </style>
 </head>

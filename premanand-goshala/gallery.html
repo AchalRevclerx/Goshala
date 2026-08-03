@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery - श्री प्रेमानंद गोशाला</title>
-    <link rel="icon" type="image/png" href="icon/favicon.png">
+    <link rel="icon" type="image/png" href="images/logo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Acme&display=swap">
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/shared.css?v=2">
     <style>
         .page-hero{background:linear-gradient(rgba(139,69,19,0.85),rgba(139,69,19,0.85)),url('images/IMG-20260708-WA0006.jpg');}
         .gallery-page-section{padding:60px 0;}
@@ -37,8 +37,11 @@
             .lightbox-overlay .lightbox-close{font-size:28px;top:10px;right:15px;}
         }
         @media only screen and (max-width:576px){
-            .gallery-page-section .head_item3 span{font-size:15px;padding:8px 18px;}
-            .gallery-grid-page{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+            .gallery-page-section .head_item3 span{font-size:14px;padding:8px 14px;}
+            .gallery-grid-page{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px;}
+            .lightbox-overlay .lightbox-nav{font-size:22px;padding:8px;}
+            .lightbox-overlay .lightbox-close{font-size:24px;top:8px;right:10px;}
+            .lightbox-overlay img{max-width:95%;}
         }
     </style>
 </head>

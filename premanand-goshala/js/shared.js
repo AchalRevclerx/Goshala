@@ -9,6 +9,14 @@ var socialSidebar = '<div class="social-sidebar">' +
     '<a href="#" target="_blank" class="youtube" title="YouTube"><i class="fa fa-youtube-play"></i></a>' +
     '</div>';
 
+/* ---- Mobile Social Bar (bottom-left on phones) ---- */
+var mobileSocialBar = '<div class="mobile-social-bar">' +
+    '<a href="#" target="_blank" class="ms-whatsapp" title="WhatsApp"><i class="fa fa-whatsapp"></i></a>' +
+    '<a href="#" target="_blank" class="ms-facebook" title="Facebook"><i class="fa fa-facebook"></i></a>' +
+    '<a href="#" target="_blank" class="ms-instagram" title="Instagram"><i class="fa fa-instagram"></i></a>' +
+    '<a href="#" target="_blank" class="ms-youtube" title="YouTube"><i class="fa fa-youtube-play"></i></a>' +
+    '</div>';
+
 /* ---- Top Bar ---- */
 var topBar = '<div class="top-bar d-none d-md-block">' +
     '<div class="container">' +
@@ -26,7 +34,7 @@ var topBar = '<div class="top-bar d-none d-md-block">' +
 
 /* ---- Header ---- */
 var header = '<header class="header-top">' +
-    '<div class="container-fluid px-4">' +
+    '<div class="container-fluid">' +
     '<div class="logo-area">' +
     '<button class="hamburger-menu" onclick="toggleMobileNav()"><i class="fa fa-bars"></i></button>' +
     '<a href="index.html"><img src="images/logo.jpg" alt="Logo"></a>' +
@@ -60,32 +68,32 @@ var desktopNav = '<nav class="nav-bar">' +
     '<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">About Us</a>' +
     '<div class="dropdown-menu">' +
     '<a class="dropdown-item" href="aboutus.html">About Us</a>' +
-    '<a class="dropdown-item" href="#">Management Team</a>' +
-    '<a class="dropdown-item" href="#">Working Staff</a>' +
-    '<a class="dropdown-item" href="#">Our Team</a>' +
-    '<a class="dropdown-item" href="#">Achievements</a>' +
-    '<a class="dropdown-item" href="#">Certifications</a>' +
-    '<a class="dropdown-item" href="#">Annual Report</a>' +
-    '<a class="dropdown-item" href="#">Audit Report</a>' +
-    '<a class="dropdown-item" href="#">ITR</a>' +
-    '<a class="dropdown-item" href="#">Memorandum</a>' +
+    '<a class="dropdown-item" href="staff-search.html">Management Team</a>' +
+    '<a class="dropdown-item" href="staff-search.html">Working Staff</a>' +
+    '<a class="dropdown-item" href="staff-search.html">Our Team</a>' +
+    '<a class="dropdown-item" href="aboutus.html">Achievements</a>' +
+    '<a class="dropdown-item" href="aboutus.html">Certifications</a>' +
+    '<a class="dropdown-item" href="aboutus.html">Annual Report</a>' +
+    '<a class="dropdown-item" href="aboutus.html">Audit Report</a>' +
+    '<a class="dropdown-item" href="aboutus.html">ITR</a>' +
+    '<a class="dropdown-item" href="aboutus.html">Memorandum</a>' +
     '</div></li>' +
     '<li class="nav-item dropdown">' +
     '<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Links</a>' +
     '<div class="dropdown-menu dropdown-menu-right">' +
-    '<a class="dropdown-item" href="#">Crowdfunding</a>' +
-    '<a class="dropdown-item" href="#">Our Solutions</a>' +
-    '<a class="dropdown-item" href="#">Your Problems</a>' +
-    '<a class="dropdown-item" href="#">Our Project</a>' +
-    '<a class="dropdown-item" href="#">Geographical Location</a>' +
-    '<a class="dropdown-item" href="#">Projects Funding</a>' +
-    '<a class="dropdown-item" href="#">Programs & Activities</a>' +
+    '<a class="dropdown-item" href="donation_form.html">Crowdfunding</a>' +
+    '<a class="dropdown-item" href="gallery.html">Our Solutions</a>' +
+    '<a class="dropdown-item" href="aboutus.html">Your Problems</a>' +
+    '<a class="dropdown-item" href="gallery.html">Our Project</a>' +
+    '<a class="dropdown-item" href="contact-us.html">Geographical Location</a>' +
+    '<a class="dropdown-item" href="donation_form.html">Projects Funding</a>' +
+    '<a class="dropdown-item" href="events.html">Programs & Activities</a>' +
     '</div></li>' +
     '<li class="nav-item dropdown">' +
     '<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-sign-in"></i> Login</a>' +
     '<div class="dropdown-menu dropdown-menu-right">' +
-    '<a class="dropdown-item" href="admin-login.html">Coordinator Login</a>' +
-    '<a class="dropdown-item" href="admin-login.html">Manager Login</a>' +
+    '<a class="dropdown-item" href="login.html">Member Login</a>' +
+    '<a class="dropdown-item" href="admin-login.html">Coordinator / Manager Login</a>' +
     '</div></li>' +
     '</ul></div></nav>';
 
@@ -110,21 +118,21 @@ var mobileNav = '<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="
     '<div><a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-info-circle"></i> About Us</span><i class="fa fa-chevron-down"></i></a>' +
     '<div class="sub-menu">' +
     '<a href="aboutus.html">About Us</a>' +
-    '<a href="#">Management Team</a><a href="#">Working Staff</a><a href="#">Our Team</a>' +
-    '<a href="#">Achievements</a><a href="#">Certifications</a>' +
-    '<a href="#">Annual Report</a><a href="#">Audit Report</a>' +
-    '<a href="#">ITR</a><a href="#">Memorandum</a>' +
+    '<a href="staff-search.html">Management Team</a><a href="staff-search.html">Working Staff</a><a href="staff-search.html">Our Team</a>' +
+    '<a href="aboutus.html">Achievements</a><a href="aboutus.html">Certifications</a>' +
+    '<a href="aboutus.html">Annual Report</a><a href="aboutus.html">Audit Report</a>' +
+    '<a href="aboutus.html">ITR</a><a href="aboutus.html">Memorandum</a>' +
     '</div></div>' +
     '<div><a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-link"></i> Important Links</span><i class="fa fa-chevron-down"></i></a>' +
     '<div class="sub-menu">' +
-    '<a href="#">Crowdfunding</a><a href="#">Our Solutions</a><a href="#">Your Problems</a>' +
-    '<a href="#">Our Project</a><a href="#">Geographical Location</a>' +
-    '<a href="#">Projects Funding</a><a href="#">Programs & Activities</a>' +
+    '<a href="donation_form.html">Crowdfunding</a><a href="gallery.html">Our Solutions</a><a href="aboutus.html">Your Problems</a>' +
+    '<a href="gallery.html">Our Project</a><a href="contact-us.html">Geographical Location</a>' +
+    '<a href="donation_form.html">Projects Funding</a><a href="events.html">Programs & Activities</a>' +
     '</div></div>' +
     '<div><a class="dropdown-toggle-nav" onclick="toggleMobileSubMenu(this)"><span><i class="fa fa-sign-in"></i> Login</span><i class="fa fa-chevron-down"></i></a>' +
     '<div class="sub-menu">' +
-    '<a href="admin-login.html">Coordinator Login</a>' +
-    '<a href="admin-login.html">Manager Login</a>' +
+    '<a href="login.html">Member Login</a>' +
+    '<a href="admin-login.html">Coordinator / Manager Login</a>' +
     '</div></div>' +
     '</div></div>';
 
@@ -155,8 +163,8 @@ var footer = '<footer class="contact-footer">' +
     '<a href="gallery.html"><i class="fa fa-angle-right"></i> Gallery</a>' +
     '<a href="contact-us.html"><i class="fa fa-angle-right"></i> Contact Us</a>' +
     '<a href="aboutus.html"><i class="fa fa-angle-right"></i> About Us</a>' +
-    '<a href="#"><i class="fa fa-angle-right"></i> Important Links</a>' +
-    '<a href="#"><i class="fa fa-angle-right"></i> Login</a>' +
+    '<a href="events.html"><i class="fa fa-angle-right"></i> Important Links</a>' +
+    '<a href="login.html"><i class="fa fa-angle-right"></i> Login</a>' +
     '</div></div>' +
     '<div class="col-lg-4 col-md-6 mb-4">' +
     '<h5>Follow Us</h5>' +
@@ -183,10 +191,6 @@ var footer = '<footer class="contact-footer">' +
     '<a href="#">Privacy Policy</a> &nbsp;|&nbsp; ' +
     '<a href="#">Disclaimer</a> &nbsp;|&nbsp; ' +
     '<a href="#">Refund Policy</a>' +
-    '</div></div>' +
-    '<div class="row mt-2">' +
-    '<div class="col-12 text-center" style="font-size:13px;color:rgba(255,255,255,0.6);">' +
-    'Website Designed By - <a href="#" style="color:var(--gold);">Fragron Infotech</a>, Mob. - 7000131032' +
     '</div></div></div></div>' +
     '</footer>';
 
@@ -194,8 +198,8 @@ var footer = '<footer class="contact-footer">' +
 var floatingButtons = '<div class="floating-buttons">' +
     '<a id="s-fl-wa" href="#" target="_blank" class="fb-whatsapp" title="WhatsApp"><i class="fa fa-whatsapp"></i></a>' +
     '<a href="donation_form.html" class="fb-donate" title="Donate"><i class="fa fa-heart"></i></a>' +
-    '<a href="#" class="fb-problem"><i class="fa fa-exclamation-triangle"></i> Register Problem</a>' +
-    '</div>';
+    '<a href="contact-us.html" class="fb-problem"><i class="fa fa-exclamation-triangle"></i> Register Problem</a>' +
+    '</div>' + mobileSocialBar;
 
 /* ---- Inject HTML ---- */
 document.addEventListener('DOMContentLoaded', function() {
@@ -259,6 +263,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (s.youtube) $('#s-ft-yt').attr('href', s.youtube);
         if (s.whatsapp) $('#s-ft-wa').attr('href', s.whatsapp);
         if (s.whatsapp) $('#s-fl-wa').attr('href', s.whatsapp);
+        if (s.whatsapp) $('.mobile-social-bar .ms-whatsapp').attr('href', s.whatsapp);
+        if (s.facebook) $('.mobile-social-bar .ms-facebook').attr('href', s.facebook);
+        if (s.instagram) $('.mobile-social-bar .ms-instagram').attr('href', s.instagram);
+        if (s.youtube) $('.mobile-social-bar .ms-youtube').attr('href', s.youtube);
     });
 });
 

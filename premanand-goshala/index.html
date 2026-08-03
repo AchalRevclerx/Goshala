@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>श्री प्रेमानंद गोशाला | Premanand Gaushala</title>
-    <link rel="icon" type="image/png" href="icon/favicon.png">
+    <link rel="icon" type="image/png" href="images/logo.jpg">
+    <link rel="apple-touch-icon" href="images/logo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Acme&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/shared.css?v=2">
     <style>
         .main_slider .carousel-inner img { height:500px; object-fit:cover; }
         .main_slider .carousel-inner { position:relative; }
@@ -35,6 +36,8 @@
         .view_all_btn:hover { background:var(--background-color); color:#fff; text-decoration:none; }
 
         .content { position:relative; border-radius:12px; overflow:hidden; cursor:pointer; height:180px; }
+        .content-link { display:block; text-decoration:none; }
+        .content-link:hover { text-decoration:none; }
         .content-image { width:100%; height:100%; object-fit:cover; }
         .content-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); transition:0.3s; }
         .content:hover .content-overlay { background:rgba(139,69,19,0.7); }
@@ -119,19 +122,30 @@
         }
         @media only screen and (max-width:576px) {
             .buttons { grid-template-columns:1fr 1fr; gap:8px; }
-            .buttons button { padding:12px 6px; font-size:12px; gap:4px; }
-            .buttons button i { font-size:16px; }
+            .buttons button { padding:10px 4px; font-size:11px; gap:3px; }
+            .buttons button i { font-size:14px; }
             .main_slider .carousel-inner img { height:220px; }
-            .slider_btn_div { bottom:30px; gap:8px; }
-            .slider_btn_div a { padding:8px 16px; font-size:13px; }
+            .slider_btn_div { bottom:25px; gap:6px; }
+            .slider_btn_div a { padding:7px 12px; font-size:12px; }
             .gallery-grid { grid-template-columns:1fr 1fr; }
             .gallery-grid .gallery-item img { height:140px; }
             .content { height:150px; }
-            .about-section .head_item3 span { font-size:15px; padding:8px 18px; }
+            .about-section .head_item3 span { font-size:14px; padding:8px 14px; }
             .message-card .message-content h4 { font-size:16px; }
             .message-card .message-content p { font-size:13px; }
-            .marquee_parent h5 { font-size:15px; }
-            .slider-section-title { font-size:15px; flex-direction:column; gap:4px; align-items:flex-start; }
+            .marquee_parent h5 { font-size:14px; }
+            .slider-section-title { font-size:14px; flex-direction:column; gap:4px; align-items:flex-start; }
+        }
+        @media only screen and (max-width:375px) {
+            .main_slider .carousel-inner img { height:180px; }
+            .slider_btn_div { bottom:18px; gap:4px; }
+            .slider_btn_div a { padding:6px 10px; font-size:11px; }
+            .gallery-grid { grid-template-columns:1fr 1fr; gap:8px; }
+            .gallery-grid .gallery-item img { height:110px; }
+            .buttons button { padding:8px 4px; font-size:10px; }
+            .message-card { padding:12px; gap:12px; }
+            .message-card img { width:80px; height:80px; }
+            .message-card .founder-name { font-size:14px; }
         }
     </style>
 </head>
@@ -140,12 +154,12 @@
     <div id="main-content">
         <div class="main_slider">
             <div id="mainCarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
-                <ol class="carousel-indicators">
+                <ol class="carousel-indicators" id="mainCarouselIndicators">
                     <li data-target="#mainCarousel" data-slide-to="0" class="active"></li>
                     <li data-target="#mainCarousel" data-slide-to="1"></li>
                     <li data-target="#mainCarousel" data-slide-to="2"></li>
                 </ol>
-                <div class="carousel-inner">
+                <div class="carousel-inner" id="mainCarouselInner">
                     <div class="carousel-item active">
                         <img src="images/IMG-20260708-WA0005.jpg" alt="Gaushala">
                     </div>
@@ -157,8 +171,8 @@
                     </div>
                 </div>
                 <div class="slider_btn_div">
-                    <a href="#" class="slider_btn1"><i class="fa fa-pencil"></i> Register Now</a>
-                    <a href="#" class="slider_btn2"><i class="fa fa-heart"></i> Donate</a>
+                    <a href="member-apply.html" class="slider_btn1"><i class="fa fa-pencil"></i> Register Now</a>
+                    <a href="donation_form.html" class="slider_btn2"><i class="fa fa-heart"></i> Donate</a>
                 </div>
                 <a class="carousel-control-prev" href="#mainCarousel" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -186,24 +200,28 @@
                             <p><i class="fa fa-check-circle" style="color:var(--green);"></i> गौ संरक्षण पर विशेष संगोष्ठी</p>
                         </marquee>
                     </div>
-                    <a href="#" class="view_all_btn">View All <i class="fa fa-arrow-right"></i></a>
+                    <a href="events.html" class="view_all_btn">View All <i class="fa fa-arrow-right"></i></a>
                 </div>
-                <div class="content" data-aos="fade-up">
-                    <img class="content-image" src="images/IMG-20260708-WA0001.jpg" alt="Member Apply">
-                    <div class="content-overlay"></div>
-                    <div class="content-details">
-                        <div class="content-title">Member Apply</div>
-                        <span>Join Us <i class="fa fa-arrow-right arrow"></i></span>
+                <a href="member-apply.html" class="content-link" data-aos="fade-up">
+                    <div class="content">
+                        <img class="content-image" src="images/IMG-20260708-WA0001.jpg" alt="Member Apply">
+                        <div class="content-overlay"></div>
+                        <div class="content-details">
+                            <div class="content-title">Member Apply</div>
+                            <span>Join Us <i class="fa fa-arrow-right arrow"></i></span>
+                        </div>
                     </div>
-                </div>
-                <div class="content" data-aos="fade-up">
-                    <img class="content-image" src="images/IMG-20260708-WA0006.jpg" alt="Donation">
-                    <div class="content-overlay"></div>
-                    <div class="content-details">
-                        <div class="content-title">Donation</div>
-                        <span>Support Us <i class="fa fa-arrow-right arrow"></i></span>
+                </a>
+                <a href="donation_form.html" class="content-link" data-aos="fade-up">
+                    <div class="content">
+                        <img class="content-image" src="images/IMG-20260708-WA0006.jpg" alt="Donation">
+                        <div class="content-overlay"></div>
+                        <div class="content-details">
+                            <div class="content-title">Donation</div>
+                            <span>Support Us <i class="fa fa-arrow-right arrow"></i></span>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <div class="grid_center_div">
@@ -213,7 +231,7 @@
                     <a href="events.html"><button style="background:var(--green);"><i class="fa fa-calendar"></i> Upcoming Event</button></a>
                     <a href="donation_form.html"><button style="background:var(--background-color);"><i class="fa fa-heart"></i> Donate</button></a>
                     <a href="donors.html"><button style="background:var(--gold);"><i class="fa fa-list"></i> List of Donors</button></a>
-                    <a href="#gallery"><button style="background:var(--green);"><i class="fa fa-image"></i> Gallery</button></a>
+                    <a href="#homeGallery"><button style="background:var(--green);"><i class="fa fa-image"></i> Gallery</button></a>
                 </div>
                 <div class="latest-activity" id="latestActivity" data-aos="fade-up">
                     <h5><i class="fa fa-clock-o"></i> Latest Activity</h5>
@@ -258,7 +276,7 @@
                 <div data-aos="fade-up">
                     <div class="slider-section-title">
                         <span><i class="fa fa-paw"></i> Our Cows</span>
-                        <a href="#">View All <i class="fa fa-arrow-right"></i></a>
+                        <a href="gallery.html">View All <i class="fa fa-arrow-right"></i></a>
                     </div>
                     <div class="owl-carousel owl-theme member_slider" id="cowSlider">
                         <div class="card">
@@ -286,50 +304,29 @@
                 <div data-aos="fade-up">
                     <div class="slider-section-title">
                         <span><i class="fa fa-users"></i> Management Team</span>
-                        <a href="#">View All <i class="fa fa-arrow-right"></i></a>
+                        <a href="staff-search.html">View All <i class="fa fa-arrow-right"></i></a>
                     </div>
-                    <div class="owl-carousel owl-theme member_slider" id="managementSlider">
-                        <div class="card">
-                            <img src="images/IMG-20260708-WA0006.jpg" alt="President">
-                            <div class="card-body text-center"><h6 class="card-title">श्री प्रेमानंद जी</h6><p class="card-text">(President)</p></div>
-                        </div>
-                        <div class="card">
-                            <img src="images/IMG-20260708-WA0005.jpg" alt="Secretary">
-                            <div class="card-body text-center"><h6 class="card-title">श्री रामकिशोर जी</h6><p class="card-text">(Secretary)</p></div>
-                        </div>
-                        <div class="card">
-                            <img src="images/IMG-20260708-WA0003.jpg" alt="Treasurer">
-                            <div class="card-body text-center"><h6 class="card-title">श्री मोहन जी</h6><p class="card-text">(Treasurer)</p></div>
-                        </div>
-                        <div class="card">
-                            <img src="images/IMG-20260708-WA0002.jpg" alt="Manager">
-                            <div class="card-body text-center"><h6 class="card-title">श्री हरिओम जी</h6><p class="card-text">(Manager)</p></div>
-                        </div>
-                        <div class="card">
-                            <img src="images/IMG-20260708-WA0001.jpg" alt="Advisor">
-                            <div class="card-body text-center"><h6 class="card-title">स्वामी रामदेव जी</h6><p class="card-text">(Advisor)</p></div>
-                        </div>
-                    </div>
+                    <div class="owl-carousel owl-theme member_slider" id="managementSlider"></div>
                 </div>
             </div>
         </div>
 
         <section class="about-section" data-aos="fade-up">
             <div class="container">
-                <div class="head_item3"><span>About Us</span></div>
+                <div class="head_item3"><span id="aboutHeading">About Us</span></div>
                 <div class="row align-items-center">
                     <div class="col-lg-6" data-aos="fade-right">
                         <div class="about_relative_div">
-                            <img src="images/IMG-20260708-WA0006.jpg" alt="Premanand Gaushala">
+                            <img id="aboutImage" src="images/IMG-20260708-WA0006.jpg" alt="Premanand Gaushala">
                         </div>
                     </div>
                     <div class="col-lg-6" data-aos="fade-left">
                         <div class="blog-slider__text">
-                            <p><strong>श्री प्रेमानंद गोशाला</strong> एक धार्मिक एवं सेवा संस्था है जो गायों के संरक्षण और देखभाल के लिए समर्पित है। हमारी गोशाला में बूढ़ी, बीमार और बेसहारा गायों को आश्रय दिया जाता है। हमारा उद्देश्य गौ माता की सेवा करना और गौ संरक्षण के प्रति समाज में जागरूकता फैलाना है।</p>
+                            <p id="aboutTextP"><strong>श्री प्रेमानंद गोशाला</strong> एक धार्मिक एवं सेवा संस्था है जो गायों के संरक्षण और देखभाल के लिए समर्पित है। हमारी गोशाला में बूढ़ी, बीमार और बेसहारा गायों को आश्रय दिया जाता है। हमारा उद्देश्य गौ माता की सेवा करना और गौ संरक्षण के प्रति समाज में जागरूकता फैलाना है।</p>
                             <p>प्रेमानंद गोशाला में गायों को रहने के लिए साफ-सुथरे बाड़े, पौष्टिक चारा, स्वच्छ पानी और नियमित चिकित्सा सुविधा उपलब्ध कराई जाती है। हम गौ संरक्षण को भारतीय संस्कृति और धर्म का अभिन्न हिस्सा मानते हैं।</p>
-                            <p><strong>Mission:</strong> गौ माता की सेवा, उनका संरक्षण और गौ-पालन को बढ़ावा देना।</p>
-                            <p><strong>Vision:</strong> एक ऐसा समाज जहाँ हर गाय को सम्मान, सुरक्षा और प्यार मिले।</p>
-                            <a href="#" class="blog-slider__button">READ MORE <i class="fa fa-arrow-right"></i></a>
+                            <p><strong>Mission:</strong> <span id="aboutMissionP">गौ माता की सेवा, उनका संरक्षण और गौ-पालन को बढ़ावा देना।</span></p>
+                            <p><strong>Vision:</strong> <span id="aboutVisionP">एक ऐसा समाज जहाँ हर गाय को सम्मान, सुरक्षा और प्यार मिले।</span></p>
+                            <a href="aboutus.html" class="blog-slider__button">READ MORE <i class="fa fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -355,19 +352,10 @@
             </div>
         </section>
 
-        <section class="gallery-section" id="gallery" data-aos="fade-up">
+        <section class="gallery-section" id="homeGallery" data-aos="fade-up" style="display:none;">
             <div class="container">
                 <div class="head_item3"><span>Gallery</span></div>
-                <div class="gallery-grid">
-                    <div class="gallery-item" data-aos="zoom-in"><img src="images/IMG-20260708-WA0003.jpg" alt="Gallery"><div class="gallery-overlay"><i class="fa fa-search-plus"></i></div></div>
-                    <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100"><img src="images/IMG-20260708-WA0002.jpg" alt="Gallery"><div class="gallery-overlay"><i class="fa fa-search-plus"></i></div></div>
-                    <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200"><img src="images/IMG-20260708-WA0001.jpg" alt="Gallery"><div class="gallery-overlay"><i class="fa fa-search-plus"></i></div></div>
-                    <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300"><img src="images/IMG-20260708-WA0006.jpg" alt="Gallery"><div class="gallery-overlay"><i class="fa fa-search-plus"></i></div></div>
-                    <div class="gallery-item" data-aos="zoom-in"><img src="images/IMG-20260708-WA0005.jpg" alt="Gallery"><div class="gallery-overlay"><i class="fa fa-search-plus"></i></div></div>
-                    <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100"><img src="images/IMG-20260708-WA0003.jpg" alt="Gallery"><div class="gallery-overlay"><i class="fa fa-search-plus"></i></div></div>
-                    <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200"><img src="images/IMG-20260708-WA0002.jpg" alt="Gallery"><div class="gallery-overlay"><i class="fa fa-search-plus"></i></div></div>
-                    <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300"><img src="images/IMG-20260708-WA0001.jpg" alt="Gallery"><div class="gallery-overlay"><i class="fa fa-search-plus"></i></div></div>
-                </div>
+                <div class="gallery-grid" id="homeGalleryGrid"></div>
             </div>
         </section>
     </div>
@@ -385,11 +373,38 @@
             responsive: { 0: { items: 1 }, 576: { items: 1 }, 768: { items: 2 }, 992: { items: 1 } }
         });
 
-        $('#managementSlider').owlCarousel({
-            loop: true, margin: 10, nav: true, dots: false,
-            navText: ['<i class="fa fa-chevron-left"></i>','<i class="fa fa-chevron-right"></i>'],
-            responsive: { 0: { items: 1 }, 576: { items: 1 }, 768: { items: 2 }, 992: { items: 1 } }
-        });
+        function initManagementSlider() {
+            $.get('/api/staff?' + Date.now(), function(staff) {
+                var list = staff || [];
+                var h = '';
+                if (list.length === 0) {
+                    list = [
+                        { name: 'श्री प्रेमानंद जी', designation: 'President', photo: '' },
+                        { name: 'श्री रामकिशोर जी', designation: 'Secretary', photo: '' },
+                        { name: 'श्री मोहन जी', designation: 'Treasurer', photo: '' },
+                        { name: 'श्री हरिओम जी', designation: 'Manager', photo: '' }
+                    ];
+                }
+                list.forEach(function(m) {
+                    var img = m.photo ? 'uploads/' + m.photo : 'images/IMG-20260708-WA0006.jpg';
+                    h += '<div class="card"><img src="' + img + '" alt="' + (m.name || '') + '">' +
+                        '<div class="card-body text-center"><h6 class="card-title">' + (m.name || '') + '</h6>' +
+                        '<p class="card-text">(' + (m.designation || 'Team Member') + ')</p></div></div>';
+                });
+                $('#managementSlider').html(h);
+                if ($.fn.owlCarousel) {
+                    if ($('#managementSlider').data('owl.carousel')) {
+                        $('#managementSlider').trigger('refresh.owl.carousel');
+                    } else {
+                        $('#managementSlider').owlCarousel({
+                            loop: true, margin: 10, nav: true, dots: false,
+                            navText: ['<i class="fa fa-chevron-left"></i>','<i class="fa fa-chevron-right"></i>'],
+                            responsive: { 0: { items: 1 }, 576: { items: 1 }, 768: { items: 2 }, 992: { items: 1 } }
+                        });
+                    }
+                }
+            });
+        }
 
         $('.owl-carousel').on('initialized.owl.carousel', function() {
             $(this).find('.owl-nav button').css({
@@ -402,6 +417,48 @@
         });
 
         loadActivities();
+        loadSliders();
+        loadHomeGallery();
+        loadHomeAbout();
+        initManagementSlider();
+
+        function loadSliders() {
+            $.get('/api/sliders?' + Date.now(), function(sliders) {
+                if (!sliders || sliders.length === 0) return;
+                var inner = $('#mainCarouselInner');
+                var indicators = $('#mainCarouselIndicators');
+                inner.empty();
+                indicators.empty();
+                sliders.forEach(function(s, i) {
+                    indicators.append('<li data-target="#mainCarousel" data-slide-to="' + i + '"' + (i === 0 ? ' class="active"' : '') + '></li>');
+                    inner.append('<div class="carousel-item' + (i === 0 ? ' active' : '') + '"><img src="uploads/' + s.image + '" alt="' + (s.title || 'Slide') + '"></div>');
+                });
+            });
+        }
+
+        function loadHomeGallery() {
+            $.get('/api/gallery?' + Date.now(), function(images) {
+                if (!images || images.length === 0) return;
+                var grid = $('#homeGalleryGrid');
+                grid.empty();
+                images.slice(0, 8).forEach(function(g, i) {
+                    grid.append('<div class="gallery-item" data-aos="zoom-in" data-aos-delay="' + (i % 4) * 100 + '"><a href="gallery.html"><img src="uploads/' + g.image + '" alt="' + (g.title || 'Gallery') + '"><div class="gallery-overlay"><i class="fa fa-search-plus"></i></div></a></div>');
+                });
+                $('#homeGallery').show();
+                if (typeof AOS !== 'undefined') AOS.refresh();
+            });
+        }
+
+        function loadHomeAbout() {
+            $.get('/api/settings?' + Date.now(), function(s) {
+                if (!s) return;
+                if (s.about_heading) $('#aboutHeading').text(s.about_heading);
+                if (s.about_text) $('#aboutTextP').html(s.about_text);
+                if (s.about_mission) $('#aboutMissionP').text(s.about_mission);
+                if (s.about_vision) $('#aboutVisionP').text(s.about_vision);
+                if (s.about_image) $('#aboutImage').attr('src', 'uploads/' + s.about_image);
+            });
+        }
 
         function loadActivities() {
             $.get('/api/activities', function(activities) {

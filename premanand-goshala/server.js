@@ -181,6 +181,14 @@ async function initDB() {
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
+  db.run(`CREATE TABLE IF NOT EXISTS sliders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT,
+    image TEXT NOT NULL,
+    sort_order INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT (datetime('now'))
+  )`);
+
   db.run(`CREATE TABLE IF NOT EXISTS activities (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
@@ -273,6 +281,18 @@ async function initDB() {
     ['seal_color', '#D32F2F']
   ];
   sealDefaults.forEach(([key, value]) => {
+    const exists = queryOne('SELECT id FROM settings WHERE key = ?', [key]);
+    if (!exists) runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
+  });
+
+  const aboutDefaults = [
+    ['about_heading', 'About Us'],
+    ['about_text', 'श्री प्रेमानंद गोशाला एक धार्मिक एवं सेवा संस्था है जो गायों के संरक्षण और देखभाल के लिए समर्पित है। हमारी गोशाला में बूढ़ी, बीमार और बेसहारा गायों को आश्रय दिया जाता है। हमारा उद्देश्य गौ माता की सेवा करना और गौ संरक्षण के प्रति समाज में जागरूकता फैलाना है।'],
+    ['about_mission', 'गौ माता की सेवा, उनका संरक्षण और गौ-पालन को बढ़ावा देना।'],
+    ['about_vision', 'एक ऐसा समाज जहाँ हर गाय को सम्मान, सुरक्षा और प्यार मिले।'],
+    ['about_image', '']
+  ];
+  aboutDefaults.forEach(([key, value]) => {
     const exists = queryOne('SELECT id FROM settings WHERE key = ?', [key]);
     if (!exists) runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
   });
@@ -543,6 +563,40 @@ app.delete('/api/gallery/:id', authMiddleware, (req, res) => {
   const existing = queryOne('SELECT * FROM gallery WHERE id = ?', [req.params.id]);
   if (!existing) return res.status(404).json({ error: 'Image not found' });
   runSQL('DELETE FROM gallery WHERE id = ?', [req.params.id]);
+  const imgPath = path.join(UPLOADS_DIR, existing.image);
+  if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+  res.json({ success: true });
+});
+
+// ===== Slider / Carousel API =====
+app.get('/api/sliders', noCacheMiddleware, (req, res) => {
+  const sliders = queryAll('SELECT * FROM sliders ORDER BY sort_order ASC, id ASC');
+  res.json(sliders);
+});
+
+app.post('/api/sliders', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'Image required' });
+  const title = req.body.title || null;
+  const sort_order = parseInt(req.body.sort_order) || 0;
+  runInsert('INSERT INTO sliders (title, image, sort_order) VALUES (?, ?, ?)', [title, req.file.filename, sort_order]);
+  res.status(201).json({ success: true, filename: req.file.filename });
+});
+
+app.put('/api/sliders/:id', authMiddleware, adminMiddleware, (req, res) => {
+  const existing = queryOne('SELECT * FROM sliders WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Slider not found' });
+  runSQL('UPDATE sliders SET title = ?, sort_order = ? WHERE id = ?', [
+    req.body.title !== undefined ? req.body.title : existing.title,
+    req.body.sort_order !== undefined ? (parseInt(req.body.sort_order) || 0) : existing.sort_order,
+    req.params.id
+  ]);
+  res.json({ success: true });
+});
+
+app.delete('/api/sliders/:id', authMiddleware, adminMiddleware, (req, res) => {
+  const existing = queryOne('SELECT * FROM sliders WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Slider not found' });
+  runSQL('DELETE FROM sliders WHERE id = ?', [req.params.id]);
   const imgPath = path.join(UPLOADS_DIR, existing.image);
   if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
   res.json({ success: true });

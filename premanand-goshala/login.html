@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - श्री प्रेमानंद गौशाला</title>
+    <title>Member Login - श्री प्रेमानंद गौशाला</title>
     <link rel="icon" type="image/png" href="images/logo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -40,7 +40,7 @@
         <div class="login-card">
             <img src="images/logo.jpg" alt="Logo" class="logo">
             <h4>श्री प्रेमानंद गौशाला</h4>
-            <p>Admin Panel Login</p>
+            <p>Member Login</p>
             <div id="loginMsg"></div>
             <form id="loginForm">
                 <div class="form-group">
@@ -58,7 +58,8 @@
                 <button type="submit" class="btn-login"><i class="fa fa-sign-in"></i> Login</button>
             </form>
             <div class="login-footer">
-                <a href="index.html"><i class="fa fa-home"></i> Back to Home</a>
+                <a href="index.html"><i class="fa fa-home"></i> Back to Home</a> &nbsp;|&nbsp;
+                <a href="member-apply.html"><i class="fa fa-user-plus"></i> Become a Member</a>
             </div>
         </div>
     </div>
@@ -66,12 +67,8 @@
     <script>
         var token = localStorage.getItem('admin_token');
         if (token) {
-            $.ajax({ url: '/api/settings/all', headers: { 'Authorization': 'Bearer ' + token } })
-                .done(function() { window.location.href = 'admin-dashboard.html'; })
-                .fail(function() {
-                    localStorage.removeItem('admin_token');
-                    localStorage.removeItem('admin_user');
-                });
+            var u = JSON.parse(localStorage.getItem('admin_user') || '{}');
+            window.location.href = (u.role && u.role !== 'admin' && u.role !== 'coordinator' && u.role !== 'manager') ? 'index.html' : 'admin-dashboard.html';
         }
 
         $('#loginForm').on('submit', function(e) {
@@ -83,7 +80,8 @@
                     localStorage.setItem('admin_token', res.token);
                     localStorage.setItem('admin_user', JSON.stringify(res.user));
                     $('#loginMsg').html('<div class="alert alert-success">Login successful! Redirecting...</div>');
-                    setTimeout(function() { window.location.href = 'admin-dashboard.html'; }, 800);
+                    var target = (res.user.role && res.user.role !== 'admin' && res.user.role !== 'coordinator' && res.user.role !== 'manager') ? 'index.html' : 'admin-dashboard.html';
+                    setTimeout(function() { window.location.href = target; }, 800);
                 })
                 .fail(function(xhr) {
                     var msg = xhr.responseJSON?.error || 'Login failed. Try again.';

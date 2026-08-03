@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - श्री प्रेमानंद गोशाला</title>
-    <link rel="icon" type="image/png" href="icon/favicon.png">
+    <link rel="icon" type="image/png" href="images/logo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Acme&display=swap">
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/shared.css?v=2">
     <style>
         .nav-bar { margin-top:39px; }
         .about-hero{background:linear-gradient(rgba(139,69,19,0.85),rgba(139,69,19,0.85)),url('images/IMG-20260708-WA0006.jpg');}
@@ -52,14 +52,20 @@
             .about-welcome{padding:30px 0;}
         }
         @media only screen and (max-width:576px){
-            .about-content-section .about-head span{font-size:15px;padding:8px 18px;}
-            .about-detail-section .about-head span{font-size:15px;padding:8px 18px;}
-            .about-welcome h2{font-size:22px;}
-            .about-card{padding:20px;}
-            .about-card h4{font-size:18px;}
-            .about-stats .stat-card h3{font-size:24px;}
-            .timeline-item{padding:18px;}
-            .timeline-item h5{font-size:16px;}
+            .about-content-section .about-head span{font-size:14px;padding:8px 14px;}
+            .about-detail-section .about-head span{font-size:14px;padding:8px 14px;}
+            .about-welcome h2{font-size:20px;}
+            .about-welcome p{font-size:14px;line-height:1.6;}
+            .about-card{padding:15px;}
+            .about-card h4{font-size:16px;}
+            .about-card p{font-size:13px;}
+            .about-stats .stat-card h3{font-size:22px;}
+            .about-stats .stat-card p{font-size:12px;}
+            .about-stats .stat-icon{width:40px;height:40px;}
+            .about-stats .stat-icon i{font-size:18px;}
+            .timeline-item{padding:15px;}
+            .timeline-item h5{font-size:15px;}
+            .timeline-item p{font-size:13px;}
         }
     </style>
 </head>
@@ -82,20 +88,34 @@
         <section class="about-content-section">
             <div class="container">
                 <div class="about-head" data-aos="fade-down">
-                    <span><i class="fa fa-info-circle"></i> About Us</span>
+                    <span id="aboutHead"><i class="fa fa-info-circle"></i> About Us</span>
                 </div>
-                <div class="about-card" data-aos="fade-up" style="margin-bottom:0;">
-                    <div class="card-icon"><i class="fa fa-bullseye"></i></div>
-                    <h4>Our Mission</h4>
-                    <p>To rescue, shelter, and care for abandoned and stray cows while promoting organic farming and sustainable living. We aim to create a world where every cow is treated with love and respect, and where traditional farming practices are preserved for future generations.</p>
+                <div class="row" data-aos="fade-up">
+                    <div class="col-lg-5 mb-4">
+                        <div style="border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15);height:100%;">
+                            <img id="aboutPageImage" src="images/IMG-20260708-WA0006.jpg" alt="Premanand Gaushala" style="width:100%;height:100%;min-height:260px;object-fit:cover;">
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="about-card" data-aos="fade-up">
+                            <div class="card-icon"><i class="fa fa-bullseye"></i></div>
+                            <h4>Our Mission</h4>
+                            <p id="aboutMissionText">To rescue, shelter, and care for abandoned and stray cows while promoting organic farming and sustainable living. We aim to create a world where every cow is treated with love and respect, and where traditional farming practices are preserved for future generations.</p>
+                        </div>
+                        <div class="about-card" data-aos="fade-up">
+                            <div class="card-icon"><i class="fa fa-eye"></i></div>
+                            <h4>Our Vision</h4>
+                            <p id="aboutVisionText">A society where every cow receives dignity, safety, love, and care — and where gau seva inspires a compassionate and self-reliant community.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section class="about-welcome">
             <div class="container" data-aos="fade-up">
-                <h2><i class="fa fa-heart"></i> Welcome to Our Gaushala</h2>
-                <p>Welcome to Shri Premand Gaushala, a sacred place dedicated to the protection and care of cows. Founded with a deep love for these gentle creatures, our Gaushala has been serving the community and preserving Indian traditions for years. We believe that cows are not just animals but are considered sacred in our culture, representing Mother Earth's abundance and nourishment.</p>
+                <h2 id="aboutWelcomeTitle"><i class="fa fa-heart"></i> Welcome to Our Gaushala</h2>
+                <p id="aboutWelcomeText">Welcome to Shri Premand Gaushala, a sacred place dedicated to the protection and care of cows. Founded with a deep love for these gentle creatures, our Gaushala has been serving the community and preserving Indian traditions for years. We believe that cows are not just animals but are considered sacred in our culture, representing Mother Earth's abundance and nourishment.</p>
             </div>
         </section>
 
@@ -173,5 +193,17 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/app.js"></script>
     <script src="js/shared.js"></script>
+    <script>
+        $(function() {
+            $.get('/api/settings?' + Date.now(), function(s) {
+                if (!s) return;
+                if (s.about_heading) { $('#aboutHead').html('<i class="fa fa-info-circle"></i> ' + s.about_heading); $('#aboutWelcomeTitle').html('<i class="fa fa-heart"></i> ' + s.about_heading); }
+                if (s.about_text) $('#aboutWelcomeText').text(s.about_text);
+                if (s.about_mission) $('#aboutMissionText').text(s.about_mission);
+                if (s.about_vision) $('#aboutVisionText').text(s.about_vision);
+                if (s.about_image) $('#aboutPageImage').attr('src', 'uploads/' + s.about_image);
+            });
+        });
+    </script>
 </body>
 </html>

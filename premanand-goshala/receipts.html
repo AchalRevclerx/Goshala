@@ -4,27 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Donation Receipts - श्री प्रेमानंद गोशाला</title>
-    <link rel="icon" type="image/png" href="icon/favicon.png">
+    <link rel="icon" type="image/png" href="images/logo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Acme&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/shared.css?v=2">
     <style>
         .receipts-section { padding:60px 0; }
         .receipts-section .head_item3 { width:100%; text-align:center; margin:0 0 40px; display:flex; align-items:center; justify-content:center; }
         .receipts-section .head_item3 span { background:var(--green); color:#fff; padding:12px 40px; border-radius:8px; font-size:24px; font-weight:bold; display:inline-block; text-transform:uppercase; box-shadow:0 4px 15px rgba(46,139,87,0.3); }
-        .receipts-table-wrap { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
-        .receipts-table-wrap table { margin:0; font-size:14px; }
+        .receipts-table-wrap { background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+        .receipts-table-wrap .table-responsive { border-radius:12px; }
+        .receipts-table-wrap table { margin:0; font-size:14px; min-width:600px; }
         .receipts-table-wrap th { background:var(--background-color); color:#fff; font-weight:600; border:none; padding:12px 15px; }
         .receipts-table-wrap td { padding:12px 15px; vertical-align:middle; }
         .receipts-table-wrap tr:hover { background:var(--light-bg); }
         .badge-pending { background:#ffc107; color:#333; padding:4px 12px; border-radius:50px; font-size:12px; font-weight:600; }
         .badge-completed { background:var(--green); color:#fff; padding:4px 12px; border-radius:50px; font-size:12px; font-weight:600; }
         .badge-rejected { background:#dc3545; color:#fff; padding:4px 12px; border-radius:50px; font-size:12px; font-weight:600; }
-        .btn-receipt { background:var(--gold); color:#fff; border:none; padding:6px 16px; border-radius:50px; font-size:13px; cursor:pointer; transition:0.3s; font-family:'Bree Serif',serif; }
+        .btn-receipt { background:var(--gold); color:#fff; border:none; padding:6px 12px; border-radius:50px; font-size:12px; cursor:pointer; transition:0.3s; font-family:'Bree Serif',serif; white-space:nowrap; display:inline-flex; align-items:center; gap:4px; }
         .btn-receipt:hover { background:var(--background-color); color:#fff; transform:scale(1.05); }
         .no-receipts { text-align:center; padding:60px 20px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
         .no-receipts i { font-size:60px; color:#ddd; margin-bottom:15px; }
@@ -60,15 +61,18 @@
             .receipts-table-wrap{font-size:13px;}
             .receipts-table-wrap th{padding:10px 8px;font-size:12px;}
             .receipts-table-wrap td{padding:10px 8px;font-size:12px;}
-            .btn-receipt{padding:5px 12px;font-size:11px;}
+            .btn-receipt{padding:5px 10px;font-size:11px;}
         }
         @media only screen and (max-width:576px){
-            .receipts-section .head_item3 span{font-size:15px;padding:8px 18px;}
+            .receipts-section .head_item3 span{font-size:14px;padding:8px 14px;}
             .receipt-content{padding:20px;}
             .receipt-content .receipt-body table td{font-size:12px;padding:8px;}
             .receipt-content .receipt-body table td:first-child{width:auto;}
             .receipt-content .receipt-title{font-size:16px;padding:6px 15px;}
             .receipt-paper .receipt-actions button{font-size:11px;padding:4px 12px;}
+            .idcard-search-box .form-row .col-md-8,
+            .idcard-search-box .form-row .col-md-4 { flex:0 0 100%; max-width:100%; }
+            .idcard-search-box .btn-receipt { width:100%; justify-content:center; }
         }
     </style>
 </head>
