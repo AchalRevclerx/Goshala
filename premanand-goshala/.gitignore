@@ -6,3 +6,4 @@ data/*.db
 data/*.db-wal
 data/*.db-shm
 data/backups/
+data/.jwt_secret

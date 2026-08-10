@@ -1,20 +1,88 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const Database = require('better-sqlite3');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'premanand-goshala-secret-key-2026';
+const IS_PROD = process.env.NODE_ENV === 'production';
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// JWT secret resolution. Prefer the environment variable. If it's not set, we
+// generate one ONCE and persist it to disk so it survives restarts — otherwise
+// every restart would invalidate all issued tokens and log everyone out. It is
+// still never hardcoded in source, so it can't be forged from the code.
+function resolveJwtSecret() {
+  if (process.env.JWT_SECRET) return process.env.JWT_SECRET;
+  const dataDir = path.join(__dirname, 'data');
+  const secretFile = path.join(dataDir, '.jwt_secret');
+  try {
+    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+    if (fs.existsSync(secretFile)) {
+      const existing = fs.readFileSync(secretFile, 'utf8').trim();
+      if (existing) return existing;
+    }
+    const generated = crypto.randomBytes(48).toString('hex');
+    fs.writeFileSync(secretFile, generated, { mode: 0o600 });
+    console.warn('WARNING: JWT_SECRET env not set — generated and persisted one at data/.jwt_secret. Set JWT_SECRET for multi-instance deployments.');
+    return generated;
+  } catch (e) {
+    console.warn('WARNING: could not persist a JWT secret (' + e.message + '); using an ephemeral one. Set the JWT_SECRET env var.');
+    return crypto.randomBytes(48).toString('hex');
+  }
+}
+const JWT_SECRET = resolveJwtSecret();
+
+app.disable('x-powered-by');
+app.set('trust proxy', 1); // behind Hostinger's reverse proxy; needed for correct client IPs (rate limiting)
+
+// Security headers. CSP is left off because the static HTML relies on inline
+// scripts/styles and external CDNs; enabling a strict policy would break the site.
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, // allow images/uploads to load from the pages
+}));
+
+// CORS: same-origin by default (the frontend is served by this app). Set
+// ALLOWED_ORIGINS (comma-separated) only if a different origin must call the API.
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+  .split(',').map(s => s.trim()).filter(Boolean);
+app.use(cors({
+  origin: allowedOrigins.length ? allowedOrigins : false,
+}));
+
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
+// Rate limiters: a tight one for auth (brute-force protection) and a broad one for the API.
+// authLimiter only counts FAILED logins, so a legitimate user who signs in
+// successfully is never throttled.
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many failed attempts. Please try again in 15 minutes.' },
+});
+// Broad ceiling for the whole API. High enough that a normal admin session
+// (the dashboard fires many requests per page) never trips it.
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 2000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please slow down.' },
+});
+app.use('/api/', apiLimiter);
 
 const PUBLIC_DIR = __dirname;
 const UPLOADS_DIR = path.join(PUBLIC_DIR, 'uploads');
@@ -31,18 +99,20 @@ if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR, { recursive: true });
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOADS_DIR),
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `${uuidv4()}${ext}`);
+    // Never trust the client extension — derive it from the allowed list only.
+    const extMap = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/gif': '.gif', 'image/webp': '.webp', 'application/pdf': '.pdf' };
+    cb(null, `${uuidv4()}${extMap[file.mimetype] || ''}`);
   }
 });
+const ALLOWED_MIME = new Set(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf']);
+const ALLOWED_EXT = /\.(jpe?g|png|gif|webp|pdf)$/i;
 const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 },
+  limits: { fileSize: 10 * 1024 * 1024, files: 5 },
   fileFilter: (req, file, cb) => {
-    const allowed = /jpeg|jpg|png|gif|webp|pdf/;
-    const extOk = allowed.test(path.extname(file.originalname).toLowerCase());
-    const mimeOk = allowed.test(file.mimetype.split('/')[1]);
-    cb(null, extOk || mimeOk);
+    // Require BOTH a whitelisted MIME type and a matching extension.
+    const ok = ALLOWED_MIME.has(file.mimetype) && ALLOWED_EXT.test(file.originalname);
+    cb(null, ok);
   }
 });
 
@@ -208,11 +278,16 @@ async function initDB() {
 
   const existing = queryOne('SELECT COUNT(*) as count FROM users');
   if (existing.count === 0) {
-    const hash = bcrypt.hashSync('admin123', 10);
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@goshala.org';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    const hash = bcrypt.hashSync(adminPassword, 12);
     runSQL('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)', [
-      'Super Admin', 'admin@goshala.org', hash, 'admin'
+      'Super Admin', adminEmail, hash, 'admin'
     ]);
-    console.log('Default admin created: admin@goshala.org / admin123');
+    if (!process.env.ADMIN_PASSWORD) {
+      console.warn('SECURITY WARNING: default admin password in use. Set ADMIN_EMAIL/ADMIN_PASSWORD env vars and change it immediately.');
+    }
+    console.log(`Default admin created: ${adminEmail}`);
   }
 
   const settingsExist = queryOne('SELECT COUNT(*) as count FROM settings');
@@ -334,7 +409,7 @@ app.put('/api/settings', authMiddleware, adminMiddleware, (req, res) => {
 });
 
 // ===== Auth API =====
-app.post('/api/auth/login', (req, res) => {
+app.post('/api/auth/login', authLimiter, (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password required' });
@@ -347,18 +422,38 @@ app.post('/api/auth/login', (req, res) => {
   res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
 });
 
-app.post('/api/auth/register', authMiddleware, (req, res) => {
+app.post('/api/auth/register', authMiddleware, adminMiddleware, (req, res) => {
   const { name, email, password, role } = req.body;
   if (!name || !email || !password) {
     return res.status(400).json({ error: 'Name, email, and password required' });
   }
+  if (String(password).length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters' });
+  }
   const existing = queryOne('SELECT id FROM users WHERE email = ?', [email]);
   if (existing) return res.status(409).json({ error: 'Email already registered' });
-  const hash = bcrypt.hashSync(password, 10);
+  const hash = bcrypt.hashSync(password, 12);
   const id = runInsert('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)', [
     name, email, hash, role || 'staff'
   ]);
   res.status(201).json({ id, name, email, role: role || 'staff' });
+});
+
+// Change own password (any authenticated user).
+app.post('/api/auth/change-password', authMiddleware, (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: 'Current and new password required' });
+  }
+  if (String(newPassword).length < 8) {
+    return res.status(400).json({ error: 'New password must be at least 8 characters' });
+  }
+  const user = queryOne('SELECT * FROM users WHERE id = ?', [req.user.id]);
+  if (!user || !bcrypt.compareSync(currentPassword, user.password)) {
+    return res.status(401).json({ error: 'Current password is incorrect' });
+  }
+  runSQL('UPDATE users SET password = ? WHERE id = ?', [bcrypt.hashSync(newPassword, 12), req.user.id]);
+  res.json({ success: true });
 });
 
 // ===== Users Management (Admin) =====
@@ -403,11 +498,15 @@ app.post('/api/donate', upload.fields([
   if (!donor_name || !phone || !amount) {
     return res.status(400).json({ error: 'Name, phone, and amount required' });
   }
+  const amt = parseFloat(amount);
+  if (!Number.isFinite(amt) || amt <= 0) {
+    return res.status(400).json({ error: 'Amount must be a positive number' });
+  }
   const photoPaths = req.files?.photo ? req.files.photo.map(f => f.filename) : [];
   runSQL(
     'INSERT INTO donations (donor_name, phone, email, pan, address, amount, purpose, payment_method, transaction_id, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [donor_name, phone, email || null, pan || null, address || null,
-    parseFloat(amount), purpose || null, payment_method || 'offline', transaction_id || null,
+    amt, purpose || null, payment_method || 'offline', transaction_id || null,
     photoPaths.join(',')]
   );
   res.status(201).json({ success: true, message: 'Donation recorded successfully' });
@@ -586,11 +685,15 @@ app.post('/api/donations', authMiddleware, adminMiddleware, upload.fields([
   if (!donor_name || !phone || !amount) {
     return res.status(400).json({ error: 'Name, phone, and amount required' });
   }
+  const amt = parseFloat(amount);
+  if (!Number.isFinite(amt) || amt <= 0) {
+    return res.status(400).json({ error: 'Amount must be a positive number' });
+  }
   const photoPaths = req.files?.photo ? req.files.photo.map(f => f.filename) : [];
   runSQL(
     'INSERT INTO donations (donor_name, phone, email, pan, address, amount, purpose, payment_method, transaction_id, photo, status, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [donor_name, phone, email || null, pan || null, address || null,
-    parseFloat(amount), purpose || null, payment_method || 'offline', transaction_id || null,
+    amt, purpose || null, payment_method || 'offline', transaction_id || null,
     photoPaths.join(','), status || 'completed', 'admin']
   );
   res.status(201).json({ success: true, message: 'Donation recorded successfully' });
@@ -838,10 +941,32 @@ app.get('/api/stats', authMiddleware, (req, res) => {
   res.json({ memberCount, donationCount, donationTotal, contactCount, eventCount, galleryCount, staffCount, pendingMembers });
 });
 
+// Block direct access to server source, config, secrets, dependencies and the DB.
+// Without this, express.static(PUBLIC_DIR) would happily serve /server.js, /.env, etc.
+const BLOCKED_FILES = new Set([
+  '/server.js', '/backup.js', '/package.json', '/package-lock.json',
+  '/.gitignore', '/.env', '/stdout.log',
+]);
+function isBlockedPath(reqPath) {
+  const p = decodeURIComponent(reqPath).toLowerCase().replace(/\\/g, '/');
+  if (p.includes('..')) return true;
+  if (BLOCKED_FILES.has(p)) return true;
+  if (p.startsWith('/data') || p.startsWith('/node_modules') || p.startsWith('/.git')) return true;
+  if (p.startsWith('/.')) return true; // any dotfile
+  if (/\.(db|db-wal|db-shm|env|log)$/.test(p)) return true;
+  return false;
+}
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api/')) return next();
+  if (isBlockedPath(req.path)) return res.status(404).json({ error: 'Not found' });
+  next();
+});
+
 app.use('/uploads', express.static(UPLOADS_DIR));
 app.use(express.static(PUBLIC_DIR, {
   extensions: ['html'],
   index: 'index.html',
+  dotfiles: 'ignore',
   setHeaders: function(res) {
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.set('Pragma', 'no-cache');
@@ -850,8 +975,10 @@ app.use(express.static(PUBLIC_DIR, {
 }));
 
 app.get('*', (req, res) => {
+  if (isBlockedPath(req.path)) return res.status(404).json({ error: 'Not found' });
   const filePath = path.join(PUBLIC_DIR, req.path);
-  if (fs.existsSync(filePath) && !fs.statSync(filePath).isDirectory()) {
+  // Ensure the resolved path stays inside PUBLIC_DIR (defense-in-depth vs traversal).
+  if (filePath.startsWith(PUBLIC_DIR) && fs.existsSync(filePath) && !fs.statSync(filePath).isDirectory()) {
     return res.sendFile(filePath);
   }
   const indexPath = path.join(PUBLIC_DIR, 'index.html');
@@ -860,6 +987,18 @@ app.get('*', (req, res) => {
   } else {
     res.status(404).json({ error: 'Not found' });
   }
+});
+
+// Global error handler — return clean JSON, never leak stack traces to clients.
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({ error: `Upload error: ${err.message}` });
+  }
+  if (err && err.type === 'entity.too.large') {
+    return res.status(413).json({ error: 'Request body too large' });
+  }
+  console.error('Unhandled error:', err && err.stack ? err.stack : err);
+  res.status(500).json({ error: 'Internal server error' });
 });
 
 // ===== Daily DB backup =====
