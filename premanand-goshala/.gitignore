@@ -3,3 +3,5 @@ node_modules/
 *.log
 uploads/
 data/*.db
+data/*.db-wal
+data/*.db-shm

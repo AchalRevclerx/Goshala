@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const initSqlJs = require('sql.js');
+const Database = require('better-sqlite3');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -44,61 +44,35 @@ const upload = multer({
 
 let db;
 
-function saveDB() {
-  const data = db.export();
-  const buffer = Buffer.from(data);
-  fs.writeFileSync(DB_PATH, buffer);
-}
-
 function queryAll(sql, params = []) {
-  const stmt = db.prepare(sql);
-  if (params.length) stmt.bind(params);
-  const rows = [];
-  while (stmt.step()) {
-    rows.push(stmt.getAsObject());
-  }
-  stmt.free();
-  return rows;
+  return db.prepare(sql).all(...params);
 }
 
 function queryOne(sql, params = []) {
-  const rows = queryAll(sql, params);
-  return rows.length ? rows[0] : null;
+  return db.prepare(sql).get(...params) || null;
 }
 
 function runSQL(sql, params = []) {
-  const stmt = db.prepare(sql);
-  if (params.length) stmt.bind(params);
-  stmt.step();
-  stmt.free();
-  saveDB();
+  db.prepare(sql).run(...params);
 }
 
 function runInsert(sql, params = []) {
-  const stmt = db.prepare(sql);
-  if (params.length) stmt.bind(params);
-  stmt.step();
-  stmt.free();
-  const result = db.exec("SELECT last_insert_rowid() as id");
-  saveDB();
-  return result[0]?.values[0]?.[0];
+  const info = db.prepare(sql).run(...params);
+  return info.lastInsertRowid;
 }
 
 function execSQL(sql) {
   db.exec(sql);
-  saveDB();
 }
 
 async function initDB() {
-  const SQL = await initSqlJs();
-  if (fs.existsSync(DB_PATH)) {
-    const buffer = fs.readFileSync(DB_PATH);
-    db = new SQL.Database(buffer);
-  } else {
-    db = new SQL.Database();
-  }
+  db = new Database(DB_PATH);
+  // WAL + synchronous NORMAL: durable, crash-safe, and safe under concurrent access.
+  db.pragma('journal_mode = WAL');
+  db.pragma('synchronous = NORMAL');
+  db.pragma('foreign_keys = ON');
 
-  db.run(`CREATE TABLE IF NOT EXISTS users (
+  db.exec(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
@@ -107,7 +81,7 @@ async function initDB() {
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
-  db.run(`CREATE TABLE IF NOT EXISTS members (
+  db.exec(`CREATE TABLE IF NOT EXISTS members (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     phone TEXT NOT NULL,
@@ -123,10 +97,10 @@ async function initDB() {
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
-  try { db.run("ALTER TABLE members ADD COLUMN roles TEXT DEFAULT ''"); } catch(e) {}
-  try { db.run("ALTER TABLE members ADD COLUMN working_valid_till TEXT"); } catch(e) {}
+  try { db.exec("ALTER TABLE members ADD COLUMN roles TEXT DEFAULT ''"); } catch(e) {}
+  try { db.exec("ALTER TABLE members ADD COLUMN working_valid_till TEXT"); } catch(e) {}
 
-  db.run(`CREATE TABLE IF NOT EXISTS donations (
+  db.exec(`CREATE TABLE IF NOT EXISTS donations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     donor_name TEXT NOT NULL,
     phone TEXT NOT NULL,
@@ -143,10 +117,10 @@ async function initDB() {
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
-  try { db.run("ALTER TABLE donations ADD COLUMN purpose TEXT"); } catch(e) {}
-  try { db.run("ALTER TABLE donations ADD COLUMN created_by TEXT DEFAULT 'user'"); } catch(e) {}
+  try { db.exec("ALTER TABLE donations ADD COLUMN purpose TEXT"); } catch(e) {}
+  try { db.exec("ALTER TABLE donations ADD COLUMN created_by TEXT DEFAULT 'user'"); } catch(e) {}
 
-  db.run(`CREATE TABLE IF NOT EXISTS events (
+  db.exec(`CREATE TABLE IF NOT EXISTS events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     description TEXT,
@@ -160,11 +134,11 @@ async function initDB() {
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
-  try { db.run("ALTER TABLE events ADD COLUMN organizer TEXT"); } catch(e) {}
-  try { db.run("ALTER TABLE events ADD COLUMN organizer_phone TEXT"); } catch(e) {}
-  try { db.run("ALTER TABLE events ADD COLUMN organizer_email TEXT"); } catch(e) {}
+  try { db.exec("ALTER TABLE events ADD COLUMN organizer TEXT"); } catch(e) {}
+  try { db.exec("ALTER TABLE events ADD COLUMN organizer_phone TEXT"); } catch(e) {}
+  try { db.exec("ALTER TABLE events ADD COLUMN organizer_email TEXT"); } catch(e) {}
 
-  db.run(`CREATE TABLE IF NOT EXISTS contacts (
+  db.exec(`CREATE TABLE IF NOT EXISTS contacts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     phone TEXT NOT NULL,
@@ -174,14 +148,14 @@ async function initDB() {
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
-  db.run(`CREATE TABLE IF NOT EXISTS gallery (
+  db.exec(`CREATE TABLE IF NOT EXISTS gallery (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT,
     image TEXT NOT NULL,
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
-  db.run(`CREATE TABLE IF NOT EXISTS sliders (
+  db.exec(`CREATE TABLE IF NOT EXISTS sliders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT,
     image TEXT NOT NULL,
@@ -189,7 +163,7 @@ async function initDB() {
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
-  db.run(`CREATE TABLE IF NOT EXISTS activities (
+  db.exec(`CREATE TABLE IF NOT EXISTS activities (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     description TEXT,
@@ -197,13 +171,13 @@ async function initDB() {
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
-  db.run(`CREATE TABLE IF NOT EXISTS settings (
+  db.exec(`CREATE TABLE IF NOT EXISTS settings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     key TEXT UNIQUE NOT NULL,
     value TEXT
   )`);
 
-  db.run(`CREATE TABLE IF NOT EXISTS staff (
+  db.exec(`CREATE TABLE IF NOT EXISTS staff (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     phone TEXT,
@@ -214,7 +188,7 @@ async function initDB() {
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
-  db.run(`CREATE TABLE IF NOT EXISTS member_roles (
+  db.exec(`CREATE TABLE IF NOT EXISTS member_roles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL,
     created_at DATETIME DEFAULT (datetime('now'))
@@ -297,7 +271,6 @@ async function initDB() {
     if (!exists) runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
   });
 
-  saveDB();
   console.log('Database initialized');
 }
 
@@ -453,16 +426,10 @@ app.get('/api/donations/search', noCacheMiddleware, (req, res) => {
     return res.status(400).json({ error: 'Phone number is required' });
   }
   const cleanPhone = phone.trim();
-  const results = db.exec("SELECT * FROM donations WHERE phone = '" + cleanPhone.replace(/'/g, "''") + "' ORDER BY created_at DESC");
-  if (results.length === 0 || results[0].values.length === 0) {
+  const donations = queryAll("SELECT * FROM donations WHERE phone = ? ORDER BY created_at DESC", [cleanPhone]);
+  if (donations.length === 0) {
     return res.status(404).json({ error: 'No donations found for this phone number.' });
   }
-  const cols = results[0].columns;
-  const donations = results[0].values.map(function(row) {
-    var obj = {};
-    cols.forEach(function(c, i) { obj[c] = row[i]; });
-    return obj;
-  });
   res.json(donations);
 });
 
@@ -474,13 +441,13 @@ app.post('/api/member/apply', upload.single('photo'), (req, res) => {
   }
   const cleanPhone = phone.trim();
   const cleanEmail = email ? email.trim() : null;
-  const phoneResults = db.exec("SELECT id FROM members WHERE phone = '" + cleanPhone.replace(/'/g, "''") + "'");
-  if (phoneResults.length > 0 && phoneResults[0].values.length > 0) {
+  const phoneExists = queryOne("SELECT id FROM members WHERE phone = ?", [cleanPhone]);
+  if (phoneExists) {
     return res.status(400).json({ error: 'This phone number is already registered.' });
   }
   if (cleanEmail) {
-    const emailResults = db.exec("SELECT id FROM members WHERE email = '" + cleanEmail.replace(/'/g, "''") + "'");
-    if (emailResults.length > 0 && emailResults[0].values.length > 0) {
+    const emailExists = queryOne("SELECT id FROM members WHERE email = ?", [cleanEmail]);
+    if (emailExists) {
       return res.status(400).json({ error: 'This email address is already registered.' });
     }
   }
