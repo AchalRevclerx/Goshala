@@ -11,7 +11,11 @@
 * { padding:0; margin:0; box-sizing:border-box; }
 
 html, body {
-    overflow-x:hidden;
+    /* Use clip (not hidden) to stop sideways scroll: clip does NOT create a
+       scroll container, so position:fixed elements (the floating buttons)
+       stay pinned to the viewport on mobile. overflow-x:hidden here breaks
+       fixed positioning on iOS/Android and makes them scroll with the page. */
+    overflow-x:clip;
     max-width:100%;
     width:100%;
 }
@@ -19,7 +23,6 @@ html, body {
 body {
     font-family:'Bree Serif',serif;
     background:var(--light-bg);
-    position:relative;
 }
 
 /* Nothing may exceed the viewport width — the core guard against sideways scroll. */
@@ -375,9 +378,9 @@ table { max-width:100%; }
 /* ===== Floating Action Buttons ===== */
 .floating-buttons {
     position:fixed;
-    bottom:20px;
-    right:20px;
-    z-index:9999;
+    bottom:calc(20px + env(safe-area-inset-bottom, 0px));
+    right:calc(20px + env(safe-area-inset-right, 0px));
+    z-index:100000;
     display:flex;
     flex-direction:column;
     gap:10px;
@@ -414,9 +417,9 @@ table { max-width:100%; }
         display:flex;
         flex-direction:column;
         position:fixed;
-        left:10px;
-        bottom:12px;
-        z-index:9999;
+        left:calc(10px + env(safe-area-inset-left, 0px));
+        bottom:calc(12px + env(safe-area-inset-bottom, 0px));
+        z-index:100000;
         gap:8px;
     }
     .mobile-social-bar a {
@@ -488,7 +491,7 @@ table { max-width:100%; }
     .nav-bar { display:none; }
     .page-hero h1 { font-size:36px; }
     .social-sidebar { display:none; }
-    .floating-buttons { bottom:15px; right:15px; }
+    .floating-buttons { bottom:calc(15px + env(safe-area-inset-bottom, 0px)); right:calc(15px + env(safe-area-inset-right, 0px)); }
     .floating-buttons a { width:46px; height:46px; font-size:20px; }
     .floating-buttons .fb-problem { font-size:12px; padding:0 14px; }
 }
@@ -513,7 +516,7 @@ table { max-width:100%; }
     .contact-footer h5 { font-size:16px; }
     .footer-bottom { text-align:center; }
     .footer-bottom .col-md-6 { text-align:center !important; }
-    .floating-buttons { bottom:12px; right:12px; gap:8px; }
+    .floating-buttons { bottom:calc(12px + env(safe-area-inset-bottom, 0px)); right:calc(12px + env(safe-area-inset-right, 0px)); gap:8px; }
     .floating-buttons a { width:44px; height:44px; font-size:18px; }
     .floating-buttons .fb-problem { font-size:11px; padding:0 12px; }
 }
