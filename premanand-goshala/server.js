@@ -20,9 +20,13 @@ const PUBLIC_DIR = __dirname;
 const UPLOADS_DIR = path.join(PUBLIC_DIR, 'uploads');
 const DATA_DIR = path.join(__dirname, 'data');
 const DB_PATH = path.join(DATA_DIR, 'goshala.db');
+// Backups go to a separate dir; override with BACKUP_DIR to a persistent path on the host.
+const BACKUP_DIR = process.env.BACKUP_DIR || path.join(DATA_DIR, 'backups');
+const BACKUP_RETENTION = parseInt(process.env.BACKUP_RETENTION || '14', 10); // keep N most recent
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR, { recursive: true });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOADS_DIR),
@@ -858,12 +862,46 @@ app.get('*', (req, res) => {
   }
 });
 
+// ===== Daily DB backup =====
+// Uses SQLite's "VACUUM INTO", which is safe to run while the app is live and
+// produces a compact, self-contained backup file (no WAL/SHM sidecars).
+function backupDB() {
+  try {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const stamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+    // VACUUM INTO won't overwrite; ensure a unique path if one already exists this second.
+    let dest = path.join(BACKUP_DIR, `goshala-${stamp}.db`);
+    for (let i = 1; fs.existsSync(dest); i++) dest = path.join(BACKUP_DIR, `goshala-${stamp}-${i}.db`);
+    db.prepare('VACUUM INTO ?').run(dest);
+
+    // Retention: keep only the newest BACKUP_RETENTION files.
+    const files = fs.readdirSync(BACKUP_DIR)
+      .filter(f => f.startsWith('goshala-') && f.endsWith('.db'))
+      .sort();
+    while (files.length > BACKUP_RETENTION) {
+      const old = files.shift();
+      try { fs.unlinkSync(path.join(BACKUP_DIR, old)); } catch (e) {}
+    }
+    console.log(`DB backup written: ${dest} (${files.length} kept)`);
+  } catch (err) {
+    console.error('DB backup failed:', err.message);
+  }
+}
+
+function scheduleBackups() {
+  backupDB(); // one on startup
+  setInterval(backupDB, 24 * 60 * 60 * 1000).unref(); // then daily
+}
+
 initDB().then(() => {
+  scheduleBackups();
   app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
     console.log(`Serving directory: ${PUBLIC_DIR}`);
     console.log(`Database: ${DB_PATH}`);
     console.log(`Uploads: ${UPLOADS_DIR}`);
+    console.log(`Backups: ${BACKUP_DIR}`);
   });
 }).catch(err => {
   console.error('Failed to initialize database:', err);
