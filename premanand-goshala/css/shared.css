@@ -399,7 +399,7 @@ table { max-width:100%; }
     transition:0.3s;
 }
 .floating-buttons a:hover { transform:scale(1.1); }
-.floating-buttons .fb-whatsapp { background:#25D366; }
+.floating-buttons .fb-member { background:var(--green); }
 .floating-buttons .fb-donate { background:var(--green); }
 .floating-buttons .fb-problem {
     background:var(--gold);
@@ -446,7 +446,7 @@ table { max-width:100%; }
 .form-control {
     border-radius:8px !important;
     border:1px solid #ddd;
-    padding:10px 15px;
+    padding:7px 15px;
     font-size:14px;
     font-family:'Bree Serif',serif;
 }
@@ -528,7 +528,7 @@ table { max-width:100%; }
     .header-top .container-fluid { padding-left:10px; padding-right:10px; }
     .header-top .logo-area { gap:6px; }
     .header-top .logo-area img { height:34px; }
-    .header-top .site-title { font-size:12px; line-height:1.1; overflow:hidden; text-overflow:ellipsis; max-width:120px; }
+    .header-top .site-title { font-size:12px; line-height:1.1; overflow:hidden; text-overflow:ellipsis; max-width:120px; padding-top: 8px; }
     .header-top .site-title small { font-size:9px; }
     .header-top .header-right { gap:8px; }
     .header-top .header-right .enquiry-btn { padding:6px 10px; font-size:11px; white-space:nowrap; flex-shrink:0; }

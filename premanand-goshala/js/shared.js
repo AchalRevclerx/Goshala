@@ -196,7 +196,7 @@ var footer = '<footer class="contact-footer">' +
 
 /* ---- Floating Action Buttons ---- */
 var floatingButtons = '<div class="floating-buttons">' +
-    '<a id="s-fl-wa" href="#" target="_blank" class="fb-whatsapp" title="WhatsApp"><i class="fa fa-whatsapp"></i></a>' +
+    '<a href="member-apply.html" class="fb-member" title="Member Apply"><i class="fa fa-pencil"></i></a>' +
     '<a href="donation_form.html" class="fb-donate" title="Donate"><i class="fa fa-heart"></i></a>' +
     '<a href="contact-us.html" class="fb-problem"><i class="fa fa-exclamation-triangle"></i> Register Problem</a>' +
     '</div>' + mobileSocialBar;
@@ -269,7 +269,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (s.instagram) $('#s-ft-ig').attr('href', s.instagram);
         if (s.youtube) $('#s-ft-yt').attr('href', s.youtube);
         if (s.whatsapp) $('#s-ft-wa').attr('href', s.whatsapp);
-        if (s.whatsapp) $('#s-fl-wa').attr('href', s.whatsapp);
         if (s.whatsapp) $('.mobile-social-bar .ms-whatsapp').attr('href', s.whatsapp);
         if (s.facebook) $('.mobile-social-bar .ms-facebook').attr('href', s.facebook);
         if (s.instagram) $('.mobile-social-bar .ms-instagram').attr('href', s.instagram);
