@@ -217,8 +217,15 @@ document.addEventListener('DOMContentLoaded', function() {
     /* ---- Receipts now public, no login required ---- */
 
     /* ---- AOS Init ---- */
+    /* Disable on phones/tablets: the fade-left/right transforms shift elements
+       sideways and cause horizontal scrolling on small screens. */
     if (typeof AOS !== 'undefined') {
-        AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            disable: function() { return window.innerWidth < 992; }
+        });
     }
 
     /* ---- Active Page Highlighting ---- */

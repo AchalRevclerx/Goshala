@@ -10,13 +10,30 @@
 
 * { padding:0; margin:0; box-sizing:border-box; }
 
+html, body {
+    overflow-x:hidden;
+    max-width:100%;
+    width:100%;
+}
+
 body {
     font-family:'Bree Serif',serif;
     background:var(--light-bg);
-    overflow-x:hidden;
+    position:relative;
 }
 
+/* Nothing may exceed the viewport width — the core guard against sideways scroll. */
+#main-content { overflow-x:clip; }
+
 img { max-width:100%; height:auto; }
+
+/* Wide/embedded media must never push the page wider than the screen. */
+img, video, iframe, embed, object, canvas, svg { max-width:100%; }
+iframe { border:0; }
+marquee { max-width:100%; }
+
+/* Any raw table stays scrollable inside its own box instead of widening the page. */
+table { max-width:100%; }
 
 /* ===== Fixed Left Social Sidebar ===== */
 .social-sidebar {
