@@ -27,7 +27,14 @@
         .bank-details .detail-item .detail-text p{color:#666;font-size:13px;margin:0;}
         .upi-section{background:#fff;border-radius:12px;padding:20px;text-align:center;margin-top:20px;box-shadow:0 4px 15px rgba(0,0,0,0.05);}
         .upi-section h6{color:var(--background-color);font-family:'Acme',serif;margin-bottom:10px;}
-        .upi-section .upi-qr{width:150px;margin:10px auto;}
+        .upi-section .upi-qr{width:220px;max-width:100%;margin:10px auto;display:block;border:1px solid #eee;border-radius:8px;padding:6px;background:#fff;}
+        .pay-online-btn{background:#0b64c2;color:#fff;padding:14px 30px;border:none;border-radius:50px;font-size:17px;font-weight:700;cursor:pointer;transition:0.3s;font-family:'Bree Serif',serif;width:100%;margin-bottom:12px;}
+        .pay-online-btn:hover{background:#094f99;}
+        .pay-online-btn:disabled{opacity:0.6;cursor:not-allowed;}
+        .pay-divider{display:flex;align-items:center;text-align:center;color:#999;margin:14px 0;font-size:13px;}
+        .pay-divider::before,.pay-divider::after{content:'';flex:1;border-bottom:1px solid #ddd;}
+        .pay-divider span{padding:0 12px;}
+        .pay-secure-note{font-size:12px;color:#888;text-align:center;margin-top:6px;}
         .upload-box{border:2px dashed var(--gold);border-radius:12px;padding:30px;text-align:center;background:rgba(212,160,23,0.05);cursor:pointer;transition:0.3s;}
         .upload-box:hover{background:rgba(212,160,23,0.1);}
         .upload-box i{font-size:40px;color:var(--gold);margin-bottom:10px;}
@@ -137,7 +144,10 @@
                                         <button type="button" class="btn btn-sm btn-danger mt-2" id="removeReceipt"><i class="fa fa-times"></i> Remove</button>
                                     </div>
                                 </div>
+                                <button type="button" id="payOnlineBtn" class="pay-online-btn" style="display:none;"><i class="fa fa-lock"></i> Pay Securely Online</button>
+                                <div class="pay-divider" id="payDivider" style="display:none;"><span>or record a manual / bank / UPI payment</span></div>
                                 <button type="submit" class="donate-submit-btn"><i class="fa fa-heart"></i> Donate Now</button>
+                                <p class="pay-secure-note" id="paySecureNote" style="display:none;"><i class="fa fa-shield"></i> Secured by Razorpay — UPI, Cards, Net Banking &amp; Wallets</p>
                             </form>
                             <div id="donationFormMsg" class="mt-3"></div>
                         </div>
@@ -184,9 +194,13 @@
                         </div>
 
                         <div class="upi-section">
-                            <h6><i class="fa fa-qrcode"></i> UPI Payment</h6>
-                            <p style="font-size:13px;color:#666;">Scan the QR code or use UPI ID</p>
+                            <h6><i class="fa fa-qrcode"></i> Scan &amp; Pay via UPI</h6>
+                            <p style="font-size:13px;color:#666;">Scan with any UPI app (GPay, PhonePe, Paytm)</p>
+                            <img id="upiQrImg" class="upi-qr" src="" alt="UPI QR Code" style="display:none;">
+                            <p id="upiQrLoading" style="font-size:13px;color:#999;">Loading QR…</p>
+                            <p style="font-size:13px;color:#666;margin-bottom:2px;">UPI ID</p>
                             <p style="font-size:15px;font-weight:bold;color:var(--background-color);" id="donate-upi-id">-</p>
+                            <p style="font-size:12px;color:#999;" id="upiQrAmountNote"></p>
                         </div>
                     </div>
                 </div>
@@ -197,10 +211,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="js/app.js"></script>
     <script src="js/shared.js"></script>
     <script>
         $(function() {
+            var payConfig = { razorpay_enabled: false, key_id: '', payee_name: '' };
+
             $.get('/api/settings?' + Date.now(), function(s) {
                 if (!s) return;
                 if (s.bank_name) $('#donate-bank-name').text(s.bank_name);
@@ -211,10 +228,116 @@
                 if (s.upi_id) $('#donate-upi-id').text(s.upi_id);
             });
 
+            // Load payment config; show the "Pay Online" button only if Razorpay is set up.
+            $.get('/api/payment/config?' + Date.now(), function(cfg) {
+                payConfig = cfg || payConfig;
+                if (payConfig.razorpay_enabled) {
+                    $('#payOnlineBtn, #payDivider, #paySecureNote').show();
+                }
+            });
+
+            function currentAmount() {
+                return parseFloat($('input[name="amount"]').val()) || 0;
+            }
+
+            // Refresh the UPI QR for the current amount (debounced).
+            var qrTimer = null;
+            function refreshUpiQr() {
+                var amt = currentAmount();
+                $.get('/api/payment/upi-qr?amount=' + encodeURIComponent(amt) + '&_=' + Date.now(), function(r) {
+                    if (r && r.qr) {
+                        $('#upiQrImg').attr('src', r.qr).show();
+                        $('#upiQrLoading').hide();
+                        $('#upiQrAmountNote').text(amt > 0 ? ('Amount: ₹' + amt) : 'Enter an amount to lock it in the QR');
+                    }
+                }).fail(function() {
+                    $('#upiQrLoading').text('UPI QR not available.');
+                });
+            }
+            function scheduleQr() { clearTimeout(qrTimer); qrTimer = setTimeout(refreshUpiQr, 400); }
+            refreshUpiQr();
+
             $('.amount-btn').on('click', function() {
                 $('.amount-btn').removeClass('active');
                 $(this).addClass('active');
                 $('input[name="amount"]').val($(this).data('amount'));
+                scheduleQr();
+            });
+            $('input[name="amount"]').on('input', scheduleQr);
+
+            // ===== Pay Online (Razorpay) =====
+            $('#payOnlineBtn').on('click', function() {
+                var donor_name = $('input[name="donor_name"]').val().trim();
+                var phone = $('input[name="phone"]').val().trim();
+                var email = $('input[name="email"]').val().trim();
+                var address = $('textarea[name="address"]').val().trim();
+                var purpose = $('select[name="purpose"]').val();
+                var amount = currentAmount();
+                if (!donor_name || !phone) {
+                    $('#donationFormMsg').html('<div class="alert alert-warning">Please enter your name and mobile number.</div>');
+                    return;
+                }
+                if (!amount || amount < 1) {
+                    $('#donationFormMsg').html('<div class="alert alert-warning">Please enter a valid amount.</div>');
+                    return;
+                }
+                var btn = $(this);
+                btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Starting secure payment…');
+                $('#donationFormMsg').html('');
+
+                $.ajax({
+                    url: '/api/payment/order', type: 'POST', contentType: 'application/json',
+                    data: JSON.stringify({ amount: amount, donor_name: donor_name, phone: phone, purpose: purpose }),
+                    success: function(order) {
+                        var options = {
+                            key: order.key_id,
+                            amount: order.amount,
+                            currency: order.currency,
+                            name: payConfig.payee_name || 'Donation',
+                            description: purpose || 'Donation',
+                            order_id: order.order_id,
+                            prefill: { name: donor_name, contact: phone, email: email },
+                            theme: { color: '#8B4513' },
+                            handler: function(resp) {
+                                $('#donationFormMsg').html('<div class="alert alert-info"><i class="fa fa-spinner fa-spin"></i> Confirming payment…</div>');
+                                $.ajax({
+                                    url: '/api/payment/verify', type: 'POST', contentType: 'application/json',
+                                    data: JSON.stringify({
+                                        razorpay_order_id: resp.razorpay_order_id,
+                                        razorpay_payment_id: resp.razorpay_payment_id,
+                                        razorpay_signature: resp.razorpay_signature,
+                                        donor_name: donor_name, phone: phone, email: email,
+                                        address: address, purpose: purpose
+                                    }),
+                                    success: function(vr) {
+                                        $('#donationFormMsg').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + vr.message + ' Payment ID: ' + (vr.payment_id || resp.razorpay_payment_id) + '</div>');
+                                        $('#donationForm')[0].reset();
+                                        $('.amount-btn').removeClass('active');
+                                        refreshUpiQr();
+                                    },
+                                    error: function(xhr) {
+                                        var msg = (xhr.responseJSON && xhr.responseJSON.error) || 'Payment could not be confirmed.';
+                                        $('#donationFormMsg').html('<div class="alert alert-danger">' + msg + ' (Payment ID: ' + resp.razorpay_payment_id + ')</div>');
+                                    }
+                                });
+                            },
+                            modal: { ondismiss: function() {
+                                btn.prop('disabled', false).html('<i class="fa fa-lock"></i> Pay Securely Online');
+                            }}
+                        };
+                        var rzp = new Razorpay(options);
+                        rzp.on('payment.failed', function(resp) {
+                            $('#donationFormMsg').html('<div class="alert alert-danger">Payment failed: ' + (resp.error && resp.error.description || 'Please try again.') + '</div>');
+                        });
+                        rzp.open();
+                        btn.prop('disabled', false).html('<i class="fa fa-lock"></i> Pay Securely Online');
+                    },
+                    error: function(xhr) {
+                        var msg = (xhr.responseJSON && xhr.responseJSON.error) || 'Could not start payment.';
+                        $('#donationFormMsg').html('<div class="alert alert-danger">' + msg + '</div>');
+                        btn.prop('disabled', false).html('<i class="fa fa-lock"></i> Pay Securely Online');
+                    }
+                });
             });
 
             $('#uploadBox').on('click', function() { $('#receiptInput').click(); });

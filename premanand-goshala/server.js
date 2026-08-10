@@ -10,7 +10,18 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const Razorpay = require('razorpay');
+const QRCode = require('qrcode');
 const { v4: uuidv4 } = require('uuid');
+
+// Razorpay client — only enabled when both keys are provided via env.
+// The SECRET stays on the server; only the public key_id is ever sent to the browser.
+const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
+const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
+const razorpayEnabled = Boolean(RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET);
+const razorpay = razorpayEnabled
+  ? new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET })
+  : null;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -510,6 +521,107 @@ app.post('/api/donate', upload.fields([
     photoPaths.join(',')]
   );
   res.status(201).json({ success: true, message: 'Donation recorded successfully' });
+});
+
+// ===== Payment Gateway (Razorpay + UPI QR) =====
+
+// Public config the checkout page needs. Never exposes the secret.
+app.get('/api/payment/config', noCacheMiddleware, (req, res) => {
+  const upiRow = queryOne("SELECT value FROM settings WHERE key = 'upi_id'");
+  const nameRow = queryOne("SELECT value FROM settings WHERE key = 'bank_holder'");
+  res.json({
+    razorpay_enabled: razorpayEnabled,
+    key_id: RAZORPAY_KEY_ID,
+    upi_id: upiRow ? upiRow.value : '',
+    payee_name: nameRow ? nameRow.value : '',
+  });
+});
+
+// Build a scannable UPI QR (data URL) for the given amount from the configured UPI ID.
+app.get('/api/payment/upi-qr', noCacheMiddleware, async (req, res) => {
+  try {
+    const upiRow = queryOne("SELECT value FROM settings WHERE key = 'upi_id'");
+    const upiId = upiRow ? String(upiRow.value).trim() : '';
+    if (!upiId) return res.status(400).json({ error: 'UPI ID is not configured yet.' });
+    const nameRow = queryOne("SELECT value FROM settings WHERE key = 'bank_holder'");
+    const payeeName = (nameRow && nameRow.value) ? nameRow.value : 'Goshala';
+    const amount = parseFloat(req.query.amount);
+    let uri = 'upi://pay?pa=' + encodeURIComponent(upiId) +
+      '&pn=' + encodeURIComponent(payeeName) + '&cu=INR&tn=' + encodeURIComponent('Donation');
+    if (Number.isFinite(amount) && amount > 0) uri += '&am=' + amount.toFixed(2);
+    const qr = await QRCode.toDataURL(uri, { width: 260, margin: 1 });
+    res.json({ qr, upiUri: uri, upiId, payeeName });
+  } catch (err) {
+    console.error('UPI QR error:', err.message);
+    res.status(500).json({ error: 'Could not generate UPI QR.' });
+  }
+});
+
+// Create a Razorpay order for the amount (amount is authoritative on the server).
+app.post('/api/payment/order', async (req, res) => {
+  if (!razorpayEnabled) return res.status(503).json({ error: 'Online payment is not configured.' });
+  const amt = parseFloat(req.body.amount);
+  if (!Number.isFinite(amt) || amt < 1) {
+    return res.status(400).json({ error: 'Amount must be at least ₹1.' });
+  }
+  try {
+    const order = await razorpay.orders.create({
+      amount: Math.round(amt * 100), // paise
+      currency: 'INR',
+      receipt: 'don_' + Date.now(),
+      payment_capture: 1,
+      notes: {
+        donor_name: String(req.body.donor_name || '').slice(0, 100),
+        phone: String(req.body.phone || '').slice(0, 20),
+        purpose: String(req.body.purpose || '').slice(0, 100),
+      },
+    });
+    res.json({ order_id: order.id, amount: order.amount, currency: order.currency, key_id: RAZORPAY_KEY_ID });
+  } catch (err) {
+    console.error('Razorpay order error:', err && err.error ? err.error : err.message);
+    res.status(502).json({ error: 'Could not start payment. Please try again.' });
+  }
+});
+
+// Verify the payment signature server-side, then record the donation as completed.
+app.post('/api/payment/verify', async (req, res) => {
+  if (!razorpayEnabled) return res.status(503).json({ error: 'Online payment is not configured.' });
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature,
+    donor_name, phone, email, pan, address, purpose } = req.body;
+  if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+    return res.status(400).json({ error: 'Missing payment verification fields.' });
+  }
+  // Signature = HMAC_SHA256(order_id | payment_id) keyed with the secret.
+  const expected = crypto.createHmac('sha256', RAZORPAY_KEY_SECRET)
+    .update(razorpay_order_id + '|' + razorpay_payment_id).digest('hex');
+  const a = Buffer.from(expected);
+  const b = Buffer.from(String(razorpay_signature));
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+    return res.status(400).json({ error: 'Payment verification failed.' });
+  }
+  try {
+    // Fetch the payment from Razorpay for the authoritative amount/status —
+    // the client cannot tamper with what actually gets recorded.
+    const payment = await razorpay.payments.fetch(razorpay_payment_id);
+    if (!payment || (payment.status !== 'captured' && payment.status !== 'authorized')) {
+      return res.status(400).json({ error: 'Payment not completed.' });
+    }
+    // Idempotency: never record the same payment twice.
+    const already = queryOne('SELECT id FROM donations WHERE transaction_id = ?', [razorpay_payment_id]);
+    if (already) return res.json({ success: true, message: 'Payment already recorded.', duplicate: true });
+
+    const amt = payment.amount / 100;
+    runInsert(
+      'INSERT INTO donations (donor_name, phone, email, pan, address, amount, purpose, payment_method, transaction_id, status, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [donor_name || 'Donor', phone || (payment.contact || ''), email || (payment.email || null),
+      pan || null, address || null, amt, purpose || 'General Donation',
+      'online', razorpay_payment_id, 'completed', 'user']
+    );
+    res.json({ success: true, message: 'Thank you! Your donation was received.', payment_id: razorpay_payment_id, amount: amt });
+  } catch (err) {
+    console.error('Razorpay verify error:', err && err.error ? err.error : err.message);
+    res.status(502).json({ error: 'Could not confirm payment. If money was deducted, contact us with your payment ID.' });
+  }
 });
 
 app.get('/api/donations/public', noCacheMiddleware, (req, res) => {
@@ -1041,6 +1153,7 @@ initDB().then(() => {
     console.log(`Database: ${DB_PATH}`);
     console.log(`Uploads: ${UPLOADS_DIR}`);
     console.log(`Backups: ${BACKUP_DIR}`);
+    console.log(`Razorpay online payments: ${razorpayEnabled ? 'ENABLED' : 'disabled (set RAZORPAY_KEY_ID/RAZORPAY_KEY_SECRET)'}`);
   });
 }).catch(err => {
   console.error('Failed to initialize database:', err);
