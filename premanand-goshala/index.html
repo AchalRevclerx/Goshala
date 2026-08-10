@@ -190,7 +190,7 @@
                 <div class="marquee_parent" data-aos="fade-up">
                     <h5><i class="fa fa-bullhorn"></i> Recent Activity</h5>
                     <div class="marquee_parent_sub">
-                        <marquee direction="up" scrollamount="3" onmouseover="this.stop()" onmouseout="this.start()" height="200">
+                        <marquee id="recentActivityMarquee" direction="up" scrollamount="3" onmouseover="this.stop()" onmouseout="this.start()" height="200">
                             <p><i class="fa fa-check-circle" style="color:var(--green);"></i> गौशाला में 50 नई गायों का आगमन</p>
                             <p><i class="fa fa-check-circle" style="color:var(--green);"></i> वार्षिक गौ पूजा समारोह 15 जुलाई को</p>
                             <p><i class="fa fa-check-circle" style="color:var(--green);"></i> गोदान कार्यक्रम में 100+ श्रद्धालु हुए शामिल</p>
@@ -337,16 +337,15 @@
             <div class="container">
                 <div class="head_item3"><span>President's Message</span></div>
                 <div class="message-card" data-aos="zoom-in">
-                    <img src="images/IMG-20260708-WA0005.jpg" alt="President">
+                    <img id="presidentImg" src="images/IMG-20260708-WA0005.jpg" alt="President">
                     <div class="message-content">
-                        <h4><i class="fa fa-quote-left" style="color:var(--gold);"></i> गौ सेवा ही सबसे बड़ा धर्म</h4>
-                        <p>प्रिय गौ भक्तों,</p>
-                        <p>मैं श्री प्रेमानंद गोशाला की ओर से आप सभी का हार्दिक स्वागत करता हूँ। हमारी गोशाला गायों की सेवा और उनके संरक्षण के लिए समर्पित है। गाय हमारी संस्कृति की आधारशिला हैं और उनकी सेवा करना ही मानव सेवा है।</p>
-                        <p>हमारी गोशाला में आज 200 से अधिक गायों को आश्रय मिला हुआ है। हम बूढ़ी, बीमार और बेसहारा गायों को अपनाते हैं और उनकी हर संभव देखभाल करते हैं। हम चाहते हैं कि हर गाय को एक सुरक्षित और स्वस्थ जीवन मिले।</p>
-                        <p>हम सभी गौ भक्तों से निवेदन करते हैं कि वे इस पुण्य कार्य में हमारा सहयोग करें। आपका दान और सहयोग ही इस गोशाला को चलाने में सहायक है।</p>
-                        <p>गौ माता की जय!</p>
-                        <div class="founder-name">- श्री प्रेमानंद जी</div>
-                        <small style="color:#999;">Founder & President, श्री प्रेमानंद गोशाला</small>
+                        <h4><i class="fa fa-quote-left" style="color:var(--gold);"></i> <span id="presidentHeading">गौ सेवा ही सबसे बड़ा धर्म</span></h4>
+                        <div id="presidentBody">
+                            <p>प्रिय गौ भक्तों,</p>
+                            <p>मैं श्री प्रेमानंद गोशाला की ओर से आप सभी का हार्दिक स्वागत करता हूँ। हमारी गोशाला गायों की सेवा और उनके संरक्षण के लिए समर्पित है।</p>
+                        </div>
+                        <div class="founder-name" id="presidentName">- श्री प्रेमानंद जी</div>
+                        <small style="color:#999;" id="presidentTitle">Founder &amp; President, श्री प्रेमानंद गोशाला</small>
                     </div>
                 </div>
             </div>
@@ -367,11 +366,27 @@
     <script src="js/app.js"></script>
     <script src="js/shared.js"></script>
     <script>
-        $('#cowSlider').owlCarousel({
-            loop: true, margin: 10, nav: true, dots: false,
-            navText: ['<i class="fa fa-chevron-left"></i>','<i class="fa fa-chevron-right"></i>'],
-            responsive: { 0: { items: 1 }, 576: { items: 1 }, 768: { items: 2 }, 992: { items: 1 } }
-        });
+        function initCowSlider() {
+            $.get('/api/cows?' + Date.now(), function(cows) {
+                var list = cows || [];
+                if (list.length) {
+                    var h = '';
+                    list.forEach(function(c) {
+                        var img = c.image ? 'uploads/' + c.image : 'images/IMG-20260708-WA0006.jpg';
+                        h += '<div class="card"><img src="' + img + '" alt="' + (c.name || '') + '">' +
+                            '<div class="card-body text-center"><h6 class="card-title">' + (c.name || '') + '</h6>' +
+                            '<p class="card-text">' + (c.breed || '') + '</p></div></div>';
+                    });
+                    $('#cowSlider').html(h);
+                }
+                $('#cowSlider').owlCarousel({
+                    loop: true, margin: 10, nav: true, dots: false,
+                    navText: ['<i class="fa fa-chevron-left"></i>','<i class="fa fa-chevron-right"></i>'],
+                    responsive: { 0: { items: 1 }, 576: { items: 1 }, 768: { items: 2 }, 992: { items: 1 } }
+                });
+            });
+        }
+        initCowSlider();
 
         function initManagementSlider() {
             $.get('/api/staff?' + Date.now(), function(staff) {
@@ -420,7 +435,24 @@
         loadSliders();
         loadHomeGallery();
         loadHomeAbout();
+        loadPresident();
         initManagementSlider();
+
+        function loadPresident() {
+            $.get('/api/settings?' + Date.now(), function(s) {
+                if (!s) return;
+                if (s.president_heading) $('#presidentHeading').text(s.president_heading);
+                if (s.president_name) $('#presidentName').text('- ' + s.president_name);
+                if (s.president_title) $('#presidentTitle').text(s.president_title);
+                if (s.president_image) $('#presidentImg').attr('src', 'uploads/' + s.president_image);
+                if (s.president_message) {
+                    var paras = s.president_message.split(/\n\s*\n/).map(function(p) {
+                        return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+                    }).join('');
+                    $('#presidentBody').html(paras);
+                }
+            });
+        }
 
         function loadSliders() {
             $.get('/api/sliders?' + Date.now(), function(sliders) {
@@ -461,15 +493,24 @@
         }
 
         function loadActivities() {
-            $.get('/api/activities', function(activities) {
+            $.get('/api/activities?' + Date.now(), function(activities) {
                 if (!activities || activities.length === 0) return;
+                // Latest Activity cards (top 4)
                 var list = $('#activityList');
                 list.empty();
                 activities.slice(0, 4).forEach(function(a) {
-                    var imgSrc = a.image ? 'images/' + a.image : 'images/IMG-20260708-WA0001.jpg';
+                    var imgSrc = a.image ? 'uploads/' + a.image : 'images/IMG-20260708-WA0001.jpg';
                     var time = a.created_at ? '<small><i class="fa fa-clock-o"></i> ' + timeSince(new Date(a.created_at)) + '</small>' : '';
                     list.append('<div class="activity-item"><img src="' + imgSrc + '" alt="Activity"><div class="activity-text"><h6>' + (a.title || 'Activity') + '</h6><p>' + (a.description || '') + '</p>' + time + '</div></div>');
                 });
+                // Recent Activity ticker (marquee) — all items
+                var mq = $('#recentActivityMarquee');
+                if (mq.length) {
+                    mq.empty();
+                    activities.forEach(function(a) {
+                        mq.append('<p><i class="fa fa-check-circle" style="color:var(--green);"></i> ' + (a.title || '') + '</p>');
+                    });
+                }
             });
         }
 

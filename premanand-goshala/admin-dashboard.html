@@ -131,6 +131,11 @@
             <a href="#" data-page="contacts"><i class="fa fa-envelope"></i> Messages</a>
             <a href="#" data-page="gallery"><i class="fa fa-image"></i> Gallery</a>
             <a href="#" data-page="sliders"><i class="fa fa-picture-o"></i> Home Slider</a>
+            <a href="#" data-page="activities"><i class="fa fa-bullhorn"></i> Activities</a>
+            <a href="#" data-page="cows"><i class="fa fa-paw"></i> Our Cows</a>
+            <a href="#" data-page="staff"><i class="fa fa-users"></i> Staff / Team</a>
+            <a href="#" data-page="achievements"><i class="fa fa-trophy"></i> Achievements</a>
+            <a href="#" data-page="documents"><i class="fa fa-file-text"></i> Documents</a>
             <a href="#" data-page="about"><i class="fa fa-info-circle"></i> About Us</a>
             <a href="#" data-page="users"><i class="fa fa-user-circle"></i> Users & Roles</a>
             <a href="#" data-page="member-roles"><i class="fa fa-id-badge"></i> Member Roles</a>
@@ -337,6 +342,130 @@
                         <div id="aboutMsg" class="mt-2"></div>
                     </form>
                 </div>
+
+                <div class="form-section mt-4">
+                    <h6><i class="fa fa-user"></i> President's Message (Home page)</h6>
+                    <form id="presidentForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6"><label>President Name</label><input type="text" class="form-control form-control-sm" id="presName"></div>
+                            <div class="col-md-6"><label>Title / Designation</label><input type="text" class="form-control form-control-sm" id="presTitle"></div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6"><label>Message Heading</label><input type="text" class="form-control form-control-sm" id="presHeading"></div>
+                            <div class="col-md-6"><label>Photo (optional)</label><input type="file" class="form-control form-control-sm" id="presImage" accept="image/*">
+                                <div id="presImgPreview" style="margin-top:6px;"></div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12"><label>Message</label><textarea class="form-control form-control-sm" id="presMessage" rows="5"></textarea>
+                                <small class="text-muted">Use blank lines to separate paragraphs.</small>
+                            </div>
+                        </div>
+                        <div class="mt-3"><button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;"><i class="fa fa-save"></i> Save President's Message</button></div>
+                        <div id="presMsg" class="mt-2"></div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ACTIVITIES (Home: Recent + Latest Activity) -->
+            <div class="page" id="page-activities">
+                <div class="form-section">
+                    <h6><i class="fa fa-bullhorn"></i> Add Activity / News</h6>
+                    <form id="activityForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-5"><label>Title *</label><input type="text" class="form-control form-control-sm" id="activityTitle" required></div>
+                            <div class="col-md-4"><label>Image (optional)</label><input type="file" class="form-control form-control-sm" id="activityImage" accept="image/*"></div>
+                            <div class="col-md-3"><label>&nbsp;</label><button type="submit" class="btn btn-sm btn-block" style="background:var(--green);color:#fff;"><i class="fa fa-plus"></i> Add</button></div>
+                        </div>
+                        <div class="row mt-2"><div class="col-md-12"><label>Description</label><textarea class="form-control form-control-sm" id="activityDesc" rows="2"></textarea></div></div>
+                    </form>
+                    <small class="text-muted">Shown in the "Recent Activity" ticker and "Latest Activity" cards on the home page.</small>
+                </div>
+                <div class="table-wrap" id="activitiesTable"><div class="empty-state"><i class="fa fa-bullhorn"></i> No activities</div></div>
+            </div>
+
+            <!-- STAFF / MANAGEMENT TEAM -->
+            <div class="page" id="page-staff">
+                <div class="form-section">
+                    <h6><i class="fa fa-users"></i> Add Staff / Team Member</h6>
+                    <form id="staffForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-4"><label>Name *</label><input type="text" class="form-control form-control-sm" id="staffName" required></div>
+                            <div class="col-md-4"><label>Designation</label><input type="text" class="form-control form-control-sm" id="staffDesignation" placeholder="e.g. President, Manager"></div>
+                            <div class="col-md-4"><label>Photo</label><input type="file" class="form-control form-control-sm" id="staffPhoto" accept="image/*"></div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-4"><label>Phone</label><input type="text" class="form-control form-control-sm" id="staffPhone"></div>
+                            <div class="col-md-4"><label>Email</label><input type="email" class="form-control form-control-sm" id="staffEmail"></div>
+                            <div class="col-md-4"><label>Address</label><input type="text" class="form-control form-control-sm" id="staffAddress"></div>
+                        </div>
+                        <div class="mt-2"><button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;"><i class="fa fa-plus"></i> Add Staff</button></div>
+                    </form>
+                    <small class="text-muted">Shown in the "Management Team" slider on the home page and on Find Member / staff pages.</small>
+                </div>
+                <div class="table-wrap" id="staffTable"><div class="empty-state"><i class="fa fa-users"></i> No staff</div></div>
+            </div>
+
+            <!-- OUR COWS -->
+            <div class="page" id="page-cows">
+                <div class="form-section">
+                    <h6><i class="fa fa-paw"></i> Add Cow</h6>
+                    <form id="cowForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-4"><label>Name *</label><input type="text" class="form-control form-control-sm" id="cowName" required></div>
+                            <div class="col-md-3"><label>Breed</label><input type="text" class="form-control form-control-sm" id="cowBreed" placeholder="e.g. Gir Cow"></div>
+                            <div class="col-md-2"><label>Sort</label><input type="number" class="form-control form-control-sm" id="cowOrder" value="0"></div>
+                            <div class="col-md-3"><label>Image *</label><input type="file" class="form-control form-control-sm" id="cowImage" accept="image/*" required></div>
+                        </div>
+                        <div class="mt-2"><button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;"><i class="fa fa-plus"></i> Add Cow</button></div>
+                    </form>
+                    <small class="text-muted">Shown in the "Our Cows" slider on the home page.</small>
+                </div>
+                <div class="gallery-grid" id="cowsGrid"><div class="empty-state"><i class="fa fa-paw"></i> No cows</div></div>
+            </div>
+
+            <!-- ACHIEVEMENTS -->
+            <div class="page" id="page-achievements">
+                <div class="form-section">
+                    <h6><i class="fa fa-trophy"></i> Add Achievement</h6>
+                    <form id="achievementForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-5"><label>Title *</label><input type="text" class="form-control form-control-sm" id="achTitle" required></div>
+                            <div class="col-md-2"><label>Sort</label><input type="number" class="form-control form-control-sm" id="achOrder" value="0"></div>
+                            <div class="col-md-3"><label>Image (optional)</label><input type="file" class="form-control form-control-sm" id="achImage" accept="image/*"></div>
+                            <div class="col-md-2"><label>&nbsp;</label><button type="submit" class="btn btn-sm btn-block" style="background:var(--green);color:#fff;"><i class="fa fa-plus"></i> Add</button></div>
+                        </div>
+                        <div class="row mt-2"><div class="col-md-12"><label>Description</label><textarea class="form-control form-control-sm" id="achDesc" rows="2"></textarea></div></div>
+                    </form>
+                    <small class="text-muted">Shown in the Achievements section on the About Us page.</small>
+                </div>
+                <div class="table-wrap" id="achievementsTable"><div class="empty-state"><i class="fa fa-trophy"></i> No achievements</div></div>
+            </div>
+
+            <!-- DOCUMENTS -->
+            <div class="page" id="page-documents">
+                <div class="form-section">
+                    <h6><i class="fa fa-file-text"></i> Add Document</h6>
+                    <form id="documentForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-4"><label>Title *</label><input type="text" class="form-control form-control-sm" id="docTitle" required placeholder="e.g. Annual Report 2025"></div>
+                            <div class="col-md-3"><label>Category</label>
+                                <select class="form-control form-control-sm" id="docCategory">
+                                    <option value="Certification">Certification</option>
+                                    <option value="Annual Report">Annual Report</option>
+                                    <option value="Audit Report">Audit Report</option>
+                                    <option value="ITR">ITR</option>
+                                    <option value="Memorandum">Memorandum</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3"><label>File * (PDF/Image)</label><input type="file" class="form-control form-control-sm" id="docFile" accept="image/*,application/pdf" required></div>
+                            <div class="col-md-2"><label>&nbsp;</label><button type="submit" class="btn btn-sm btn-block" style="background:var(--green);color:#fff;"><i class="fa fa-upload"></i> Upload</button></div>
+                        </div>
+                    </form>
+                    <small class="text-muted">Shown as downloadable documents on the About Us page.</small>
+                </div>
+                <div class="table-wrap" id="documentsTable"><div class="empty-state"><i class="fa fa-file-text"></i> No documents</div></div>
             </div>
 
             <!-- USERS & ROLES -->
@@ -520,6 +649,11 @@
             if(pg==='contacts') loadContacts();
             if(pg==='gallery') loadGallery();
             if(pg==='sliders') loadSliders();
+            if(pg==='activities') loadActivities();
+            if(pg==='cows') loadCows();
+            if(pg==='staff') loadStaffAdmin();
+            if(pg==='achievements') loadAchievements();
+            if(pg==='documents') loadDocuments();
             if(pg==='about') loadAbout();
             if(pg==='users') loadUsers();
             if(pg==='member-roles') loadMemberRoles();
@@ -980,6 +1114,13 @@
             $('#aboutMission').val(map.about_mission||'');
             $('#aboutVision').val(map.about_vision||'');
             $('#aboutImageSelect').val(map.about_image||'');
+            // President's Message fields
+            $('#presName').val(map.president_name||'');
+            $('#presTitle').val(map.president_title||'');
+            $('#presHeading').val(map.president_heading||'');
+            $('#presMessage').val(map.president_message||'');
+            $('#presImgPreview').html(map.president_image?'<img src="/uploads/'+esc(map.president_image)+'" style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);">':'');
+            $('#presImage').data('current', map.president_image||'');
             ajax(API+'/gallery').done(function(g){
                 var opts='<option value="">-- Select uploaded image --</option>';
                 (g||[]).forEach(function(im){opts+='<option value="'+esc(im.image)+'">'+esc(im.title||im.image)+'</option>';});
@@ -999,6 +1140,177 @@
         ];
         ajax(API+'/settings',{method:'PUT',contentType:'application/json',data:JSON.stringify({settings:settings})})
             .done(function(){$('#aboutMsg').html('<div class="alert alert-success" style="padding:8px 14px;font-size:13px;border-radius:6px;">Saved!</div>');setTimeout(function(){$('#aboutMsg').html('');},3000);});
+    });
+
+    /* =================== PRESIDENT'S MESSAGE =================== */
+    $('#presidentForm').on('submit',function(e){
+        e.preventDefault();
+        var fd=new FormData();
+        fd.append('name',$('#presName').val());
+        fd.append('title',$('#presTitle').val());
+        fd.append('heading',$('#presHeading').val());
+        fd.append('message',$('#presMessage').val());
+        var img=document.getElementById('presImage').files[0];
+        if(img) fd.append('image',img);
+        $.ajax({url:API+'/president',headers:authHeaders(),method:'POST',data:fd,processData:false,contentType:false})
+            .done(function(){$('#presMsg').html('<div class="alert alert-success" style="padding:8px 14px;font-size:13px;border-radius:6px;">Saved!</div>');loadAbout();setTimeout(function(){$('#presMsg').html('');},3000);})
+            .fail(function(xhr){$('#presMsg').html('<div class="alert alert-danger" style="padding:8px 14px;font-size:13px;">Error: '+(xhr.responseJSON&&xhr.responseJSON.error||xhr.statusText)+'</div>');});
+    });
+
+    /* =================== ACTIVITIES =================== */
+    function loadActivities(){
+        ajax(API+'/activities').done(function(data){
+            if(!data||!data.length){$('#activitiesTable').html('<div class="empty-state"><i class="fa fa-bullhorn"></i> No activities</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>Image</th><th>Title</th><th>Description</th><th>Action</th></tr></thead><tbody>';
+            data.forEach(function(a){
+                var img=a.image?'<img src="/uploads/'+esc(a.image)+'" style="width:50px;height:50px;object-fit:cover;border-radius:6px;">':'-';
+                h+='<tr><td>'+img+'</td><td>'+esc(a.title)+'</td><td>'+esc((a.description||'').slice(0,80))+'</td>'+
+                   '<td><button class="btn btn-sm btn-danger" onclick="deleteActivity('+a.id+')"><i class="fa fa-trash"></i></button></td></tr>';
+            });
+            $('#activitiesTable').html(h+'</tbody></table>');
+        });
+    }
+    window.deleteActivity=function(id){
+        Swal.fire({title:'Delete this activity?',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',confirmButtonText:'Yes, delete'}).then(function(r){
+            if(r.isConfirmed) ajax(API+'/activities/'+id,{method:'DELETE'}).done(loadActivities);
+        });
+    };
+    $('#activityForm').on('submit',function(e){
+        e.preventDefault();
+        var fd=new FormData();
+        fd.append('title',$('#activityTitle').val());
+        fd.append('description',$('#activityDesc').val());
+        var img=document.getElementById('activityImage').files[0];
+        if(img) fd.append('image',img);
+        $.ajax({url:API+'/activities',headers:authHeaders(),method:'POST',data:fd,processData:false,contentType:false})
+            .done(function(){$('#activityForm')[0].reset();loadActivities();})
+            .fail(function(xhr){alert('Error: '+(xhr.responseJSON&&xhr.responseJSON.error||xhr.statusText));});
+    });
+
+    /* =================== STAFF / TEAM =================== */
+    function loadStaffAdmin(){
+        ajax(API+'/staff').done(function(data){
+            if(!data||!data.length){$('#staffTable').html('<div class="empty-state"><i class="fa fa-users"></i> No staff</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>Photo</th><th>Name</th><th>Designation</th><th>Phone</th><th>Action</th></tr></thead><tbody>';
+            data.forEach(function(s){
+                var img=s.photo?'<img src="/uploads/'+esc(s.photo)+'" style="width:50px;height:50px;object-fit:cover;border-radius:50%;">':'-';
+                h+='<tr><td>'+img+'</td><td>'+esc(s.name)+'</td><td>'+esc(s.designation||'-')+'</td><td>'+esc(s.phone||'-')+'</td>'+
+                   '<td><button class="btn btn-sm btn-danger" onclick="deleteStaffAdmin('+s.id+')"><i class="fa fa-trash"></i></button></td></tr>';
+            });
+            $('#staffTable').html(h+'</tbody></table>');
+        });
+    }
+    window.deleteStaffAdmin=function(id){
+        Swal.fire({title:'Delete this staff member?',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',confirmButtonText:'Yes, delete'}).then(function(r){
+            if(r.isConfirmed) ajax(API+'/staff/'+id,{method:'DELETE'}).done(loadStaffAdmin);
+        });
+    };
+    $('#staffForm').on('submit',function(e){
+        e.preventDefault();
+        var fd=new FormData();
+        fd.append('name',$('#staffName').val());
+        fd.append('designation',$('#staffDesignation').val());
+        fd.append('phone',$('#staffPhone').val());
+        fd.append('email',$('#staffEmail').val());
+        fd.append('address',$('#staffAddress').val());
+        var img=document.getElementById('staffPhoto').files[0];
+        if(img) fd.append('photo',img);
+        $.ajax({url:API+'/staff',headers:authHeaders(),method:'POST',data:fd,processData:false,contentType:false})
+            .done(function(){$('#staffForm')[0].reset();loadStaffAdmin();})
+            .fail(function(xhr){alert('Error: '+(xhr.responseJSON&&xhr.responseJSON.error||xhr.statusText));});
+    });
+
+    /* =================== OUR COWS =================== */
+    function loadCows(){
+        ajax(API+'/cows').done(function(data){
+            if(!data||!data.length){$('#cowsGrid').html('<div class="empty-state"><i class="fa fa-paw"></i> No cows</div>');return;}
+            var h='';
+            data.forEach(function(c){
+                h+='<div class="gallery-item"><button class="gallery-delete" onclick="deleteCow('+c.id+')"><i class="fa fa-trash"></i></button>';
+                h+='<img src="/uploads/'+esc(c.image)+'" alt="'+esc(c.name)+'"><p>'+esc(c.name)+(c.breed?' ('+esc(c.breed)+')':'')+'</p></div>';
+            });
+            $('#cowsGrid').html(h);
+        });
+    }
+    window.deleteCow=function(id){
+        Swal.fire({title:'Delete this cow?',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',confirmButtonText:'Yes, delete'}).then(function(r){
+            if(r.isConfirmed) ajax(API+'/cows/'+id,{method:'DELETE'}).done(loadCows);
+        });
+    };
+    $('#cowForm').on('submit',function(e){
+        e.preventDefault();
+        var img=document.getElementById('cowImage').files[0];
+        if(!img){alert('Please choose an image.');return;}
+        var fd=new FormData();
+        fd.append('name',$('#cowName').val());
+        fd.append('breed',$('#cowBreed').val());
+        fd.append('sort_order',$('#cowOrder').val());
+        fd.append('image',img);
+        $.ajax({url:API+'/cows',headers:authHeaders(),method:'POST',data:fd,processData:false,contentType:false})
+            .done(function(){$('#cowForm')[0].reset();$('#cowOrder').val('0');loadCows();})
+            .fail(function(xhr){alert('Error: '+(xhr.responseJSON&&xhr.responseJSON.error||xhr.statusText));});
+    });
+
+    /* =================== ACHIEVEMENTS =================== */
+    function loadAchievements(){
+        ajax(API+'/achievements').done(function(data){
+            if(!data||!data.length){$('#achievementsTable').html('<div class="empty-state"><i class="fa fa-trophy"></i> No achievements</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>Image</th><th>Title</th><th>Description</th><th>Sort</th><th>Action</th></tr></thead><tbody>';
+            data.forEach(function(a){
+                var img=a.image?'<img src="/uploads/'+esc(a.image)+'" style="width:50px;height:50px;object-fit:cover;border-radius:6px;">':'-';
+                h+='<tr><td>'+img+'</td><td>'+esc(a.title)+'</td><td>'+esc((a.description||'').slice(0,80))+'</td><td>'+(a.sort_order||0)+'</td>'+
+                   '<td><button class="btn btn-sm btn-danger" onclick="deleteAchievement('+a.id+')"><i class="fa fa-trash"></i></button></td></tr>';
+            });
+            $('#achievementsTable').html(h+'</tbody></table>');
+        });
+    }
+    window.deleteAchievement=function(id){
+        Swal.fire({title:'Delete this achievement?',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',confirmButtonText:'Yes, delete'}).then(function(r){
+            if(r.isConfirmed) ajax(API+'/achievements/'+id,{method:'DELETE'}).done(loadAchievements);
+        });
+    };
+    $('#achievementForm').on('submit',function(e){
+        e.preventDefault();
+        var fd=new FormData();
+        fd.append('title',$('#achTitle').val());
+        fd.append('description',$('#achDesc').val());
+        fd.append('sort_order',$('#achOrder').val());
+        var img=document.getElementById('achImage').files[0];
+        if(img) fd.append('image',img);
+        $.ajax({url:API+'/achievements',headers:authHeaders(),method:'POST',data:fd,processData:false,contentType:false})
+            .done(function(){$('#achievementForm')[0].reset();$('#achOrder').val('0');loadAchievements();})
+            .fail(function(xhr){alert('Error: '+(xhr.responseJSON&&xhr.responseJSON.error||xhr.statusText));});
+    });
+
+    /* =================== DOCUMENTS =================== */
+    function loadDocuments(){
+        ajax(API+'/documents').done(function(data){
+            if(!data||!data.length){$('#documentsTable').html('<div class="empty-state"><i class="fa fa-file-text"></i> No documents</div>');return;}
+            var h='<table class="table table-hover"><thead><tr><th>Title</th><th>Category</th><th>File</th><th>Action</th></tr></thead><tbody>';
+            data.forEach(function(d){
+                h+='<tr><td>'+esc(d.title)+'</td><td>'+esc(d.category||'-')+'</td>'+
+                   '<td><a href="/uploads/'+esc(d.file)+'" target="_blank"><i class="fa fa-external-link"></i> View</a></td>'+
+                   '<td><button class="btn btn-sm btn-danger" onclick="deleteDocument('+d.id+')"><i class="fa fa-trash"></i></button></td></tr>';
+            });
+            $('#documentsTable').html(h+'</tbody></table>');
+        });
+    }
+    window.deleteDocument=function(id){
+        Swal.fire({title:'Delete this document?',icon:'warning',showCancelButton:true,confirmButtonColor:'#dc3545',confirmButtonText:'Yes, delete'}).then(function(r){
+            if(r.isConfirmed) ajax(API+'/documents/'+id,{method:'DELETE'}).done(loadDocuments);
+        });
+    };
+    $('#documentForm').on('submit',function(e){
+        e.preventDefault();
+        var file=document.getElementById('docFile').files[0];
+        if(!file){alert('Please choose a file.');return;}
+        var fd=new FormData();
+        fd.append('title',$('#docTitle').val());
+        fd.append('category',$('#docCategory').val());
+        fd.append('file',file);
+        $.ajax({url:API+'/documents',headers:authHeaders(),method:'POST',data:fd,processData:false,contentType:false})
+            .done(function(){$('#documentForm')[0].reset();loadDocuments();})
+            .fail(function(xhr){alert('Error: '+(xhr.responseJSON&&xhr.responseJSON.error||xhr.statusText));});
     });
 
     /* =================== USERS =================== */

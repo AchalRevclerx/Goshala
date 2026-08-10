@@ -150,6 +150,15 @@ function execSQL(sql) {
   db.exec(sql);
 }
 
+// Safely delete an uploaded file (e.g. when a record's image is replaced/removed).
+function removeUpload(filename) {
+  if (!filename) return;
+  try {
+    const p = path.join(UPLOADS_DIR, filename);
+    if (fs.existsSync(p)) fs.unlinkSync(p);
+  } catch (e) { /* ignore */ }
+}
+
 async function initDB() {
   db = new Database(DB_PATH);
   // WAL + synchronous NORMAL: durable, crash-safe, and safe under concurrent access.
@@ -256,6 +265,33 @@ async function initDB() {
     created_at DATETIME DEFAULT (datetime('now'))
   )`);
 
+  db.exec(`CREATE TABLE IF NOT EXISTS achievements (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT,
+    image TEXT,
+    sort_order INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT (datetime('now'))
+  )`);
+
+  db.exec(`CREATE TABLE IF NOT EXISTS documents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    category TEXT,
+    file TEXT NOT NULL,
+    sort_order INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT (datetime('now'))
+  )`);
+
+  db.exec(`CREATE TABLE IF NOT EXISTS cows (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    breed TEXT,
+    image TEXT,
+    sort_order INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT (datetime('now'))
+  )`);
+
   db.exec(`CREATE TABLE IF NOT EXISTS settings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     key TEXT UNIQUE NOT NULL,
@@ -357,6 +393,18 @@ async function initDB() {
     ['about_image', '']
   ];
   aboutDefaults.forEach(([key, value]) => {
+    const exists = queryOne('SELECT id FROM settings WHERE key = ?', [key]);
+    if (!exists) runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
+  });
+
+  const presidentDefaults = [
+    ['president_name', 'श्री प्रेमानंद जी'],
+    ['president_title', 'Founder & President, श्री प्रेमानंद गोशाला'],
+    ['president_heading', 'गौ सेवा ही सबसे बड़ा धर्म'],
+    ['president_message', 'प्रिय गौ भक्तों,\n\nमैं श्री प्रेमानंद गोशाला की ओर से आप सभी का हार्दिक स्वागत करता हूँ। हमारी गोशाला गायों की सेवा और उनके संरक्षण के लिए समर्पित है। गाय हमारी संस्कृति की आधारशिला हैं और उनकी सेवा करना ही मानव सेवा है।\n\nहम सभी गौ भक्तों से निवेदन करते हैं कि वे इस पुण्य कार्य में हमारा सहयोग करें।\n\nगौ माता की जय!'],
+    ['president_image', '']
+  ];
+  presidentDefaults.forEach(([key, value]) => {
     const exists = queryOne('SELECT id FROM settings WHERE key = ?', [key]);
     if (!exists) runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
   });
@@ -880,8 +928,161 @@ app.get('/api/contacts', authMiddleware, (req, res) => {
 
 // ===== Activities API =====
 app.get('/api/activities', noCacheMiddleware, (req, res) => {
-  const activities = queryAll('SELECT * FROM activities ORDER BY created_at DESC LIMIT 10');
+  const activities = queryAll('SELECT * FROM activities ORDER BY created_at DESC LIMIT 20');
   res.json(activities);
+});
+
+app.post('/api/activities', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
+  const { title, description } = req.body;
+  if (!title) return res.status(400).json({ error: 'Title required' });
+  const image = req.file ? req.file.filename : null;
+  const id = runInsert('INSERT INTO activities (title, description, image) VALUES (?, ?, ?)', [title, description || null, image]);
+  res.status(201).json({ success: true, id });
+});
+
+app.put('/api/activities/:id', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
+  const existing = queryOne('SELECT * FROM activities WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Activity not found' });
+  const { title, description } = req.body;
+  const image = req.file ? req.file.filename : existing.image;
+  runSQL('UPDATE activities SET title = ?, description = ?, image = ? WHERE id = ?',
+    [title || existing.title, description ?? existing.description, image, req.params.id]);
+  if (req.file && existing.image) removeUpload(existing.image);
+  res.json({ success: true });
+});
+
+app.delete('/api/activities/:id', authMiddleware, adminMiddleware, (req, res) => {
+  const existing = queryOne('SELECT * FROM activities WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Activity not found' });
+  runSQL('DELETE FROM activities WHERE id = ?', [req.params.id]);
+  if (existing.image) removeUpload(existing.image);
+  res.json({ success: true });
+});
+
+// ===== Achievements API =====
+app.get('/api/achievements', noCacheMiddleware, (req, res) => {
+  res.json(queryAll('SELECT * FROM achievements ORDER BY sort_order ASC, id DESC'));
+});
+
+app.post('/api/achievements', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
+  const { title, description } = req.body;
+  if (!title) return res.status(400).json({ error: 'Title required' });
+  const image = req.file ? req.file.filename : null;
+  const sort_order = parseInt(req.body.sort_order) || 0;
+  const id = runInsert('INSERT INTO achievements (title, description, image, sort_order) VALUES (?, ?, ?, ?)',
+    [title, description || null, image, sort_order]);
+  res.status(201).json({ success: true, id });
+});
+
+app.put('/api/achievements/:id', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
+  const existing = queryOne('SELECT * FROM achievements WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Achievement not found' });
+  const { title, description } = req.body;
+  const image = req.file ? req.file.filename : existing.image;
+  const sort_order = req.body.sort_order !== undefined ? (parseInt(req.body.sort_order) || 0) : existing.sort_order;
+  runSQL('UPDATE achievements SET title = ?, description = ?, image = ?, sort_order = ? WHERE id = ?',
+    [title || existing.title, description ?? existing.description, image, sort_order, req.params.id]);
+  if (req.file && existing.image) removeUpload(existing.image);
+  res.json({ success: true });
+});
+
+app.delete('/api/achievements/:id', authMiddleware, adminMiddleware, (req, res) => {
+  const existing = queryOne('SELECT * FROM achievements WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Achievement not found' });
+  runSQL('DELETE FROM achievements WHERE id = ?', [req.params.id]);
+  if (existing.image) removeUpload(existing.image);
+  res.json({ success: true });
+});
+
+// ===== Documents API (reports/certificates) =====
+app.get('/api/documents', noCacheMiddleware, (req, res) => {
+  res.json(queryAll('SELECT * FROM documents ORDER BY sort_order ASC, id DESC'));
+});
+
+app.post('/api/documents', authMiddleware, adminMiddleware, upload.single('file'), (req, res) => {
+  const { title, category } = req.body;
+  if (!title) return res.status(400).json({ error: 'Title required' });
+  if (!req.file) return res.status(400).json({ error: 'File required' });
+  const sort_order = parseInt(req.body.sort_order) || 0;
+  const id = runInsert('INSERT INTO documents (title, category, file, sort_order) VALUES (?, ?, ?, ?)',
+    [title, category || null, req.file.filename, sort_order]);
+  res.status(201).json({ success: true, id });
+});
+
+app.put('/api/documents/:id', authMiddleware, adminMiddleware, upload.single('file'), (req, res) => {
+  const existing = queryOne('SELECT * FROM documents WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Document not found' });
+  const { title, category } = req.body;
+  const file = req.file ? req.file.filename : existing.file;
+  const sort_order = req.body.sort_order !== undefined ? (parseInt(req.body.sort_order) || 0) : existing.sort_order;
+  runSQL('UPDATE documents SET title = ?, category = ?, file = ?, sort_order = ? WHERE id = ?',
+    [title || existing.title, category ?? existing.category, file, sort_order, req.params.id]);
+  if (req.file && existing.file) removeUpload(existing.file);
+  res.json({ success: true });
+});
+
+app.delete('/api/documents/:id', authMiddleware, adminMiddleware, (req, res) => {
+  const existing = queryOne('SELECT * FROM documents WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Document not found' });
+  runSQL('DELETE FROM documents WHERE id = ?', [req.params.id]);
+  if (existing.file) removeUpload(existing.file);
+  res.json({ success: true });
+});
+
+// ===== Our Cows API =====
+app.get('/api/cows', noCacheMiddleware, (req, res) => {
+  res.json(queryAll('SELECT * FROM cows ORDER BY sort_order ASC, id DESC'));
+});
+
+app.post('/api/cows', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
+  const { name, breed } = req.body;
+  if (!name) return res.status(400).json({ error: 'Name required' });
+  const image = req.file ? req.file.filename : null;
+  const sort_order = parseInt(req.body.sort_order) || 0;
+  const id = runInsert('INSERT INTO cows (name, breed, image, sort_order) VALUES (?, ?, ?, ?)',
+    [name, breed || null, image, sort_order]);
+  res.status(201).json({ success: true, id });
+});
+
+app.put('/api/cows/:id', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
+  const existing = queryOne('SELECT * FROM cows WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Cow not found' });
+  const { name, breed } = req.body;
+  const image = req.file ? req.file.filename : existing.image;
+  const sort_order = req.body.sort_order !== undefined ? (parseInt(req.body.sort_order) || 0) : existing.sort_order;
+  runSQL('UPDATE cows SET name = ?, breed = ?, image = ?, sort_order = ? WHERE id = ?',
+    [name || existing.name, breed ?? existing.breed, image, sort_order, req.params.id]);
+  if (req.file && existing.image) removeUpload(existing.image);
+  res.json({ success: true });
+});
+
+app.delete('/api/cows/:id', authMiddleware, adminMiddleware, (req, res) => {
+  const existing = queryOne('SELECT * FROM cows WHERE id = ?', [req.params.id]);
+  if (!existing) return res.status(404).json({ error: 'Cow not found' });
+  runSQL('DELETE FROM cows WHERE id = ?', [req.params.id]);
+  if (existing.image) removeUpload(existing.image);
+  res.json({ success: true });
+});
+
+// ===== President's Message (settings + optional photo upload) =====
+function upsertSetting(key, value) {
+  const existing = queryOne('SELECT id FROM settings WHERE key = ?', [key]);
+  if (existing) runSQL('UPDATE settings SET value = ? WHERE key = ?', [value, key]);
+  else runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
+}
+
+app.post('/api/president', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
+  const { name, title, heading, message } = req.body;
+  if (name !== undefined) upsertSetting('president_name', name);
+  if (title !== undefined) upsertSetting('president_title', title);
+  if (heading !== undefined) upsertSetting('president_heading', heading);
+  if (message !== undefined) upsertSetting('president_message', message);
+  if (req.file) {
+    const old = queryOne("SELECT value FROM settings WHERE key = 'president_image'");
+    upsertSetting('president_image', req.file.filename);
+    if (old && old.value) removeUpload(old.value);
+  }
+  res.json({ success: true });
 });
 
 // ===== Member Search (public) =====
