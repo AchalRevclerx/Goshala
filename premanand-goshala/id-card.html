@@ -132,9 +132,11 @@
     <script src="js/shared.js"></script>
     <script>
         var _cinNumber = '';
+        var _officialMobile = '';
 
         $.get('/api/settings?' + Date.now(), function(s) {
             _cinNumber = s.cin_number || '';
+            _officialMobile = s.official_mobile || '';
         });
 
         function showCard(data) {
@@ -144,6 +146,7 @@
                 : '<div class="placeholder"><i class="fa fa-user"></i></div>';
             var joinDate = new Date(data.joinDate).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
             var validTill = new Date(data.validTill).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+            var roleText = (data.roles && data.roles.trim()) ? data.roles.split(',').map(function(r){return r.trim();}).filter(Boolean).join(', ') : 'Member';
 
             var cardHtml = '<div class="idcard-preview">' +
                 '<div class="idcard" id="idCard">' +
@@ -162,12 +165,14 @@
                 '<div class="member-id">ID: ' + data.memberId + '</div>' +
                 '<div class="info-grid">' +
                 '<span class="label">Member ID</span><span class="value">' + data.memberId + '</span>' +
+                '<span class="label">Role</span><span class="value">' + roleText + '</span>' +
                 '<span class="label">Phone</span><span class="value">' + data.mobile + '</span>' +
                 '<span class="label">Email</span><span class="value">' + (data.email || '-') + '</span>' +
                 '<span class="label">Address</span><span class="value">' + (data.address || '-') + '</span>' +
                 '<span class="label">Join Date</span><span class="value">' + joinDate + '</span>' +
                 '<span class="label">Valid Till</span><span class="value">' + validTill + '</span>' +
                 (_cinNumber ? '<span class="label">CIN No.</span><span class="value">' + _cinNumber + '</span>' : '') +
+                (_officialMobile ? '<span class="label">Gaushala No.</span><span class="value">' + _officialMobile + '</span>' : '') +
                 '</div>' +
                 '</div>' +
 

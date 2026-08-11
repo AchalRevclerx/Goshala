@@ -351,6 +351,7 @@ async function initDB() {
       ['address', 'Gaushala Road, Vrindavan, District Mathura, Uttar Pradesh - 281121'],
       ['phone', '+91-7000000000'],
       ['phone2', '+91-7000000001'],
+      ['official_mobile', '+91-7000000000'],
       ['email', 'info@premanandgaushala.org'],
       ['cin_number', 'U00000UP2024NPL000000'],
       ['registration_number', 'REG/2024/000001'],
@@ -410,6 +411,14 @@ async function initDB() {
     ['president_image', '']
   ];
   presidentDefaults.forEach(([key, value]) => {
+    const exists = queryOne('SELECT id FROM settings WHERE key = ?', [key]);
+    if (!exists) runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
+  });
+
+  const miscDefaults = [
+    ['official_mobile', '+91-7000000000']
+  ];
+  miscDefaults.forEach(([key, value]) => {
     const exists = queryOne('SELECT id FROM settings WHERE key = ?', [key]);
     if (!exists) runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
   });
@@ -1112,6 +1121,7 @@ app.get('/api/member/search', noCacheMiddleware, (req, res) => {
     email: member.email,
     address: member.address,
     photo: member.photo,
+    roles: member.roles || '',
     joinDate: member.valid_from,
     validTill: member.valid_till
   });
