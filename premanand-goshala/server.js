@@ -98,12 +98,17 @@ app.use('/api/', apiLimiter);
 const PUBLIC_DIR = __dirname;
 const UPLOADS_DIR = path.join(PUBLIC_DIR, 'uploads');
 const DATA_DIR = path.join(__dirname, 'data');
-const DB_PATH = path.join(DATA_DIR, 'goshala.db');
+// DB location. Override with DB_PATH to a persistent path OUTSIDE the deploy
+// directory so a git-pull / redeploy can never overwrite or delete it.
+const DB_PATH = process.env.DB_PATH || path.join(DATA_DIR, 'goshala.db');
 // Backups go to a separate dir; override with BACKUP_DIR to a persistent path on the host.
 const BACKUP_DIR = process.env.BACKUP_DIR || path.join(DATA_DIR, 'backups');
 const BACKUP_RETENTION = parseInt(process.env.BACKUP_RETENTION || '14', 10); // keep N most recent
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+// Ensure the DB's own directory exists (it may live outside DATA_DIR via DB_PATH).
+const DB_DIR = path.dirname(DB_PATH);
+if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR, { recursive: true });
 
