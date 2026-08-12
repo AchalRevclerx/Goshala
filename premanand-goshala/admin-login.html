@@ -11,8 +11,11 @@
     <style>
         :root { --bg: #8B4513; --gold: #D4A017; --green: #2E8B57; --light: #FFF8F0; }
         * { padding:0; margin:0; box-sizing:border-box; }
+        html, body { overflow-x:hidden; }
         body { font-family:'Bree Serif',serif; background:var(--light); min-height:100vh; display:flex; align-items:center; justify-content:center; }
-        .login-wrapper { width:100%; max-width:420px; padding:20px; }
+        .login-wrapper { width:100%; max-width:420px; padding:20px; min-width:0; }
+        .login-card .input-group { flex-wrap:nowrap; }
+        .login-card .input-group .form-control { min-width:0; }
         .login-card { background:#fff; border-radius:16px; padding:40px 35px; box-shadow:0 10px 40px rgba(0,0,0,0.1); text-align:center; }
         .login-card .logo { height:70px; margin-bottom:12px; }
         .login-card h4 { color:var(--bg); font-family:'Acme',sans-serif; }
@@ -46,7 +49,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-envelope"></i></span></div>
-                        <input type="email" name="email" class="form-control" placeholder="Email address" required autofocus>
+                        <input type="text" name="username" class="form-control" placeholder="Username or email" required autofocus>
                     </div>
                 </div>
                 <div class="form-group">

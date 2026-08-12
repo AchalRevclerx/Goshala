@@ -27,6 +27,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const IS_PROD = process.env.NODE_ENV === 'production';
 
+// Single admin credentials sourced from .env. When set, these take priority in
+// the login check (username + password); DB users remain a fallback.
+const ADMIN_USERNAME = (process.env.ADMIN_USERNAME || '').trim();
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+
 // JWT secret resolution. Prefer the environment variable. If it's not set, we
 // generate one ONCE and persist it to disk so it survives restarts — otherwise
 // every restart would invalidate all issued tokens and log everyone out. It is
@@ -330,8 +335,8 @@ async function initDB() {
 
   const existing = queryOne('SELECT COUNT(*) as count FROM users');
   if (existing.count === 0) {
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@goshala.org';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    const adminEmail = process.env.ADMIN_EMAIL || ADMIN_USERNAME || 'admin@goshala.org';
+    const adminPassword = ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || 'admin123';
     const hash = bcrypt.hashSync(adminPassword, 12);
     runSQL('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)', [
       'Super Admin', adminEmail, hash, 'admin'
@@ -483,11 +488,20 @@ app.put('/api/settings', authMiddleware, adminMiddleware, (req, res) => {
 
 // ===== Auth API =====
 app.post('/api/auth/login', authLimiter, (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password required' });
+  const identifier = String(req.body.username || req.body.email || '').trim();
+  const password = req.body.password || '';
+  if (!identifier || !password) {
+    return res.status(400).json({ error: 'Username and password required' });
   }
-  const user = queryOne('SELECT * FROM users WHERE email = ?', [email]);
+  // Env-configured single admin (ADMIN_USERNAME / ADMIN_PASSWORD) takes priority.
+  if (ADMIN_USERNAME && ADMIN_PASSWORD) {
+    if (identifier === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      const token = jwt.sign({ id: 0, email: ADMIN_USERNAME, role: 'admin', name: 'Super Admin' }, JWT_SECRET, { expiresIn: '7d' });
+      return res.json({ token, user: { id: 0, name: 'Super Admin', email: ADMIN_USERNAME, role: 'admin' } });
+    }
+  }
+  // Fall back to DB users (email-based login).
+  const user = queryOne('SELECT * FROM users WHERE email = ?', [identifier]);
   if (!user || !bcrypt.compareSync(password, user.password)) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
