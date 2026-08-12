@@ -567,6 +567,7 @@
                             </div>
                         </div>
                         <div class="mt-3"><button type="submit" class="btn btn-sm" style="background:var(--green);color:#fff;">Save Settings</button></div>
+                        <div id="settingsMsg" class="mt-2"></div>
                     </form>
                 </div>
             </div>
@@ -1412,8 +1413,16 @@
             var key=$(this).data('key');
             if(key) settings.push({key:key,value:$(this).val()});
         });
+        $('#settingsMsg').html('<div class="alert alert-info" style="padding:8px 14px;font-size:13px;border-radius:6px;">Saving…</div>');
         ajax(API+'/settings',{method:'PUT',contentType:'application/json',data:JSON.stringify({settings:settings})})
-            .done(function(){alert('Settings saved!');});
+            .done(function(){
+                $('#settingsMsg').html('<div class="alert alert-success" style="padding:8px 14px;font-size:13px;border-radius:6px;">Settings saved!</div>');
+                setTimeout(function(){$('#settingsMsg').html('');},3000);
+            })
+            .fail(function(xhr){
+                var msg=(xhr.responseJSON&&xhr.responseJSON.error)||('Request failed (HTTP '+xhr.status+')');
+                $('#settingsMsg').html('<div class="alert alert-danger" style="padding:8px 14px;font-size:13px;border-radius:6px;">Save failed: '+esc(msg)+'</div>');
+            });
     });
 
     /* =================== SEAL PREVIEW =================== */
