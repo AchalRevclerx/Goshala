@@ -152,7 +152,7 @@
 <body>
 
     <div id="main-content">
-        <div class="main_slider">
+        <div class="main_slider" id="mainSliderWrap" style="display:none;">
             <div id="mainCarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
                 <ol class="carousel-indicators" id="mainCarouselIndicators">
                     <li data-target="#mainCarousel" data-slide-to="0" class="active"></li>
@@ -184,7 +184,7 @@
 
         <div class="grid_container">
             <div class="grid_left_div">
-                <div class="marquee_parent" data-aos="fade-up">
+                <div class="marquee_parent" id="recentActivityBox" data-aos="fade-up" style="display:none;">
                     <h5><i class="fa fa-bullhorn"></i> Recent Activity</h5>
                     <div class="marquee_parent_sub">
                         <marquee id="recentActivityMarquee" direction="up" scrollamount="3" onmouseover="this.stop()" onmouseout="this.start()" height="200">
@@ -230,7 +230,7 @@
                     <a href="donors.html"><button style="background:var(--gold);"><i class="fa fa-list"></i> List of Donors</button></a>
                     <a href="#homeGallery"><button style="background:var(--green);"><i class="fa fa-image"></i> Gallery</button></a>
                 </div>
-                <div class="latest-activity" id="latestActivity" data-aos="fade-up">
+                <div class="latest-activity" id="latestActivity" data-aos="fade-up" style="display:none;">
                     <h5><i class="fa fa-clock-o"></i> Latest Activity</h5>
                     <div id="activityList">
                         <div class="activity-item">
@@ -270,7 +270,7 @@
             </div>
 
             <div class="grid_right_div">
-                <div data-aos="fade-up">
+                <div id="cowSection" data-aos="fade-up" style="display:none;">
                     <div class="slider-section-title">
                         <span><i class="fa fa-paw"></i> Our Cows</span>
                         <a href="gallery.html">View All <i class="fa fa-arrow-right"></i></a>
@@ -298,7 +298,7 @@
                         </div>
                     </div>
                 </div>
-                <div data-aos="fade-up">
+                <div id="managementSection" data-aos="fade-up" style="display:none;">
                     <div class="slider-section-title">
                         <span><i class="fa fa-users"></i> Management Team</span>
                         <a href="staff-search.html">View All <i class="fa fa-arrow-right"></i></a>
@@ -308,21 +308,20 @@
             </div>
         </div>
 
-        <section class="about-section" data-aos="fade-up">
+        <section class="about-section" id="aboutSection" data-aos="fade-up" style="display:none;">
             <div class="container">
                 <div class="head_item3"><span id="aboutHeading">About Us</span></div>
                 <div class="row align-items-center">
-                    <div class="col-lg-6" data-aos="fade-right">
+                    <div class="col-lg-6" id="aboutImageCol" data-aos="fade-right">
                         <div class="about_relative_div">
-                            <img id="aboutImage" src="images/IMG-20260708-WA0006.jpg" alt="Premanand Gaushala">
+                            <img id="aboutImage" src="" alt="Premanand Gaushala">
                         </div>
                     </div>
                     <div class="col-lg-6" data-aos="fade-left">
                         <div class="blog-slider__text">
-                            <p id="aboutTextP"><strong>श्री प्रेमानंद गोशाला</strong> एक धार्मिक एवं सेवा संस्था है जो गायों के संरक्षण और देखभाल के लिए समर्पित है। हमारी गोशाला में बूढ़ी, बीमार और बेसहारा गायों को आश्रय दिया जाता है। हमारा उद्देश्य गौ माता की सेवा करना और गौ संरक्षण के प्रति समाज में जागरूकता फैलाना है।</p>
-                            <p>प्रेमानंद गोशाला में गायों को रहने के लिए साफ-सुथरे बाड़े, पौष्टिक चारा, स्वच्छ पानी और नियमित चिकित्सा सुविधा उपलब्ध कराई जाती है। हम गौ संरक्षण को भारतीय संस्कृति और धर्म का अभिन्न हिस्सा मानते हैं।</p>
-                            <p><strong>Mission:</strong> <span id="aboutMissionP">गौ माता की सेवा, उनका संरक्षण और गौ-पालन को बढ़ावा देना।</span></p>
-                            <p><strong>Vision:</strong> <span id="aboutVisionP">एक ऐसा समाज जहाँ हर गाय को सम्मान, सुरक्षा और प्यार मिले।</span></p>
+                            <p id="aboutTextP"></p>
+                            <p id="aboutMissionWrap" style="display:none;"><strong>Mission:</strong> <span id="aboutMissionP"></span></p>
+                            <p id="aboutVisionWrap" style="display:none;"><strong>Vision:</strong> <span id="aboutVisionP"></span></p>
                             <a href="aboutus.html" class="blog-slider__button">READ MORE <i class="fa fa-arrow-right"></i></a>
                         </div>
                     </div>
@@ -330,19 +329,16 @@
             </div>
         </section>
 
-        <section class="message-section" data-aos="fade-up">
+        <section class="message-section" id="presidentSection" data-aos="fade-up" style="display:none;">
             <div class="container">
-                <div class="head_item3"><span>President's Message</span></div>
+                <div class="head_item3"><span id="presidentSectionTitle">President's Message</span></div>
                 <div class="message-card" data-aos="zoom-in">
-                    <img id="presidentImg" src="images/IMG-20260708-WA0005.jpg" alt="President">
+                    <img id="presidentImg" src="" alt="President">
                     <div class="message-content">
-                        <h4><i class="fa fa-quote-left" style="color:var(--gold);"></i> <span id="presidentHeading">गौ सेवा ही सबसे बड़ा धर्म</span></h4>
-                        <div id="presidentBody">
-                            <p>प्रिय गौ भक्तों,</p>
-                            <p>मैं श्री प्रेमानंद गोशाला की ओर से आप सभी का हार्दिक स्वागत करता हूँ। हमारी गोशाला गायों की सेवा और उनके संरक्षण के लिए समर्पित है।</p>
-                        </div>
-                        <div class="founder-name" id="presidentName">- श्री प्रेमानंद जी</div>
-                        <small style="color:#999;" id="presidentTitle">Founder &amp; President, श्री प्रेमानंद गोशाला</small>
+                        <h4><i class="fa fa-quote-left" style="color:var(--gold);"></i> <span id="presidentHeading"></span></h4>
+                        <div id="presidentBody"></div>
+                        <div class="founder-name" id="presidentName"></div>
+                        <small style="color:#999;" id="presidentTitle"></small>
                     </div>
                 </div>
             </div>
@@ -366,21 +362,22 @@
         function initCowSlider() {
             $.get('/api/cows?' + Date.now(), function(cows) {
                 var list = cows || [];
-                if (list.length) {
-                    var h = '';
-                    list.forEach(function(c) {
-                        var img = c.image ? 'uploads/' + c.image : 'images/IMG-20260708-WA0006.jpg';
-                        h += '<div class="card"><img src="' + img + '" alt="' + (c.name || '') + '">' +
-                            '<div class="card-body text-center"><h6 class="card-title">' + (c.name || '') + '</h6>' +
-                            '<p class="card-text">' + (c.breed || '') + '</p></div></div>';
-                    });
-                    $('#cowSlider').html(h);
-                }
+                if (!list.length) { $('#cowSection').hide(); return; }
+                var h = '';
+                list.forEach(function(c) {
+                    var img = c.image ? 'uploads/' + c.image : 'images/IMG-20260708-WA0006.jpg';
+                    h += '<div class="card"><img src="' + img + '" alt="' + (c.name || '') + '">' +
+                        '<div class="card-body text-center"><h6 class="card-title">' + (c.name || '') + '</h6>' +
+                        '<p class="card-text">' + (c.breed || '') + '</p></div></div>';
+                });
+                $('#cowSlider').html(h);
+                $('#cowSection').show();
                 $('#cowSlider').owlCarousel({
                     loop: true, margin: 10, nav: true, dots: false,
                     navText: ['<i class="fa fa-chevron-left"></i>','<i class="fa fa-chevron-right"></i>'],
                     responsive: { 0: { items: 1 }, 576: { items: 1 }, 768: { items: 2 }, 992: { items: 1 } }
                 });
+                if (typeof AOS !== 'undefined') AOS.refresh();
             });
         }
         initCowSlider();
@@ -388,15 +385,8 @@
         function initManagementSlider() {
             $.get('/api/staff?' + Date.now(), function(staff) {
                 var list = staff || [];
+                if (list.length === 0) { $('#managementSection').hide(); return; }
                 var h = '';
-                if (list.length === 0) {
-                    list = [
-                        { name: 'श्री प्रेमानंद जी', designation: 'President', photo: '' },
-                        { name: 'श्री रामकिशोर जी', designation: 'Secretary', photo: '' },
-                        { name: 'श्री मोहन जी', designation: 'Treasurer', photo: '' },
-                        { name: 'श्री हरिओम जी', designation: 'Manager', photo: '' }
-                    ];
-                }
                 list.forEach(function(m) {
                     var img = m.photo ? 'uploads/' + m.photo : 'images/IMG-20260708-WA0006.jpg';
                     h += '<div class="card"><img src="' + img + '" alt="' + (m.name || '') + '">' +
@@ -404,6 +394,8 @@
                         '<p class="card-text">(' + (m.designation || 'Team Member') + ')</p></div></div>';
                 });
                 $('#managementSlider').html(h);
+                $('#managementSection').show();
+                if (typeof AOS !== 'undefined') AOS.refresh();
                 if ($.fn.owlCarousel) {
                     if ($('#managementSlider').data('owl.carousel')) {
                         $('#managementSlider').trigger('refresh.owl.carousel');
@@ -437,23 +429,26 @@
 
         function loadPresident() {
             $.get('/api/settings?' + Date.now(), function(s) {
-                if (!s) return;
+                var hasContent = s && ((s.president_message && s.president_message.trim()) || (s.president_heading && s.president_heading.trim()));
+                if (!hasContent) { $('#presidentSection').hide(); return; }
                 if (s.president_heading) $('#presidentHeading').text(s.president_heading);
                 if (s.president_name) $('#presidentName').text('- ' + s.president_name);
                 if (s.president_title) $('#presidentTitle').text(s.president_title);
-                if (s.president_image) $('#presidentImg').attr('src', 'uploads/' + s.president_image);
+                $('#presidentImg').attr('src', s.president_image ? 'uploads/' + s.president_image : 'images/IMG-20260708-WA0005.jpg');
                 if (s.president_message) {
                     var paras = s.president_message.split(/\n\s*\n/).map(function(p) {
                         return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
                     }).join('');
                     $('#presidentBody').html(paras);
                 }
+                $('#presidentSection').show();
+                if (typeof AOS !== 'undefined') AOS.refresh();
             });
         }
 
         function loadSliders() {
             $.get('/api/sliders?' + Date.now(), function(sliders) {
-                if (!sliders || sliders.length === 0) return;
+                if (!sliders || sliders.length === 0) { $('#mainSliderWrap').hide(); return; }
                 var inner = $('#mainCarouselInner');
                 var indicators = $('#mainCarouselIndicators');
                 inner.empty();
@@ -462,6 +457,7 @@
                     indicators.append('<li data-target="#mainCarousel" data-slide-to="' + i + '"' + (i === 0 ? ' class="active"' : '') + '></li>');
                     inner.append('<div class="carousel-item' + (i === 0 ? ' active' : '') + '"><img src="uploads/' + s.image + '" alt="' + (s.title || 'Slide') + '"></div>');
                 });
+                $('#mainSliderWrap').show();
             });
         }
 
@@ -480,18 +476,25 @@
 
         function loadHomeAbout() {
             $.get('/api/settings?' + Date.now(), function(s) {
-                if (!s) return;
-                if (s.about_heading) $('#aboutHeading').text(s.about_heading);
-                if (s.about_text) $('#aboutTextP').html(s.about_text);
-                if (s.about_mission) $('#aboutMissionP').text(s.about_mission);
-                if (s.about_vision) $('#aboutVisionP').text(s.about_vision);
-                if (s.about_image) $('#aboutImage').attr('src', 'uploads/' + s.about_image);
+                var hasContent = s && ((s.about_text && s.about_text.trim()) || (s.about_mission && s.about_mission.trim()) || (s.about_vision && s.about_vision.trim()));
+                if (!hasContent) { $('#aboutSection').hide(); return; }
+                $('#aboutHeading').text(s.about_heading || 'About Us');
+                if (s.about_text && s.about_text.trim()) $('#aboutTextP').html(s.about_text); else $('#aboutTextP').hide();
+                if (s.about_mission && s.about_mission.trim()) { $('#aboutMissionP').text(s.about_mission); $('#aboutMissionWrap').show(); }
+                if (s.about_vision && s.about_vision.trim()) { $('#aboutVisionP').text(s.about_vision); $('#aboutVisionWrap').show(); }
+                $('#aboutImage').attr('src', s.about_image ? 'uploads/' + s.about_image : 'images/IMG-20260708-WA0006.jpg');
+                $('#aboutSection').show();
+                if (typeof AOS !== 'undefined') AOS.refresh();
             });
         }
 
         function loadActivities() {
             $.get('/api/activities?' + Date.now(), function(activities) {
-                if (!activities || activities.length === 0) return;
+                if (!activities || activities.length === 0) {
+                    $('#recentActivityBox').hide();
+                    $('#latestActivity').hide();
+                    return;
+                }
                 // Latest Activity cards (top 4)
                 var list = $('#activityList');
                 list.empty();
@@ -500,6 +503,7 @@
                     var time = a.created_at ? '<small><i class="fa fa-clock-o"></i> ' + timeSince(new Date(a.created_at)) + '</small>' : '';
                     list.append('<div class="activity-item"><img src="' + imgSrc + '" alt="Activity"><div class="activity-text"><h6>' + (a.title || 'Activity') + '</h6><p>' + (a.description || '') + '</p>' + time + '</div></div>');
                 });
+                $('#latestActivity').show();
                 // Recent Activity ticker (marquee) — all items
                 var mq = $('#recentActivityMarquee');
                 if (mq.length) {
@@ -508,6 +512,8 @@
                         mq.append('<p><i class="fa fa-check-circle" style="color:var(--green);"></i> ' + (a.title || '') + '</p>');
                     });
                 }
+                $('#recentActivityBox').show();
+                if (typeof AOS !== 'undefined') AOS.refresh();
             });
         }
 

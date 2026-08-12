@@ -538,6 +538,7 @@
                             <div class="col-md-6"><label>Site Name</label><input type="text" class="form-control form-control-sm" data-key="site_name"></div>
                             <div class="col-md-6"><label>Site Name (Hindi)</label><input type="text" class="form-control form-control-sm" data-key="site_name_hi"></div>
                             <div class="col-md-6"><label>Tagline</label><input type="text" class="form-control form-control-sm" data-key="tagline"></div>
+                            <div class="col-md-6"><label>Gaushala Official Mobile No.</label><input type="text" class="form-control form-control-sm" data-key="official_mobile"></div>
                             <div class="col-md-6"><label>CIN Number</label><input type="text" class="form-control form-control-sm" data-key="cin_number"></div>
                             <div class="col-md-6"><label>Registration Number</label><input type="text" class="form-control form-control-sm" data-key="registration_number"></div>
                             <div class="col-md-12"><hr><strong>Bank Details</strong></div>
@@ -690,13 +691,13 @@
 
     function renderMembers(list){
         if(!list||!list.length){$('#membersTable').html('<div class="empty-state"><i class="fa fa-users"></i> No members</div>');return;}
-        var h='<table class="table table-hover"><thead><tr><th>Photo</th><th>Name</th><th>Phone</th><th>Email</th><th>ID Card</th><th>Roles</th><th>Working Valid Till</th><th>Status</th><th>Action</th></tr></thead><tbody>';
-        list.forEach(function(m){
+        var h='<table class="table table-hover"><thead><tr><th>Sl. No.</th><th>Photo</th><th>Name</th><th>Phone</th><th>Email</th><th>ID Card</th><th>Roles</th><th>Working Valid Till</th><th>Status</th><th>Action</th></tr></thead><tbody>';
+        list.forEach(function(m,i){
             var ph=m.photo?'<img src="/uploads/'+m.photo+'" class="member-photo">':'<i class="fa fa-user-circle" style="font-size:30px;color:#ccc;"></i>';
             var badge='badge-'+(m.status||'pending');
             var roles = m.roles ? m.roles.split(',').map(function(r){return '<span class="badge-role">'+r.trim()+'</span>';}).join('') : '<span style="color:#ccc;">-</span>';
             var validTill = m.working_valid_till ? fmtDate(m.working_valid_till) : '<span style="color:#ccc;">-</span>';
-            h+='<tr><td>'+ph+'</td><td>'+esc(m.name)+'</td><td>'+esc(m.phone)+'</td><td>'+esc(m.email||'-')+'</td><td>'+esc(m.id_card_number||'-')+'</td>';
+            h+='<tr><td>'+(i+1)+'</td><td>'+ph+'</td><td>'+esc(m.name)+'</td><td>'+esc(m.phone)+'</td><td>'+esc(m.email||'-')+'</td><td>'+esc(m.id_card_number||'-')+'</td>';
             h+='<td>'+roles+'</td><td>'+validTill+'</td>';
             h+='<td><span class="'+badge+'">'+(m.status||'pending')+'</span></td><td style="white-space:nowrap;">';
             if(m.status==='pending'){

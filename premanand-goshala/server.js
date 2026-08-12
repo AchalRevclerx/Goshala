@@ -27,6 +27,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const IS_PROD = process.env.NODE_ENV === 'production';
 
+// Single admin credentials sourced from .env. When set, these take priority in
+// the login check (username + password); DB users remain a fallback.
+const ADMIN_USERNAME = (process.env.ADMIN_USERNAME || '').trim();
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+
 // JWT secret resolution. Prefer the environment variable. If it's not set, we
 // generate one ONCE and persist it to disk so it survives restarts — otherwise
 // every restart would invalidate all issued tokens and log everyone out. It is
@@ -98,12 +103,17 @@ app.use('/api/', apiLimiter);
 const PUBLIC_DIR = __dirname;
 const UPLOADS_DIR = path.join(PUBLIC_DIR, 'uploads');
 const DATA_DIR = path.join(__dirname, 'data');
-const DB_PATH = path.join(DATA_DIR, 'goshala.db');
+// DB location. Override with DB_PATH to a persistent path OUTSIDE the deploy
+// directory so a git-pull / redeploy can never overwrite or delete it.
+const DB_PATH = process.env.DB_PATH || path.join(DATA_DIR, 'goshala.db');
 // Backups go to a separate dir; override with BACKUP_DIR to a persistent path on the host.
 const BACKUP_DIR = process.env.BACKUP_DIR || path.join(DATA_DIR, 'backups');
 const BACKUP_RETENTION = parseInt(process.env.BACKUP_RETENTION || '14', 10); // keep N most recent
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+// Ensure the DB's own directory exists (it may live outside DATA_DIR via DB_PATH).
+const DB_DIR = path.dirname(DB_PATH);
+if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR, { recursive: true });
 
@@ -325,8 +335,8 @@ async function initDB() {
 
   const existing = queryOne('SELECT COUNT(*) as count FROM users');
   if (existing.count === 0) {
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@goshala.org';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    const adminEmail = process.env.ADMIN_EMAIL || ADMIN_USERNAME || 'admin@goshala.org';
+    const adminPassword = ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || 'admin123';
     const hash = bcrypt.hashSync(adminPassword, 12);
     runSQL('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)', [
       'Super Admin', adminEmail, hash, 'admin'
@@ -346,6 +356,7 @@ async function initDB() {
       ['address', 'Gaushala Road, Vrindavan, District Mathura, Uttar Pradesh - 281121'],
       ['phone', '+91-7000000000'],
       ['phone2', '+91-7000000001'],
+      ['official_mobile', '+91-7000000000'],
       ['email', 'info@premanandgaushala.org'],
       ['cin_number', 'U00000UP2024NPL000000'],
       ['registration_number', 'REG/2024/000001'],
@@ -405,6 +416,14 @@ async function initDB() {
     ['president_image', '']
   ];
   presidentDefaults.forEach(([key, value]) => {
+    const exists = queryOne('SELECT id FROM settings WHERE key = ?', [key]);
+    if (!exists) runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
+  });
+
+  const miscDefaults = [
+    ['official_mobile', '+91-7000000000']
+  ];
+  miscDefaults.forEach(([key, value]) => {
     const exists = queryOne('SELECT id FROM settings WHERE key = ?', [key]);
     if (!exists) runSQL('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
   });
@@ -469,11 +488,20 @@ app.put('/api/settings', authMiddleware, adminMiddleware, (req, res) => {
 
 // ===== Auth API =====
 app.post('/api/auth/login', authLimiter, (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password required' });
+  const identifier = String(req.body.username || req.body.email || '').trim();
+  const password = req.body.password || '';
+  if (!identifier || !password) {
+    return res.status(400).json({ error: 'Username and password required' });
   }
-  const user = queryOne('SELECT * FROM users WHERE email = ?', [email]);
+  // Env-configured single admin (ADMIN_USERNAME / ADMIN_PASSWORD) takes priority.
+  if (ADMIN_USERNAME && ADMIN_PASSWORD) {
+    if (identifier === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      const token = jwt.sign({ id: 0, email: ADMIN_USERNAME, role: 'admin', name: 'Super Admin' }, JWT_SECRET, { expiresIn: '7d' });
+      return res.json({ token, user: { id: 0, name: 'Super Admin', email: ADMIN_USERNAME, role: 'admin' } });
+    }
+  }
+  // Fall back to DB users (email-based login).
+  const user = queryOne('SELECT * FROM users WHERE email = ?', [identifier]);
   if (!user || !bcrypt.compareSync(password, user.password)) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
@@ -1107,6 +1135,7 @@ app.get('/api/member/search', noCacheMiddleware, (req, res) => {
     email: member.email,
     address: member.address,
     photo: member.photo,
+    roles: member.roles || '',
     joinDate: member.valid_from,
     validTill: member.valid_till
   });

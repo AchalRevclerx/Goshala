@@ -13,7 +13,9 @@ const fs = require('fs');
 const Database = require('better-sqlite3');
 
 const DATA_DIR = path.join(__dirname, 'data');
-const DB_PATH = path.join(DATA_DIR, 'goshala.db');
+// Honor DB_PATH so backups target the same database the server uses (which now
+// lives outside the deploy directory). Falls back to the legacy in-repo path.
+const DB_PATH = process.env.DB_PATH || path.join(DATA_DIR, 'goshala.db');
 const BACKUP_DIR = process.env.BACKUP_DIR || path.join(DATA_DIR, 'backups');
 const BACKUP_RETENTION = parseInt(process.env.BACKUP_RETENTION || '14', 10);
 
