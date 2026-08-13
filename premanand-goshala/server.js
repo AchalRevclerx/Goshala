@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
-const Database = require('better-sqlite3');
+const { DatabaseSync } = require('node:sqlite');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -170,11 +170,11 @@ function removeUpload(filename) {
 }
 
 async function initDB() {
-  db = new Database(DB_PATH);
+  db = new DatabaseSync(DB_PATH);
   // WAL + synchronous NORMAL: durable, crash-safe, and safe under concurrent access.
-  db.pragma('journal_mode = WAL');
-  db.pragma('synchronous = NORMAL');
-  db.pragma('foreign_keys = ON');
+  db.exec('PRAGMA journal_mode = WAL');
+  db.exec('PRAGMA synchronous = NORMAL');
+  db.exec('PRAGMA foreign_keys = ON');
 
   db.exec(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

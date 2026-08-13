@@ -37,7 +37,9 @@ Database: /home/USER/goshala-data/goshala-production.db    ← production
 ## 1. How it works
 
 The app is a **Node.js + Express** server (`server.js`) using a **SQLite**
-database via `better-sqlite3`. It serves the static HTML pages and a JSON API.
+database via Node's built-in `node:sqlite` (`DatabaseSync`) — no native
+compilation is needed, which is what makes it deployable on Hostinger. It serves
+the static HTML pages and a JSON API.
 
 Each database is a single file (e.g. `goshala-local.db`) plus two temporary
 sidecar files (`...-wal` and `...-shm`) that exist only while the app runs.

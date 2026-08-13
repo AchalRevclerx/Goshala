@@ -10,7 +10,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const Database = require('better-sqlite3');
+const { DatabaseSync } = require('node:sqlite');
 
 const DATA_DIR = path.join(__dirname, 'data');
 // Honor DB_PATH so backups target the same database the server uses (which now
@@ -33,7 +33,7 @@ async function main() {
   let dest = path.join(BACKUP_DIR, `goshala-${stamp}.db`);
   for (let i = 1; fs.existsSync(dest); i++) dest = path.join(BACKUP_DIR, `goshala-${stamp}-${i}.db`);
 
-  const db = new Database(DB_PATH);
+  const db = new DatabaseSync(DB_PATH);
   try {
     db.prepare('VACUUM INTO ?').run(dest);
   } finally {

@@ -4,13 +4,15 @@
   "description": "Shri Premanand Goshala - Cow Shelter Website",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
-    "backup": "node backup.js"
+    "start": "node --disable-warning=ExperimentalWarning server.js",
+    "dev": "node --disable-warning=ExperimentalWarning server.js",
+    "backup": "node --disable-warning=ExperimentalWarning backup.js"
+  },
+  "engines": {
+    "node": ">=22.13.0"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "better-sqlite3": "^13.0.3",
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
     "express": "^4.18.2",
