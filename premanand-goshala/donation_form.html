@@ -144,9 +144,7 @@
                                         <button type="button" class="btn btn-sm btn-danger mt-2" id="removeReceipt"><i class="fa fa-times"></i> Remove</button>
                                     </div>
                                 </div>
-                                <button type="button" id="payOnlineBtn" class="pay-online-btn" style="display:none;"><i class="fa fa-lock"></i> Pay Securely Online</button>
-                                <div class="pay-divider" id="payDivider" style="display:none;"><span>or record a manual / bank / UPI payment</span></div>
-                                <button type="submit" class="donate-submit-btn"><i class="fa fa-heart"></i> Donate Now</button>
+                                <button type="submit" id="payNowBtn" class="pay-online-btn"><i class="fa fa-lock"></i> Pay Now</button>
                                 <p class="pay-secure-note" id="paySecureNote" style="display:none;"><i class="fa fa-shield"></i> Secured by Razorpay — UPI, Cards, Net Banking &amp; Wallets</p>
                             </form>
                             <div id="donationFormMsg" class="mt-3"></div>
@@ -228,11 +226,13 @@
                 if (s.upi_id) $('#donate-upi-id').text(s.upi_id);
             });
 
-            // Load payment config; show the "Pay Online" button only if Razorpay is set up.
+            // Load payment config; open Razorpay checkout when set up, otherwise record a manual donation.
             $.get('/api/payment/config?' + Date.now(), function(cfg) {
                 payConfig = cfg || payConfig;
                 if (payConfig.razorpay_enabled) {
-                    $('#payOnlineBtn, #payDivider, #paySecureNote').show();
+                    $('#paySecureNote').html('<i class="fa fa-shield"></i> Secured by Razorpay — UPI, Cards, Net Banking &amp; Wallets').show();
+                } else {
+                    $('#paySecureNote').html('<i class="fa fa-info-circle"></i> Pay online is unavailable — your donation will be recorded here and you can pay via the bank / UPI details on the right.').show();
                 }
             });
 
@@ -265,38 +265,49 @@
             });
             $('input[name="amount"]').on('input', scheduleQr);
 
-            // ===== Pay Online (Razorpay) =====
-            $('#payOnlineBtn').on('click', function() {
+            // ===== Pay Now: Razorpay online when enabled, otherwise record a manual donation =====
+            function validateForm() {
                 var donor_name = $('input[name="donor_name"]').val().trim();
                 var phone = $('input[name="phone"]').val().trim();
-                var email = $('input[name="email"]').val().trim();
-                var address = $('textarea[name="address"]').val().trim();
-                var purpose = $('select[name="purpose"]').val();
-                var amount = currentAmount();
                 if (!donor_name || !phone) {
                     $('#donationFormMsg').html('<div class="alert alert-warning">Please enter your name and mobile number.</div>');
-                    return;
+                    return null;
                 }
+                var amount = currentAmount();
                 if (!amount || amount < 1) {
                     $('#donationFormMsg').html('<div class="alert alert-warning">Please enter a valid amount.</div>');
-                    return;
+                    return null;
                 }
-                var btn = $(this);
+                return {
+                    donor_name: donor_name, phone: phone,
+                    email: $('input[name="email"]').val().trim(),
+                    address: $('textarea[name="address"]').val().trim(),
+                    purpose: $('select[name="purpose"]').val(),
+                    amount: amount
+                };
+            }
+
+            function resetPayBtn() {
+                $('#payNowBtn').prop('disabled', false).html('<i class="fa fa-lock"></i> Pay Now');
+            }
+
+            function payWithRazorpay(d) {
+                var btn = $('#payNowBtn');
                 btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Starting secure payment…');
                 $('#donationFormMsg').html('');
 
                 $.ajax({
                     url: '/api/payment/order', type: 'POST', contentType: 'application/json',
-                    data: JSON.stringify({ amount: amount, donor_name: donor_name, phone: phone, purpose: purpose }),
+                    data: JSON.stringify({ amount: d.amount, donor_name: d.donor_name, phone: d.phone, purpose: d.purpose }),
                     success: function(order) {
                         var options = {
                             key: order.key_id,
                             amount: order.amount,
                             currency: order.currency,
                             name: payConfig.payee_name || 'Donation',
-                            description: purpose || 'Donation',
+                            description: d.purpose || 'Donation',
                             order_id: order.order_id,
-                            prefill: { name: donor_name, contact: phone, email: email },
+                            prefill: { name: d.donor_name, contact: d.phone, email: d.email },
                             theme: { color: '#8B4513' },
                             handler: function(resp) {
                                 $('#donationFormMsg').html('<div class="alert alert-info"><i class="fa fa-spinner fa-spin"></i> Confirming payment…</div>');
@@ -306,8 +317,8 @@
                                         razorpay_order_id: resp.razorpay_order_id,
                                         razorpay_payment_id: resp.razorpay_payment_id,
                                         razorpay_signature: resp.razorpay_signature,
-                                        donor_name: donor_name, phone: phone, email: email,
-                                        address: address, purpose: purpose
+                                        donor_name: d.donor_name, phone: d.phone, email: d.email,
+                                        address: d.address, purpose: d.purpose
                                     }),
                                     success: function(vr) {
                                         $('#donationFormMsg').html('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + vr.message + ' Payment ID: ' + (vr.payment_id || resp.razorpay_payment_id) + '</div>');
@@ -321,48 +332,27 @@
                                     }
                                 });
                             },
-                            modal: { ondismiss: function() {
-                                btn.prop('disabled', false).html('<i class="fa fa-lock"></i> Pay Securely Online');
-                            }}
+                            modal: { ondismiss: resetPayBtn }
                         };
                         var rzp = new Razorpay(options);
                         rzp.on('payment.failed', function(resp) {
                             $('#donationFormMsg').html('<div class="alert alert-danger">Payment failed: ' + (resp.error && resp.error.description || 'Please try again.') + '</div>');
                         });
                         rzp.open();
-                        btn.prop('disabled', false).html('<i class="fa fa-lock"></i> Pay Securely Online');
+                        resetPayBtn();
                     },
                     error: function(xhr) {
                         var msg = (xhr.responseJSON && xhr.responseJSON.error) || 'Could not start payment.';
                         $('#donationFormMsg').html('<div class="alert alert-danger">' + msg + '</div>');
-                        btn.prop('disabled', false).html('<i class="fa fa-lock"></i> Pay Securely Online');
+                        resetPayBtn();
                     }
                 });
-            });
+            }
 
-            $('#uploadBox').on('click', function() { $('#receiptInput').click(); });
-            $('#receiptInput').on('change', function(e) {
-                if (e.target.files && e.target.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = function(ev) {
-                        $('#previewImage').attr('src', ev.target.result);
-                        $('#previewContainer').show();
-                        $('#uploadBox').hide();
-                    };
-                    reader.readAsDataURL(e.target.files[0]);
-                }
-            });
-            $('#removeReceipt').on('click', function() {
-                $('#receiptInput').val('');
-                $('#previewContainer').hide();
-                $('#uploadBox').show();
-            });
-
-            $('#donationForm').on('submit', function(e) {
-                e.preventDefault();
-                var btn = $(this).find('button[type="submit"]');
+            function submitManual() {
+                var btn = $('#payNowBtn');
                 btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Processing...');
-                var formData = new FormData(this);
+                var formData = new FormData($('#donationForm')[0]);
                 $.ajax({
                     url: '/api/donate',
                     type: 'POST',
@@ -381,9 +371,38 @@
                         $('#donationFormMsg').html('<div class="alert alert-danger">' + msg + '</div>');
                     },
                     complete: function() {
-                        btn.prop('disabled', false).html('<i class="fa fa-heart"></i> Donate Now');
+                        resetPayBtn();
                     }
                 });
+            }
+
+            $('#donationForm').on('submit', function(e) {
+                e.preventDefault();
+                var d = validateForm();
+                if (!d) return;
+                if (payConfig.razorpay_enabled) {
+                    payWithRazorpay(d);
+                } else {
+                    submitManual();
+                }
+            });
+
+            $('#uploadBox').on('click', function() { $('#receiptInput').click(); });
+            $('#receiptInput').on('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(ev) {
+                        $('#previewImage').attr('src', ev.target.result);
+                        $('#previewContainer').show();
+                        $('#uploadBox').hide();
+                    };
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+            $('#removeReceipt').on('click', function() {
+                $('#receiptInput').val('');
+                $('#previewContainer').hide();
+                $('#uploadBox').show();
             });
         });
     </script>
