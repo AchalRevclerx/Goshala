@@ -35,6 +35,9 @@
         .pay-divider::before,.pay-divider::after{content:'';flex:1;border-bottom:1px solid #ddd;}
         .pay-divider span{padding:0 12px;}
         .pay-secure-note{font-size:12px;color:#888;text-align:center;margin-top:6px;}
+        .manual-donate-btn{width:100%;background:transparent;color:var(--background-color);border:1px dashed var(--gold);padding:10px;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;transition:0.3s;font-family:'Bree Serif',serif;margin-top:4px;}
+        .manual-donate-btn:hover{background:rgba(212,160,23,0.1);}
+        .manual-donate-btn:disabled{opacity:0.6;cursor:not-allowed;}
         .upload-box{border:2px dashed var(--gold);border-radius:12px;padding:30px;text-align:center;background:rgba(212,160,23,0.05);cursor:pointer;transition:0.3s;}
         .upload-box:hover{background:rgba(212,160,23,0.1);}
         .upload-box i{font-size:40px;color:var(--gold);margin-bottom:10px;}
@@ -146,6 +149,7 @@
                                 </div>
                                 <button type="submit" id="payNowBtn" class="pay-online-btn"><i class="fa fa-lock"></i> Pay Now</button>
                                 <p class="pay-secure-note" id="paySecureNote" style="display:none;"><i class="fa fa-shield"></i> Secured by Razorpay — UPI, Cards, Net Banking &amp; Wallets</p>
+                                <button type="button" id="manualDonateBtn" class="manual-donate-btn" style="display:none;"><i class="fa fa-file-text-o"></i> Record a manual / bank / UPI donation</button>
                             </form>
                             <div id="donationFormMsg" class="mt-3"></div>
                         </div>
@@ -226,13 +230,18 @@
                 if (s.upi_id) $('#donate-upi-id').text(s.upi_id);
             });
 
-            // Load payment config; open Razorpay checkout when set up, otherwise record a manual donation.
+            // Load payment config. When online payment is enabled, Pay Now opens
+            // Razorpay Checkout. When it is NOT enabled, Pay Now shows a clear
+            // error instead of silently recording an unpaid donation; the
+            // separate manual-recording button remains available as the intended
+            // offline/bank/UPI flow.
             $.get('/api/payment/config?' + Date.now(), function(cfg) {
                 payConfig = cfg || payConfig;
                 if (payConfig.razorpay_enabled) {
                     $('#paySecureNote').html('<i class="fa fa-shield"></i> Secured by Razorpay — UPI, Cards, Net Banking &amp; Wallets').show();
                 } else {
-                    $('#paySecureNote').html('<i class="fa fa-info-circle"></i> Pay online is unavailable — your donation will be recorded here and you can pay via the bank / UPI details on the right.').show();
+                    $('#paySecureNote').html('<i class="fa fa-info-circle"></i> Online payment is not available right now. Pay via the bank / UPI details on the right, or record your manual donation below.').show();
+                    $('#manualDonateBtn').show();
                 }
             });
 
@@ -380,11 +389,20 @@
                 e.preventDefault();
                 var d = validateForm();
                 if (!d) return;
-                if (payConfig.razorpay_enabled) {
-                    payWithRazorpay(d);
-                } else {
-                    submitManual();
+                if (!payConfig.razorpay_enabled) {
+                    // Never pretend an online donation was successful when
+                    // Razorpay is unavailable — tell the user no payment was taken.
+                    $('#donationFormMsg').html('<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Online payment is temporarily unavailable and <strong>no donation was recorded</strong>. Please pay via the bank / UPI details on the right, or use the "Record a manual / bank / UPI donation" button below.</div>');
+                    return;
                 }
+                payWithRazorpay(d);
+            });
+
+            // Explicit, separate offline flow (bank transfer / UPI) — the only
+            // path that records a donation without Razorpay verification.
+            $('#manualDonateBtn').on('click', function() {
+                if (!validateForm()) return;
+                submitManual();
             });
 
             $('#uploadBox').on('click', function() { $('#receiptInput').click(); });

@@ -1,4 +1,10 @@
-require('dotenv').config();
+// Load .env deterministically from the app folder (this file's directory), so the
+// process finds it regardless of the working directory it was started from. The
+// result is kept for startup diagnostics (whether the file was actually found).
+const dotenvResult = require('dotenv').config({
+  path: require('path').join(__dirname, '.env'),
+  quiet: true,
+});
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -16,8 +22,13 @@ const { v4: uuidv4 } = require('uuid');
 
 // Razorpay client — only enabled when both keys are provided via env.
 // The SECRET stays on the server; only the public key_id is ever sent to the browser.
-const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
-const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
+// Keys are read from the process environment first; if the host injects them as
+// empty strings, we fall back to the values in the .env file (dotenv never
+// overrides already-set environment variables, including empty ones).
+const envOrDefault = (name) =>
+  process.env[name] || (dotenvResult.parsed && dotenvResult.parsed[name]) || '';
+const RAZORPAY_KEY_ID = envOrDefault('RAZORPAY_KEY_ID');
+const RAZORPAY_KEY_SECRET = envOrDefault('RAZORPAY_KEY_SECRET');
 const razorpayEnabled = Boolean(RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET);
 const razorpay = razorpayEnabled
   ? new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET })
@@ -581,7 +592,7 @@ app.post('/api/contact', (req, res) => {
 app.post('/api/donate', upload.fields([
   { name: 'photo', maxCount: 5 }
 ]), (req, res) => {
-  const { donor_name, phone, email, pan, address, amount, purpose, payment_method, transaction_id } = req.body;
+  const { donor_name, phone, email, pan, address, amount, purpose, transaction_id } = req.body;
   if (!donor_name || !phone || !amount) {
     return res.status(400).json({ error: 'Name, phone, and amount required' });
   }
@@ -590,10 +601,14 @@ app.post('/api/donate', upload.fields([
     return res.status(400).json({ error: 'Amount must be a positive number' });
   }
   const photoPaths = req.files?.photo ? req.files.photo.map(f => f.filename) : [];
+  // payment_method is deliberately forced to 'offline' here. The public form can
+  // only record manual/bank/UPI donations; an 'online' payment is recorded ONLY
+  // by /api/payment/verify after server-side Razorpay signature verification.
+  // This prevents a client from faking an "online" paid donation.
   runSQL(
     'INSERT INTO donations (donor_name, phone, email, pan, address, amount, purpose, payment_method, transaction_id, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [donor_name, phone, email || null, pan || null, address || null,
-    amt, purpose || null, payment_method || 'offline', transaction_id || null,
+    amt, purpose || null, 'offline', transaction_id || null,
     photoPaths.join(',')]
   );
   res.status(201).json({ success: true, message: 'Donation recorded successfully' });
@@ -610,6 +625,10 @@ app.get('/api/payment/config', noCacheMiddleware, (req, res) => {
     key_id: RAZORPAY_KEY_ID,
     upi_id: upiRow ? upiRow.value : '',
     payee_name: nameRow ? nameRow.value : '',
+    // Human-readable reason the frontend can surface when online payment is off.
+    razorpay_disabled_reason: razorpayEnabled
+      ? null
+      : 'RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET are not set in the server environment',
   });
 });
 
@@ -1383,7 +1402,10 @@ initDB().then(() => {
     console.log(`Database: ${DB_PATH}`);
     console.log(`Uploads: ${UPLOADS_DIR}`);
     console.log(`Backups: ${BACKUP_DIR}`);
-    console.log(`Razorpay online payments: ${razorpayEnabled ? 'ENABLED' : 'disabled (set RAZORPAY_KEY_ID/RAZORPAY_KEY_SECRET)'}`);
+    console.log(`Razorpay online payments: ${razorpayEnabled ? 'ENABLED' : 'DISABLED (no RAZORPAY_KEY_ID/RAZORPAY_KEY_SECRET in env)'}`);
+    // Safe diagnostics for production troubleshooting — never prints the secret.
+    console.log(`  dotenv: ${dotenvResult.error ? 'NO .env FILE LOADED (' + (dotenvResult.error.code || 'error') + ')' : 'loaded from ' + path.join(__dirname, '.env')}`);
+    console.log(`  key_id: ${RAZORPAY_KEY_ID ? RAZORPAY_KEY_ID.slice(0, 8) + '...' : '(empty)'} | key_secret configured: ${Boolean(RAZORPAY_KEY_SECRET)}`);
   });
 }).catch(err => {
   console.error('Failed to initialize database:', err);
