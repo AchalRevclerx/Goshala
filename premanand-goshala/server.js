@@ -950,13 +950,32 @@ app.put('/api/members/:id/status', authMiddleware, (req, res) => {
 });
 
 app.put('/api/members/:id', authMiddleware, (req, res) => {
-  const { status, roles, working_valid_till } = req.body;
+  const { status, roles, working_valid_till, name, phone, email, address } = req.body;
   const member = queryOne('SELECT * FROM members WHERE id = ?', [req.params.id]);
   if (!member) return res.status(404).json({ error: 'Member not found' });
+
   const newStatus = status || member.status;
   const newRoles = roles !== undefined ? roles : (member.roles || '');
   const newValidTill = working_valid_till !== undefined ? working_valid_till : (member.working_valid_till || '');
-  runSQL('UPDATE members SET status = ?, roles = ?, working_valid_till = ? WHERE id = ?', [newStatus, newRoles, newValidTill, req.params.id]);
+
+  // Editable member fields — let admin correct wrong details from the application.
+  const newName = (name !== undefined && String(name).trim()) ? String(name).trim() : member.name;
+  const newPhone = (phone !== undefined && String(phone).trim()) ? String(phone).trim() : member.phone;
+  const newEmail = email !== undefined ? (String(email).trim() || null) : member.email;
+  const newAddress = address !== undefined ? (String(address).trim() || null) : member.address;
+
+  // Phone/email must stay unique across other members.
+  const phoneClash = queryOne('SELECT id FROM members WHERE phone = ? AND id != ?', [newPhone, req.params.id]);
+  if (phoneClash) return res.status(400).json({ error: 'Another member already uses this phone number.' });
+  if (newEmail) {
+    const emailClash = queryOne('SELECT id FROM members WHERE email = ? AND id != ?', [newEmail, req.params.id]);
+    if (emailClash) return res.status(400).json({ error: 'Another member already uses this email address.' });
+  }
+
+  runSQL(
+    'UPDATE members SET status = ?, roles = ?, working_valid_till = ?, name = ?, phone = ?, email = ?, address = ? WHERE id = ?',
+    [newStatus, newRoles, newValidTill, newName, newPhone, newEmail, newAddress, req.params.id]
+  );
   res.json({ success: true });
 });
 

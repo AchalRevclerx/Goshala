@@ -144,8 +144,8 @@
             var photoHtml = photoSrc
                 ? '<img src="' + photoSrc + '" alt="Photo">'
                 : '<div class="placeholder"><i class="fa fa-user"></i></div>';
-            var joinDate = new Date(data.joinDate).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
-            var validTill = new Date(data.validTill).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+            var joinDate = fmtDateIN(data.joinDate);
+            var validTill = fmtDateIN(data.validTill);
             var roleText = (data.roles && data.roles.trim()) ? data.roles.split(',').map(function(r){return r.trim();}).filter(Boolean).join(', ') : 'Member';
 
             var cardHtml = '<div class="idcard-preview">' +

@@ -193,7 +193,7 @@
                 }
                 var html = '<div class="receipts-table-wrap" data-aos="fade-up"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>#</th><th>Donor Name</th><th>Amount</th><th>Payment Method</th><th>Status</th><th>Date</th><th>Receipt</th></tr></thead><tbody>';
                 donations.forEach(function(d, i) {
-                    var dt = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN', { year:'numeric', month:'short', day:'numeric' }) : '-';
+                    var dt = fmtDateIN(d.created_at);
                     var amount = '\u20B9' + (parseFloat(d.amount) || 0).toLocaleString('en-IN');
                     var status = d.status || 'pending';
                     var badgeClass = 'badge-pending';
@@ -217,7 +217,7 @@
         function showReceipt(index) {
             var d = _myDonations[index];
             if (!d) return;
-            var dt = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN', { year:'numeric', month:'long', day:'numeric' }) : '-';
+            var dt = fmtDateIN(d.created_at);
             var amount = '\u20B9' + (parseFloat(d.amount) || 0).toLocaleString('en-IN');
             var receiptNo = 'REC-' + (d.id || (index + 1));
             var photoHtml = d.photo ? '<tr><td>Photo</td><td><img src="/uploads/' + d.photo + '" style="max-width:80px;border-radius:6px;"></td></tr>' : '';

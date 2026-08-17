@@ -203,6 +203,10 @@
                             <p style="font-size:13px;color:#666;margin-bottom:2px;">UPI ID</p>
                             <p style="font-size:15px;font-weight:bold;color:var(--background-color);" id="donate-upi-id">-</p>
                             <p style="font-size:12px;color:#999;" id="upiQrAmountNote"></p>
+                            <hr style="margin:14px 0;">
+                            <p style="font-size:12px;color:#666;margin-bottom:8px;">Paid using the QR above? Confirm it so your donation is recorded and shows in your receipts.</p>
+                            <button type="button" id="upiPaidBtn" class="donate-submit-btn" style="width:100%;background:var(--green);"><i class="fa fa-check-circle"></i> I've Paid via UPI</button>
+                            <div id="upiPaidMsg" class="mt-2"></div>
                         </div>
                     </div>
                 </div>
@@ -403,6 +407,57 @@
             $('#manualDonateBtn').on('click', function() {
                 if (!validateForm()) return;
                 submitManual();
+            });
+
+            // ===== Confirm UPI QR payment — record it so it appears in donor list / receipts =====
+            $('#upiPaidBtn').on('click', function() {
+                var donor_name = $('input[name="donor_name"]').val().trim();
+                var phone = $('input[name="phone"]').val().trim();
+                var email = $('input[name="email"]').val().trim();
+                var address = $('textarea[name="address"]').val().trim();
+                var purpose = $('select[name="purpose"]').val();
+                var amount = currentAmount();
+                if (!donor_name || !phone) {
+                    $('#upiPaidMsg').html('<div class="alert alert-warning" style="font-size:13px;">Please enter your name and mobile number above first.</div>');
+                    return;
+                }
+                if (!amount || amount < 1) {
+                    $('#upiPaidMsg').html('<div class="alert alert-warning" style="font-size:13px;">Please enter the amount you paid above.</div>');
+                    return;
+                }
+                var ref = window.prompt('Enter your UPI reference / transaction ID (optional but recommended):', '');
+                if (ref === null) return; // user cancelled
+                ref = (ref || '').trim();
+
+                var btn = $(this);
+                btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Recording…');
+
+                var fd = new FormData();
+                fd.append('donor_name', donor_name);
+                fd.append('phone', phone);
+                fd.append('email', email);
+                fd.append('address', address);
+                fd.append('amount', amount);
+                fd.append('purpose', purpose);
+                fd.append('payment_method', 'upi');
+                if (ref) fd.append('transaction_id', ref);
+
+                $.ajax({
+                    url: '/api/donate', type: 'POST', data: fd, processData: false, contentType: false,
+                    success: function() {
+                        $('#upiPaidMsg').html('<div class="alert alert-success" style="font-size:13px;"><i class="fa fa-check-circle"></i> Thank you! Your UPI donation has been recorded. It will show in your receipts after verification.</div>');
+                        $('#donationForm')[0].reset();
+                        $('.amount-btn').removeClass('active');
+                        refreshUpiQr();
+                    },
+                    error: function(xhr) {
+                        var msg = (xhr.responseJSON && xhr.responseJSON.error) || 'Could not record your donation. Please try again.';
+                        $('#upiPaidMsg').html('<div class="alert alert-danger" style="font-size:13px;">' + msg + '</div>');
+                    },
+                    complete: function() {
+                        btn.prop('disabled', false).html('<i class="fa fa-check-circle"></i> I\'ve Paid via UPI');
+                    }
+                });
             });
 
             $('#uploadBox').on('click', function() { $('#receiptInput').click(); });

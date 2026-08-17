@@ -288,4 +288,34 @@ window.toggleMobileSubMenu = function(el) {
     $(el).find('.fa-chevron-down').toggleClass('fa-chevron-up');
 };
 
+/* ---- Date helpers (Indian format DD/MM/YYYY, IST) ----
+   Dates from the DB are UTC. SQLite datetime('now') has no timezone marker,
+   so we tag it as UTC before formatting to Asia/Kolkata. */
+function parseDBDate(d) {
+    if (d instanceof Date) return d;
+    if (d === null || d === undefined || d === '') return null;
+    var s = String(d).trim();
+    // 'YYYY-MM-DD HH:MM:SS' (SQLite) is UTC — normalise to ISO UTC
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(s)) s = s.replace(' ', 'T') + 'Z';
+    var dt = new Date(s);
+    return isNaN(dt.getTime()) ? null : dt;
+}
+window.parseDBDate = parseDBDate;
+
+// DD/MM/YYYY
+window.fmtDateIN = function(d) {
+    var dt = parseDBDate(d);
+    if (!dt) return '-';
+    return dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Kolkata' });
+};
+
+// DD/MM/YYYY, hh:mm am/pm
+window.fmtDateTimeIN = function(d) {
+    var dt = parseDBDate(d);
+    if (!dt) return '-';
+    var date = dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Kolkata' });
+    var time = dt.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' });
+    return date + ', ' + time;
+};
+
 })();

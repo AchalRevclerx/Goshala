@@ -763,7 +763,16 @@
         var currentRoles = m.roles ? m.roles.split(',').map(function(r){return r.trim();}) : [];
 
         ajax(API+'/member-roles/all').done(function(allRoles){
-            var html = '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Assign Roles</label><div class="checkbox-group">';
+            var html = '';
+            html += '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Name</label>';
+            html += '<input type="text" class="form-control form-control-sm" id="editMemberName" value="'+esc(m.name||'')+'"></div>';
+            html += '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Phone</label>';
+            html += '<input type="text" class="form-control form-control-sm" id="editMemberPhone" value="'+esc(m.phone||'')+'"></div>';
+            html += '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Email</label>';
+            html += '<input type="email" class="form-control form-control-sm" id="editMemberEmail" value="'+esc(m.email||'')+'"></div>';
+            html += '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Address</label>';
+            html += '<textarea class="form-control form-control-sm" id="editMemberAddress" rows="2">'+esc(m.address||'')+'</textarea></div>';
+            html += '<div style="margin-bottom:12px;"><label style="font-weight:600;font-size:13px;">Assign Roles</label><div class="checkbox-group">';
             allRoles.forEach(function(r){
                 var checked = currentRoles.indexOf(r)!==-1 ? 'checked' : '';
                 html += '<label><input type="checkbox" class="member-role-cb" value="'+r+'" '+checked+'> '+r+'</label>';
@@ -789,13 +798,21 @@
     function saveMemberEdit(id){
         var roles = [];
         $('.member-role-cb:checked').each(function(){ roles.push($(this).val()); });
+        var name = ($('#editMemberName').val()||'').trim();
+        var phone = ($('#editMemberPhone').val()||'').trim();
+        if(!name || !phone){ Swal.fire('Missing info','Name and phone are required.','warning'); return; }
         var payload = {
+            name: name,
+            phone: phone,
+            email: ($('#editMemberEmail').val()||'').trim(),
+            address: ($('#editMemberAddress').val()||'').trim(),
             roles: roles.join(', '),
             working_valid_till: $('#editMemberValidTill').val() || '',
             status: $('#editMemberStatus').val()
         };
         ajax(API+'/members/'+id,{method:'PUT',contentType:'application/json',data:JSON.stringify(payload)})
-            .done(function(){ closeMemberModal(); loadMembers(); });
+            .done(function(){ closeMemberModal(); loadMembers(); Swal.fire('Saved','Member details updated.','success'); })
+            .fail(function(xhr){ Swal.fire('Error',(xhr.responseJSON&&xhr.responseJSON.error)||'Failed to update member','error'); });
     }
 
     function approveMember(id){
@@ -846,7 +863,7 @@
                 ['Address',d.address],['Amount','\u20B9'+(parseFloat(d.amount)||0).toLocaleString('en-IN')],
                 ['Purpose',d.purpose],['Payment Method',(d.payment_method||'offline').replace('_',' ')],
                 ['Transaction ID',d.transaction_id],['Status',d.status],['Created By',d.created_by||'user'],
-                ['Date',d.created_at]
+                ['Date',fmtDateTime(d.created_at)]
             ];
             fields.forEach(function(f){
                 if(f[1]) html+='<tr><td style="padding:6px 10px;font-weight:600;color:#888;width:140px;">'+f[0]+'</td><td style="padding:6px 10px;">'+f[1]+'</td></tr>';
@@ -1485,7 +1502,17 @@
 
     /* =================== UTILS =================== */
     function esc(s){return s?(s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):'';}
-    function fmtDate(d){return d?new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'-';}
+    // DB dates are UTC. SQLite datetime('now') has no tz marker — tag as UTC, then show DD/MM/YYYY in IST.
+    function parseDBDate(d){
+        if(d instanceof Date) return d;
+        if(d===null||d===undefined||d==='') return null;
+        var s=(''+d).trim();
+        if(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(s)) s=s.replace(' ','T')+'Z';
+        var dt=new Date(s);
+        return isNaN(dt.getTime())?null:dt;
+    }
+    function fmtDate(d){var dt=parseDBDate(d);return dt?dt.toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'Asia/Kolkata'}):'-';}
+    function fmtDateTime(d){var dt=parseDBDate(d);if(!dt)return '-';return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'Asia/Kolkata'})+', '+dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true,timeZone:'Asia/Kolkata'});}
 
     $(document).on('click',function(e){ if($(e.target).hasClass('modal-overlay')){ $(e.target).removeClass('active'); } });
     $(document).on('keydown',function(e){ if(e.key==='Escape'){ $('.modal-overlay').removeClass('active'); } });

@@ -86,7 +86,7 @@
                     var html = '<div class="row">';
                     donations.forEach(function(d) {
                         var initial = d.donor_name ? d.donor_name.charAt(0).toUpperCase() : '?';
-                        var date = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN') : '';
+                        var date = fmtDateIN(d.created_at);
                         var amount = '\u20B9' + (parseFloat(d.amount) || 0).toLocaleString('en-IN');
                         var addr = d.address || '';
                         var parts = addr.split(',').map(function(p){ return p.trim(); });
