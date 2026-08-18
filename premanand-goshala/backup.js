@@ -1,48 +1,73 @@
 #!/usr/bin/env node
 // Standalone DB backup — run by cron, independent of the web server.
 //   node backup.js
-// Uses SQLite's "VACUUM INTO", which is safe to run while the app is live and
-// produces a compact, self-contained backup file (no WAL/SHM sidecars).
+// Dumps all table data as SQL INSERT statements from the Supabase PostgreSQL
+// database. Supabase also provides built-in daily backups and point-in-time
+// recovery on paid plans — this script is a supplementary safety net.
 //
-// Env overrides (should match server.js on the host):
-//   BACKUP_DIR        where to write backups (default: <project>/data/backups)
-//   BACKUP_RETENTION  how many recent backups to keep (default: 14)
+// Env overrides:
+//   DATABASE_URL       PostgreSQL connection string (from .env)
+//   BACKUP_DIR         where to write backups (default: <project>/data/backups)
+//   BACKUP_RETENTION   how many recent backups to keep (default: 14)
 
 const path = require('path');
 const fs = require('fs');
-const { DatabaseSync } = require('node:sqlite');
 
-const DATA_DIR = path.join(__dirname, 'data');
-// Honor DB_PATH so backups target the same database the server uses (which now
-// lives outside the deploy directory). Falls back to the legacy in-repo path.
-const DB_PATH = process.env.DB_PATH || path.join(DATA_DIR, 'goshala.db');
-const BACKUP_DIR = process.env.BACKUP_DIR || path.join(DATA_DIR, 'backups');
+require('dotenv').config({ path: path.join(__dirname, '.env'), quiet: true });
+
+const { Pool } = require('pg');
+
+const BACKUP_DIR = process.env.BACKUP_DIR || path.join(__dirname, 'data', 'backups');
 const BACKUP_RETENTION = parseInt(process.env.BACKUP_RETENTION || '14', 10);
 
+const TABLES = [
+  'users', 'members', 'donations', 'events', 'contacts',
+  'gallery', 'sliders', 'activities', 'achievements', 'documents',
+  'cows', 'settings', 'staff', 'member_roles'
+];
+
+function escapeVal(v) {
+  if (v === null || v === undefined) return 'NULL';
+  if (typeof v === 'number') return String(v);
+  if (typeof v === 'boolean') return v ? 'TRUE' : 'FALSE';
+  return "'" + String(v).replace(/'/g, "''") + "'";
+}
+
 async function main() {
-  if (!fs.existsSync(DB_PATH)) {
-    console.error(`No database found at ${DB_PATH} — nothing to back up.`);
+  if (!process.env.DATABASE_URL) {
+    console.error('DATABASE_URL is not set. Nothing to back up.');
     process.exit(1);
   }
   if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR, { recursive: true });
 
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+  });
+
   const now = new Date();
   const pad = n => String(n).padStart(2, '0');
   const stamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
-  // VACUUM INTO won't overwrite; ensure a unique path if one already exists this second.
-  let dest = path.join(BACKUP_DIR, `goshala-${stamp}.db`);
-  for (let i = 1; fs.existsSync(dest); i++) dest = path.join(BACKUP_DIR, `goshala-${stamp}-${i}.db`);
+  const dest = path.join(BACKUP_DIR, `goshala-${stamp}.sql`);
 
-  const db = new DatabaseSync(DB_PATH);
-  try {
-    db.prepare('VACUUM INTO ?').run(dest);
-  } finally {
-    db.close();
+  const lines = ['-- Goshala DB backup ' + now.toISOString(), ''];
+  for (const table of TABLES) {
+    const { rows } = await pool.query(`SELECT * FROM ${table} ORDER BY id`);
+    if (rows.length === 0) continue;
+    lines.push(`-- Table: ${table} (${rows.length} rows)`);
+    const cols = Object.keys(rows[0]);
+    for (const row of rows) {
+      const vals = cols.map(c => escapeVal(row[c]));
+      lines.push(`INSERT INTO ${table} (${cols.join(', ')}) VALUES (${vals.join(', ')});`);
+    }
+    lines.push('');
   }
+
+  fs.writeFileSync(dest, lines.join('\n'), 'utf8');
 
   // Retention: keep only the newest BACKUP_RETENTION files.
   const files = fs.readdirSync(BACKUP_DIR)
-    .filter(f => f.startsWith('goshala-') && f.endsWith('.db'))
+    .filter(f => f.startsWith('goshala-') && f.endsWith('.sql'))
     .sort();
   while (files.length > BACKUP_RETENTION) {
     const old = files.shift();
@@ -50,6 +75,7 @@ async function main() {
   }
 
   console.log(`DB backup written: ${dest} (${files.length} kept)`);
+  await pool.end();
 }
 
 main().catch(err => {
