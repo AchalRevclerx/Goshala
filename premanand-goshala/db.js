@@ -1,22 +1,40 @@
 const { Pool } = require('pg');
 
-// Fail loudly and clearly if the connection string is missing. Without this,
-// pg silently falls back to host=localhost:5432, which on most hosts refuses
-// the connection and surfaces the confusing "AggregateError [ECONNREFUSED]"
-// (no host shown) instead of telling you the real problem: DATABASE_URL is unset.
-if (!process.env.DATABASE_URL) {
+// Two supported ways to configure the connection:
+//   1. DATABASE_URL — a full postgresql:// connection string.
+//   2. Discrete PG* vars — PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE
+//      (pg reads these from the environment automatically). PREFER THIS when the
+//      password contains special characters like # @ % : / — those must be
+//      percent-encoded inside a URL and some hosting panels (e.g. Hostinger)
+//      mangle the encoding, causing "password authentication failed". With
+//      discrete vars the password is a plain literal, so there is nothing to
+//      encode or misparse.
+//
+// Without either, pg would silently fall back to localhost:5432 and produce a
+// confusing "AggregateError [ECONNREFUSED]" — so we fail loudly instead.
+const hasUrl = Boolean(process.env.DATABASE_URL);
+const hasDiscrete = Boolean(
+  process.env.PGHOST && process.env.PGUSER && process.env.PGPASSWORD
+);
+
+if (!hasUrl && !hasDiscrete) {
   throw new Error(
-    'DATABASE_URL is not set. Configure it in the environment (e.g. Hostinger ' +
-    'Node.js app -> Environment Variables) with your Supabase connection string. ' +
-    'Use the IPv4 Supavisor pooler host (aws-0-<region>.pooler.supabase.com:6543), ' +
-    'not the IPv6-only direct host (db.<ref>.supabase.co:5432).'
+    'No database configuration found. Set DATABASE_URL, OR set discrete ' +
+    'PGHOST / PGPORT / PGUSER / PGPASSWORD / PGDATABASE env vars (recommended ' +
+    'when the password has special characters, since URL encoding breaks in ' +
+    'some hosting panels). Use the Supabase pooler host ' +
+    '(aws-0-<region>.pooler.supabase.com), not the IPv6-only direct host ' +
+    '(db.<ref>.supabase.co).'
   );
 }
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-});
+// When DATABASE_URL is absent, pg picks up PGHOST/PGPORT/PGUSER/PGPASSWORD/
+// PGDATABASE from the environment on its own — we only need to add SSL.
+const pool = new Pool(
+  hasUrl
+    ? { connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } }
+    : { ssl: { rejectUnauthorized: false } }
+);
 
 pool.on('error', (err) => {
   console.error('Unexpected PostgreSQL pool error:', err);
