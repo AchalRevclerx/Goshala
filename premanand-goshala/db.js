@@ -1,5 +1,18 @@
 const { Pool } = require('pg');
 
+// Fail loudly and clearly if the connection string is missing. Without this,
+// pg silently falls back to host=localhost:5432, which on most hosts refuses
+// the connection and surfaces the confusing "AggregateError [ECONNREFUSED]"
+// (no host shown) instead of telling you the real problem: DATABASE_URL is unset.
+if (!process.env.DATABASE_URL) {
+  throw new Error(
+    'DATABASE_URL is not set. Configure it in the environment (e.g. Hostinger ' +
+    'Node.js app -> Environment Variables) with your Supabase connection string. ' +
+    'Use the IPv4 Supavisor pooler host (aws-0-<region>.pooler.supabase.com:6543), ' +
+    'not the IPv6-only direct host (db.<ref>.supabase.co:5432).'
+  );
+}
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
