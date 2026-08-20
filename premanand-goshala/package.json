@@ -12,6 +12,7 @@
     "node": ">=22.13.0"
   },
   "dependencies": {
+    "@supabase/server": "^1.4.1",
     "@supabase/supabase-js": "^2.0.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
